@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "344021620197",
+    "firebase_url": "https://storyteller-217a6.firebaseio.com",
+    "project_id": "storyteller-217a6",
+    "storage_bucket": "storyteller-217a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344021620197:android:86e1a1367a8195fab3cb0c",
+        "android_client_info": {
+          "package_name": "com.ritwik.photex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344021620197-4pqrr6j6jtar7eae5299iq66rhdphmjh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6l7o64qGQjnq-QhbgPc8eJzfNiTMqko0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344021620197-4pqrr6j6jtar7eae5299iq66rhdphmjh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
