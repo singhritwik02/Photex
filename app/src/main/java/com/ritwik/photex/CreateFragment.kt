@@ -1536,7 +1536,7 @@ class CreateFragment : Fragment() {
             return false
         }
         val ctx = context!!
-        ContextCompat.checkSelfPermission(ctx,Ma)
+        //ContextCompat.checkSelfPermission(ctx,Ma)
 
     }
     fun resizeGalleryImage(bitmap: Bitmap): Bitmap {
