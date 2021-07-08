@@ -555,9 +555,9 @@ class CreateFragment : Fragment() {
 
         fun updateAdapter() {
             if (itemArray.size == 0) {
-                binding.fcAddItemsLabel.visibility = View.VISIBLE
+               // binding.fcAddItemsLabel.visibility = View.VISIBLE
             } else {
-                binding.fcAddItemsLabel.visibility = View.GONE
+               // binding.fcAddItemsLabel.visibility = View.GONE
             }
             if (this::adapter.isInitialized) {
                 adapter.notifyDataSetChanged()
