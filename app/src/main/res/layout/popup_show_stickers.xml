@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@id/pss_SearchField"
         app:layout_constrainedHeight="true"
         android:layout_margin="8dp"
-        android:id="@+id/pss_Recycler"
+        android:id="@+id/pss_RecyclerView"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
