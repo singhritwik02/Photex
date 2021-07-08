@@ -1,0 +1,34 @@
+<svg id="v_top_align" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25.392 25.392">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #707070;
+        stroke-width: 2px;
+      }
+
+      .cls-2 {
+        fill: #707070;
+      }
+
+      .cls-3 {
+        stroke: none;
+      }
+
+      .cls-4 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="Rectangle_21" data-name="Rectangle 21" class="cls-1">
+    <rect class="cls-3" width="25.392" height="25.392" rx="4"/>
+    <rect class="cls-4" x="1" y="1" width="23.392" height="23.392" rx="3"/>
+  </g>
+  <g id="Rectangle_22" data-name="Rectangle 22" class="cls-2">
+    <path class="cls-3" d="M4,0H21.392a4,4,0,0,1,4,4V17.532a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V4A4,4,0,0,1,4,0Z"/>
+    <path class="cls-4" d="M4,1H21.392a3,3,0,0,1,3,3V15.532a1,1,0,0,1-1,1H2a1,1,0,0,1-1-1V4A3,3,0,0,1,4,1Z"/>
+  </g>
+</svg>
