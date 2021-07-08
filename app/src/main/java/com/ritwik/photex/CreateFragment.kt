@@ -1529,16 +1529,7 @@ class CreateFragment : Fragment() {
             }
         }
     }
-    fun handleStoragePermission():Boolean
-    {
-        if(context ==null)
-        {
-            return false
-        }
-        val ctx = context!!
-        //ContextCompat.checkSelfPermission(ctx,Ma)
 
-    }
     fun resizeGalleryImage(bitmap: Bitmap): Bitmap {
         val mainHeight = mainBitmap.height * 0.5.toFloat()
         val mainWidth = mainBitmap.width * 0.5.toFloat()
