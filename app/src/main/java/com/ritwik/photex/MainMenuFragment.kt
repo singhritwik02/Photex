@@ -57,7 +57,7 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
         binding.fmmStickerSettings.setOnClickListener {
             fragment.stickerPopup.showPopup()
         }
-        binding.fmmAplha.setOnClickListener {
+        binding.fmmAlpha.setOnClickListener {
             fragment.showAlphaPopup()
         }
         binding.fmmAddImage.setOnClickListener {

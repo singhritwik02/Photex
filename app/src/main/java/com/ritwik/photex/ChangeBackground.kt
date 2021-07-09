@@ -140,7 +140,7 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
 
             }
         )
-        binding.ptbAlphaSeekBar.setOnSeekBarChangeListener(
+        binding.pcbAlphaSeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                     p0?.let {
