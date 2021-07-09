@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ritwik.photex.databinding.FragmentChangeStrokeBinding
 
+// TODO: 09/07/21 implement choose color button
 
 class ChangeStroke(val fragment: CreateFragment) : Fragment() {
     var _binding: FragmentChangeStrokeBinding? = null
