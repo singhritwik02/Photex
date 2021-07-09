@@ -30,7 +30,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="70"
+            android:layout_weight="65"
             android:background="@drawable/image_back"
             >
             <ImageView
@@ -50,20 +50,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="30"
+            android:layout_weight="35"
             android:orientation="vertical"
             android:weightSum="100"
             >
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="30"
+                android:layout_weight="40"
+                android:layout_gravity="center"
                 android:id="@+id/fc_LayerSelectorLayout"
                 />
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="70"
+                android:layout_weight="60"
                 >
                 <FrameLayout
                     android:layout_width="match_parent"

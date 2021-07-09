@@ -896,6 +896,7 @@ class CreateFragment : Fragment() {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT
             )
+            params.gravity = Gravity.CENTER
             recyclerView.layoutParams = params
             parent.addView(recyclerView)
             val layoutManager =
