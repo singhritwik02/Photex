@@ -64,7 +64,9 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val bundle = arguments
-        fragmentContainer = container.id
+        if (container != null) {
+            fragmentContainer = container.id
+        }
         if (bundle != null) {
             val mode = bundle.getString("MODE", "")
             if (mode == "BLANK") {

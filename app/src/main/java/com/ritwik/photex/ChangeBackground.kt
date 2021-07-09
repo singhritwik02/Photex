@@ -24,7 +24,7 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         val mainBitmap = fragment.mainBitmap
         val progressF = (225 / 100.toFloat()) * item.backgroundAlpha
         val progress = progressF.toInt()
-        binding.ptbAlphaSeekBar.progress = if (progress > 100) {
+        binding.pcbAlphaSeekBar.progress = if (progress > 100) {
             Log.d(TAG, "setBackground: setting progress to $progress")
             progress
         } else if (progress < 0) {
@@ -53,13 +53,13 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         }
 
 
-        binding.ptbClearButton.setOnClickListener {
+        binding.pcbClearButton.setOnClickListener {
             item.removeBackground()
             item.backgroundAlpha = 225
             fragment.reDrawBitmap()
             val progressF = (225 / 100.toFloat()) * item.backgroundAlpha
             val progress = progressF.toInt()
-            binding.ptbAlphaSeekBar.progress = if (progress > 100) {
+            binding.pcbAlphaSeekBar.progress = if (progress > 100) {
                 Log.d(TAG, "setBackground: setting progress to $progress")
                 progress
             } else if (progress < 0) {
