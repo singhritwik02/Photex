@@ -61,45 +61,12 @@ class ChooseColorClass(val context: Context) {
             binding.pccChooseColorImage.setImageBitmap(bitmap)
             cropped = true
             toReturnBitmap = bitmap
-            binding.pccPresetLayout.visibility = View.GONE
-            binding.pccModifyLayout.visibility = View.GONE
+           // binding.pccPresetLayout.visibility = View.GONE
+            //binding.pccModifyLayout.visibility = View.GONE
 
 
-        } else if (mode == "TEMPLATE") {
-            if (imageBitmap == null) {
-                Toast.makeText(context, "Error Loading Template", Toast.LENGTH_SHORT).show()
-                return
-            }
-            mainBitmap = imageBitmap
-            val bitmap = imageBitmap.copy(Bitmap.Config.ARGB_8888, true)
-            bitmap?.let {
-                if (it.width > it.height) {
-                    setVerticalAlignment()
-                } else {
-                    setHorizontalAlignment()
-                }
-            }
-            cropSquare()
-
-
-        } else if (mode == "GALLERY") {
-            if (imageBitmap == null) {
-                Toast.makeText(context, "Error Loading Template", Toast.LENGTH_SHORT).show()
-                return
-            }
-            mainBitmap = imageBitmap
-            val bitmap = imageBitmap.copy(Bitmap.Config.ARGB_8888, true)
-            bitmap?.let {
-                if (it.width > it.height) {
-                    setVerticalAlignment()
-                } else {
-                    setHorizontalAlignment()
-                }
-            }
-            cropSquare()
-
-
-        } else {
+        }
+        else {
             Log.d(TAG, "showChooseColorPopup: Unidentified Mode")
             return
         }
@@ -136,7 +103,7 @@ class ChooseColorClass(val context: Context) {
                     .show()
 
             }
-        binding.createButton
+        binding.pccCreateButton
             .setOnClickListener {
 
                 toReturnBitmap?.let { function(it) }
@@ -147,74 +114,6 @@ class ChooseColorClass(val context: Context) {
 
 
         recyclerClass.showRecycler()
-        binding.pccTopAlign
-            .setOnClickListener {
-                binding.pccModifyLayout.animate().alpha(1f).setDuration(300).withEndAction {
-                    binding.pccModifyLayout.isEnabled = true
-                    binding.pccMarginAdd.isEnabled = true
-                    binding.pccMarginSubtract.isEnabled = true
-                }
-                selectedAlignment = "START"
-                marginExtra = 0
-
-                cropSquare()
-
-            }
-        binding.pccFormSelector.setOnClickListener {
-
-        }
-        binding.pccBottomAlign
-            .setOnClickListener {
-                binding.pccModifyLayout.animate().alpha(1f).setDuration(300).withEndAction {
-                    binding.pccModifyLayout.isEnabled = true
-                    binding.pccMarginAdd.isEnabled = true
-                    binding.pccMarginSubtract.isEnabled = true
-                }
-                selectedAlignment = "END"
-                marginExtra = 0
-
-
-                cropSquare()
-
-            }
-        binding.pccCenterAlign
-            .setOnClickListener {
-                binding.pccModifyLayout.animate().alpha(1f).setDuration(300).withEndAction {
-                    binding.pccModifyLayout.isEnabled = true
-                    binding.pccMarginAdd.isEnabled = true
-                    binding.pccMarginSubtract.isEnabled = true
-                }
-                selectedAlignment = "CENTER"
-                marginExtra = 0
-
-
-                cropSquare()
-
-            }
-        binding.pccFillAlign
-            .setOnClickListener {
-                binding.pccModifyLayout.animate().alpha(0.2f).setDuration(300).withEndAction {
-                    binding.pccModifyLayout.isEnabled = false
-                    binding.pccMarginAdd.isEnabled = false
-                    binding.pccMarginSubtract.isEnabled = false
-                }
-
-                marginExtra = 0
-
-
-                fillImage()
-
-            }
-        binding.pccMarginAdd
-            .setOnClickListener {
-                marginExtra += 5
-                cropSquare()
-            }
-        binding.pccMarginSubtract
-            .setOnClickListener {
-                marginExtra -= 5
-                cropSquare()
-            }
 
 
     }
@@ -389,22 +288,6 @@ class ChooseColorClass(val context: Context) {
         return bitmap
     }
 
-
-    fun setHorizontalAlignment() {
-        orientation = "HORIZONTAL"
-        binding.pccBottomAlign.setImageResource(R.drawable.h_left_align)
-        binding.pccTopAlign.setImageResource(R.drawable.h_right_align)
-        binding.pccCenterAlign.setImageResource(R.drawable.h_center_align)
-
-    }
-
-    fun setVerticalAlignment() {
-
-        orientation = "VERTICAL"
-        binding.pccBottomAlign.setImageResource(R.drawable.v_bottom_align)
-        binding.pccTopAlign.setImageResource(R.drawable.v_top_align)
-        binding.pccCenterAlign.setImageResource(R.drawable.v_center_align)
-    }
 
 
     companion object {
