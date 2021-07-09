@@ -31,7 +31,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="65"
+            android:layout_weight="70"
             android:background="@drawable/image_back"
             >
             <ImageView
@@ -45,7 +45,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="35"
+            android:layout_weight="30"
             >
             <ImageView
                 android:layout_width="wrap_content"
@@ -57,27 +57,57 @@
                 app:layout_constraintTop_toTopOf="@id/pcc_Recycler"
                 app:layout_constraintBottom_toBottomOf="@id/pcc_Recycler"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Background Color"
+                android:id="@+id/psc_ColoLabel"
+                app:layout_constraintBottom_toTopOf="@id/pcc_Recycler"
+                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/avenir_next_bold"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_margin="8dp"
+                />
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/pcc_CreateButton"
                 android:id="@+id/pcc_Recycler"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toStartOf="@id/pcc_ColorPalette"
                 app:layout_constrainedWidth="true"
                 />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="8dp"
+                android:id="@+id/pcc_CreateButton"
+                >
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/next_button"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pcc_Recycler"
-                android:layout_margin="8dp"
-                android:id="@+id/pcc_CreateButton"
+                android:layout_gravity="center"
                 />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done"
+                    android:fontFamily="@font/avenir_next_bold"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
