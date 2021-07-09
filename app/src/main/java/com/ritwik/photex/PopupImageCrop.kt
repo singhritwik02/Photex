@@ -55,7 +55,7 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
             addTop()
             status = "T"
         }
-        binding.pciReset.setOnClickListener {
+        binding.picReset.setOnClickListener {
             toReturnBitmap = bitmap
             binding.picImageView.setImageBitmap(toReturnBitmap)
             status = ""
@@ -80,7 +80,7 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
                     .show()
 
             }
-        binding.pciNextButton.setOnClickListener {
+        binding.picNextButton.setOnClickListener {
             if(!this::toReturnBitmap.isInitialized)
             {
                 toReturnBitmap = bitmap
