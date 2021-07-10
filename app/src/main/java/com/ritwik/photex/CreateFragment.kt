@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.*
 import android.net.Uri
 import android.os.Build
@@ -18,7 +17,6 @@ import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.toRectF
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,8 +31,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ritwik.photex.databinding.*
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.util.*
-import java.util.jar.Manifest
 import kotlin.math.roundToInt
 
 
@@ -55,6 +54,7 @@ class CreateFragment : Fragment() {
     val GALLERY_IMAGE = 101
     var stickerPopup = StickerPopup()
     private var fragmentContainer:Int = 0
+    private lateinit var watermarkBitmap: Bitmap
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -212,7 +212,24 @@ class CreateFragment : Fragment() {
 
         return binding.root
     }
+    fun getWatermark()
+    {
+        val assetManager = context!!.assets
 
+        val istr: InputStream
+        var bitmap: Bitmap? = null
+        try {
+            istr = assetManager.open("created_with_photex.png")
+            bitmap = BitmapFactory.decodeStream(istr)
+        } catch (e: IOException) {
+            // handle exception
+            e.printStackTrace()
+        }
+        if(bitmap!=null) {
+            watermarkBitmap = bitmap
+        }
+
+    }
     fun showRotatePopup() {
         if (selectedItem == null) {
             Toast.makeText(context, "Select an item to Rotate", Toast.LENGTH_SHORT).show()
@@ -378,6 +395,8 @@ class CreateFragment : Fragment() {
 
     companion object {
         private const val TAG = "CreateFragment"
+        val watermarkPaint = Paint()
+
     }
 
 
@@ -422,6 +441,15 @@ class CreateFragment : Fragment() {
 
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(proxy!!)
+        // setting the thumbnail
+        watermarkPaint.color = Color.WHITE
+        val watermarkFontMetrics = Paint.FontMetrics()
+        watermarkPaint.getFontMetrics(watermarkFontMetrics)
+
+        canvas.drawText("Created With Photex", 20F, ((mainBitmap.height- 50f).toInt()
+            .toFloat()),
+            watermarkPaint)
+
         for (item in itemArray) {
             if (item.type == "TEXT") {
                 canvas.save()
@@ -1887,5 +1915,6 @@ class CreateFragment : Fragment() {
         }
 
     }
+
 
 }
