@@ -64,6 +64,7 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val bundle = arguments
+
         if (container != null) {
             fragmentContainer = container.id
         }
@@ -442,12 +443,6 @@ class CreateFragment : Fragment() {
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(proxy!!)
         // setting the thumbnail
-        if(!this::watermarkBitmap.isInitialized)
-        {
-            getWatermark()
-        }
-        // drawing the bitmap at the bottom left
-        canvas.drawBitmap(watermarkBitmap,20f,(mainBitmap.height-(20+watermarkBitmap.height)).toFloat(),null)
 
 
         for (item in itemArray) {
@@ -516,6 +511,12 @@ class CreateFragment : Fragment() {
                 }
             }
         }
+        if(!this::watermarkBitmap.isInitialized)
+        {
+            getWatermark()
+        }
+        // drawing the bitmap at the bottom left
+        canvas.drawBitmap(watermarkBitmap,20f,(mainBitmap.height-(20+watermarkBitmap.height)).toFloat(),null)
         binding.fcMainImage.setImageBitmap(proxy)
         modifiedBitmap = proxy
 

@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.Log
 
-class Items {
+open class Items {
     var text:String = ""
     var type: String? = null
     private lateinit var stickerBitmap: Bitmap
