@@ -514,6 +514,7 @@ class CreateFragment : Fragment() {
         if (!this::watermarkBitmap.isInitialized) {
             val temp = BitmapFunctions.getBitmapFromAssets(context!!, "created_with_photex.png")
             if (temp != null) {
+
                 watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.05f, "H")
             }
 

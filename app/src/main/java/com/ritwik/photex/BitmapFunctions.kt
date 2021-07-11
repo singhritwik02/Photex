@@ -3,9 +3,14 @@ package com.ritwik.photex
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.Log
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toIcon
 import java.io.IOException
 import java.io.InputStream
+import kotlin.contracts.contract
 
 class BitmapFunctions {
     companion object
@@ -67,6 +72,44 @@ class BitmapFunctions {
             return bitmap
 
         }
+        fun createWatermark(context: Context,platform:String,text:String,referenceBitmap: Bitmap):Bitmap?
+        {
+            val paint = Paint()
+            // setting the typeFace
+            paint.typeface = ResourcesCompat.getFont(context,R.font.avenir_next_bold)
+
+            // getting the size of font
+            val newHeight = referenceBitmap.height*0.03
+            paint.textSize = newHeight.toFloat()
+            val tempIcon = getBitmapFromAssets(context,"instagram.png")
+            // resizing the icon
+            var icon = tempIcon
+            if(tempIcon!=null) {
+                icon = BitmapFunctions.getResizedBitmap(tempIcon, referenceBitmap, 0.03f, "H")
+
+            }
+            else
+            {
+                return null
+            }
+            val finalIcon = icon!!
+            // calculating the dimensions of the canvas Bitmap
+            val margin = newHeight/2
+
+            val canvasHeight = newHeight + (2*margin)
+            val canvasWidth = (finalIcon.width) + (3*margin) + paint.measureText(text)
+            // creating a bitmap with the above dimensions
+            val mainBitmap = Bitmap.createBitmap(canvasWidth.toInt(), canvasHeight.toInt(),Bitmap.Config.ARGB_8888)
+            // drawing the icon to the bitmap
+            val canvas = Canvas(mainBitmap)
+            val bitmapY = (mainBitmap.height/2) - (finalIcon.height/2)
+            val bitmapX = margin
+            // drawing the icon bitmap
+            canvas.drawBitmap(finalIcon,bitmapX.toFloat(),bitmapY.toFloat(),null)
+
+            return mainBitmap
+        }
+
 
     }
 }
