@@ -446,10 +446,9 @@ class CreateFragment : Fragment() {
         {
             getWatermark()
         }
+        // drawing the bitmap at the bottom left
+        canvas.drawBitmap(watermarkBitmap,20f,(mainBitmap.height-(20+watermarkBitmap.height)).toFloat(),null)
 
-        canvas.drawText("Created With Photex", 20F, ((mainBitmap.height- 50f).toInt()
-            .toFloat()),
-            watermarkPaint)
 
         for (item in itemArray) {
             if (item.type == "TEXT") {
