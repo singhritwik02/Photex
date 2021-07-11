@@ -20,7 +20,7 @@ class NamePrintFetcher {
             val names = sharedPreferences.all
             namePrintList.clear()
             for(n in names)
-            {
+            {//
                 val temp = NamePrint()
                 temp.setDisplayTitle(n.key)
                 temp.setDisplayText(n.value.toString())
