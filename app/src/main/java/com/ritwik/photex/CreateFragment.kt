@@ -53,7 +53,7 @@ class CreateFragment : Fragment() {
     lateinit var menuFragmentManager: MenuFragmentManager
     val GALLERY_IMAGE = 101
     var stickerPopup = StickerPopup()
-    private var fragmentContainer:Int = 0
+    private var fragmentContainer: Int = 0
     private lateinit var watermarkBitmap: Bitmap
 
     @SuppressLint("ClickableViewAccessibility")
@@ -92,8 +92,7 @@ class CreateFragment : Fragment() {
                 imageLink = bundle.getString("LINK", "")
 
             }
-            if(mode == "GALLERY")
-            {
+            if (mode == "GALLERY") {
                 Log.d(TAG, "onCreateView: Gallery Mode")
                 this.mode = mode
                 binding.fcWaitingImage.visibility = View.GONE
@@ -141,7 +140,7 @@ class CreateFragment : Fragment() {
 //                                "onCreateView: bitmap width = ${it.height}, height  = ${it.height}"
 //                            )
 //                        }
-                        val cropClass = PopupImageCrop(context!!,it)
+                        val cropClass = PopupImageCrop(context!!, it)
                         {
 
                         }
@@ -213,8 +212,8 @@ class CreateFragment : Fragment() {
 
         return binding.root
     }
-    fun getWatermark()
-    {
+
+    fun getWatermark() {
         val assetManager = context!!.assets
 
         val istr: InputStream
@@ -226,11 +225,12 @@ class CreateFragment : Fragment() {
             // handle exception
             e.printStackTrace()
         }
-        if(bitmap!=null) {
-            watermarkBitmap = BitmapFunctions.getResizedBitmap(bitmap,mainBitmap, 0.05F,"H")
+        if (bitmap != null) {
+            watermarkBitmap = BitmapFunctions.getResizedBitmap(bitmap, mainBitmap, 0.05F, "H")
         }
 
     }
+
     fun showRotatePopup() {
         if (selectedItem == null) {
             Toast.makeText(context, "Select an item to Rotate", Toast.LENGTH_SHORT).show()
@@ -511,12 +511,22 @@ class CreateFragment : Fragment() {
                 }
             }
         }
-        if(!this::watermarkBitmap.isInitialized)
-        {
-            getWatermark()
+        if (!this::watermarkBitmap.isInitialized) {
+            val temp = BitmapFunctions.getBitmapFromAssets(context!!, "created_with_photex.png")
+            if (temp != null) {
+                watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.05f, "H")
+            }
+
         }
         // drawing the bitmap at the bottom left
-        canvas.drawBitmap(watermarkBitmap,20f,(mainBitmap.height-(20+watermarkBitmap.height)).toFloat(),null)
+        if (this::watermarkBitmap.isInitialized) {
+            canvas.drawBitmap(
+                watermarkBitmap,
+                20f,
+                (mainBitmap.height - (20 + watermarkBitmap.height)).toFloat(),
+                null
+            )
+        }
         binding.fcMainImage.setImageBitmap(proxy)
         modifiedBitmap = proxy
 
@@ -586,9 +596,9 @@ class CreateFragment : Fragment() {
 
         fun updateAdapter() {
             if (itemArray.size == 0) {
-               // binding.fcAddItemsLabel.visibility = View.VISIBLE
+                // binding.fcAddItemsLabel.visibility = View.VISIBLE
             } else {
-               // binding.fcAddItemsLabel.visibility = View.GONE
+                // binding.fcAddItemsLabel.visibility = View.GONE
             }
             if (this::adapter.isInitialized) {
                 adapter.notifyDataSetChanged()
@@ -1419,8 +1429,8 @@ class CreateFragment : Fragment() {
         srpBinding.pcsExtraAdd.setOnClickListener {
 
             val originalWidth = selectedItem!!.getOriginalStickerBitmap().width
-            val difference = selectedItem!!.getStickerBitmap().width-originalWidth
-            val newDifference = difference +50
+            val difference = selectedItem!!.getStickerBitmap().width - originalWidth
+            val newDifference = difference + 50
             if (originalWidth + newDifference > mainBitmap.height) {
                 Toast.makeText(context, "Cannot increase Size anymore!!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -1438,9 +1448,10 @@ class CreateFragment : Fragment() {
             reDrawBitmap()
         }
         srpBinding.pcsExtraMinus.setOnClickListener {
-            val difference = selectedItem!!.getStickerBitmap().width-selectedItem!!.getOriginalStickerBitmap().width
+            val difference =
+                selectedItem!!.getStickerBitmap().width - selectedItem!!.getOriginalStickerBitmap().width
             val newDiff = difference - 50
-            if (selectedItem!!.getOriginalStickerBitmap().width-newDiff < 50) {
+            if (selectedItem!!.getOriginalStickerBitmap().width - newDiff < 50) {
                 Toast.makeText(context, "Cannot decrease Size anymore!!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -1534,15 +1545,14 @@ class CreateFragment : Fragment() {
                 }
             }
         }
-        if(requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK)
-        {
+        if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK) {
             data?.let {
                 Log.d(TAG, "onActivityResult: Getting bitmap from uri, data is not null")
                 val bitmap = it.data?.let { it1 -> getBitmapFromUri(it1) }
                 if (bitmap != null) {
                     mainBitmap = bitmap
                     setMainBitmapAs(bitmap)
-                    val cropClass = PopupImageCrop(context!!,bitmap)
+                    val cropClass = PopupImageCrop(context!!, bitmap)
                     {
                         mainBitmap = it
                         setMainBitmapAs(it)
@@ -1552,9 +1562,14 @@ class CreateFragment : Fragment() {
 
                 } else {
 
-                    Toast.makeText(context, "Unable to load image,Please try again!!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Unable to load image,Please try again!!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     context?.let {
-                        activity!!.supportFragmentManager.beginTransaction().replace(fragmentContainer,HomeFragment(),"HOME_FRAGMENT").commit()
+                        activity!!.supportFragmentManager.beginTransaction()
+                            .replace(fragmentContainer, HomeFragment(), "HOME_FRAGMENT").commit()
                     }
                     Log.d(TAG, "onActivityResult: Bitmap is null")
                 }
@@ -1607,14 +1622,14 @@ class CreateFragment : Fragment() {
 
     }
 
-    fun chooseImage(code:Int) {
+    fun chooseImage(code: Int) {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), code)
     }
 
-    inner class  CropImageClass(val image: Bitmap) {
+    inner class CropImageClass(val image: Bitmap) {
         private lateinit var cropBinding: PopupSelectImagePartBinding
         private lateinit var window: PopupWindow
         private lateinit var finalBitmap: Bitmap
@@ -1687,19 +1702,16 @@ class CreateFragment : Fragment() {
             }
             cropBinding.psipInsertButton.setOnClickListener {
                 if (width == 0 || height == 0) {
-                   val sticker = resizeGalleryImage(image)
+                    val sticker = resizeGalleryImage(image)
                     addSticker(sticker)
                     window.dismiss()
                 } else {
                     Toast.makeText(context, "Saving image", Toast.LENGTH_SHORT).show()
                     val temp = createBitmapFromRect(selectionRect)
                     if (temp != null) {
-                        var sticker = if(selected == "OVAL")
-                        {
+                        var sticker = if (selected == "OVAL") {
                             getCroppedBitmap(temp)
-                        }
-                        else
-                        {
+                        } else {
                             temp
                         }
                         if (sticker != null)

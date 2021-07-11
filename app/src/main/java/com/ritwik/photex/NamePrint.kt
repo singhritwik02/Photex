@@ -3,6 +3,7 @@ package com.ritwik.photex
 import android.graphics.Bitmap
 
 class NamePrint: Items() {
+    private var displayTitle = ""
     private var displayText = ""
     private lateinit var displayIcon: Bitmap
     fun setDisplayText(text:String)
@@ -20,6 +21,14 @@ class NamePrint: Items() {
     fun getDisplayIcon():Bitmap
     {
         return displayIcon
+    }
+    fun setDisplayTitle(title:String)
+    {
+        displayTitle = title
+    }
+    fun getDisplayTitle():String
+    {
+        return displayTitle
     }
 
 

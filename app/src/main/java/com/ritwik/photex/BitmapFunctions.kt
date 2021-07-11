@@ -1,7 +1,11 @@
 package com.ritwik.photex
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
+import java.io.IOException
+import java.io.InputStream
 
 class BitmapFunctions {
     companion object
@@ -47,7 +51,22 @@ class BitmapFunctions {
                 height.toInt(),false)
             return toReturn
         }
+        fun getBitmapFromAssets(context:Context,fileName:String):Bitmap?
+        {
+            val assetManager = context.assets
 
+            val istr: InputStream
+            var bitmap: Bitmap? = null
+            try {
+                istr = assetManager.open(fileName)
+                bitmap = BitmapFactory.decodeStream(istr)
+            } catch (e: IOException) {
+                // handle exception
+                e.printStackTrace()
+            }
+            return bitmap
+
+        }
 
     }
 }
