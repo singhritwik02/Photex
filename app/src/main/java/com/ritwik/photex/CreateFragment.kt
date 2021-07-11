@@ -1912,6 +1912,7 @@ class CreateFragment : Fragment() {
                 canvas.drawRect(rect, paint)
             }
             cropBinding.psipImage.setImageBitmap(finalBitmap)
+
         }
 
     }
