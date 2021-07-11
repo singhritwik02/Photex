@@ -226,7 +226,7 @@ class CreateFragment : Fragment() {
             e.printStackTrace()
         }
         if(bitmap!=null) {
-            watermarkBitmap = bitmap
+            watermarkBitmap = BitmapFunctions.getResizedBitmap(bitmap,mainBitmap, 0.05F,"H")
         }
 
     }
@@ -442,9 +442,10 @@ class CreateFragment : Fragment() {
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(proxy!!)
         // setting the thumbnail
-        watermarkPaint.color = Color.WHITE
-        val watermarkFontMetrics = Paint.FontMetrics()
-        watermarkPaint.getFontMetrics(watermarkFontMetrics)
+        if(!this::watermarkBitmap.isInitialized)
+        {
+            getWatermark()
+        }
 
         canvas.drawText("Created With Photex", 20F, ((mainBitmap.height- 50f).toInt()
             .toFloat()),
