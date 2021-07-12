@@ -1930,18 +1930,16 @@ class CreateFragment : Fragment() {
         }
 
     }
-fun getNamePrint()
-{
-    val temp = BitmapFunctions.createWatermark(context!!,"","singhritwik02",mainBitmap)
-    if(temp!=null) {
-        Log.d(TAG, "getNamePrint: temp is not null")
-        addSticker(temp)
-    }
-    else
-    {
-        Log.d(TAG, "getNamePrint: temp is null")
-    }
 
-}
+    fun getNamePrint() {
+        val temp = BitmapFunctions.createWatermark(context!!, "", "singhritwik02", mainBitmap)
+        if (temp != null) {
+            Log.d(TAG, "getNamePrint: temp is not null")
+            addSticker(temp)
+        } else {
+            Log.d(TAG, "getNamePrint: temp is null")
+        }
+
+    }
 
 }

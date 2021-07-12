@@ -61,7 +61,8 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
             fragment.showAlphaPopup()
         }
         binding.fmmAddImage.setOnClickListener {
-            fragment.chooseImage(1024)
+           // fragment.chooseImage(1024)
+            fragment.getNamePrint()
         }
 
         return binding.root
