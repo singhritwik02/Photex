@@ -56,6 +56,7 @@ class CreateFragment : Fragment() {
     var stickerPopup = StickerPopup()
     private var fragmentContainer: Int = 0
     private lateinit var watermarkBitmap: Bitmap
+    private val selectedWatermarks = arrayListOf<UsernameData>()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -568,8 +569,11 @@ class CreateFragment : Fragment() {
                     } else {
                         if(itemArray[position].type == "NAME_PRINT")
                         holder.image.visibility = View.VISIBLE
-                        holder.text.text = itemArray[position].text
+                        itemArray[position].usernameData?.let {
+
+                        holder.text.text = it.getUsername()
                         holder.image.setImageBitmap(itemArray[position].getStickerThumbail())
+                        }
 
                     }
                     holder.itemView.setOnClickListener {
@@ -1948,7 +1952,11 @@ class CreateFragment : Fragment() {
     fun addNamePrintSticker(bitmap: Bitmap, name:String,platform:String) {
         val itemRef = Items()
         itemRef.type = "NAME_PRINT"
-        itemRef.text = name
+        itemRef.usernameData = UsernameData()
+        itemRef.usernameData?.let {
+            it.setUsername(name)
+            it.platform = platform
+        }
         val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!,"instagram.png")
         itemRef.setStickerBitmap(bitmap)
         if (thumbnail != null) {
@@ -2014,7 +2022,7 @@ class CreateFragment : Fragment() {
         {
             var temp = UsernameData()
             temp.setUsername(names[n])
-            temp.setImageResourceId(icons[n])
+            temp.platform = names[n]
             list.add(temp)
 
         }
@@ -2036,7 +2044,7 @@ class CreateFragment : Fragment() {
                 holder.setText(arrayList[position].getUsername())
                 holder.setIsRecyclable(false)
                 holder.removeIcon.setOnClickListener {
-                    userData.deleteAccount(arrayList[position].getUsername())
+                    userData.deleteAccount(arrayList[position].getUsername(),arrayList[position].platform)
                     arrayList = userData.getAllUsernames()
                     recyclerView?.adapter?.notifyDataSetChanged()
                 }
@@ -2069,5 +2077,18 @@ class CreateFragment : Fragment() {
             }
         }
     }
+//    inner class watermarkFunctions
+//    {
+//        fun isSelected(data:UsernameData):Boolean
+//        {
+//            for(item in itemArray)
+//            {
+//                if(item.type == "NAME_PRINT")
+//                {
+//                    if( data.getUsername() == item.text)
+//                }
+//            }
+//        }
+//    }
 
 }

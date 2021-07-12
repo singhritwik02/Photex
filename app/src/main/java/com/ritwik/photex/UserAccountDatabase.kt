@@ -25,9 +25,9 @@ class UserAccountDatabase(
     {
         writableDatabase.execSQL("insert into UserAccounts values(\"$platformp\",\"$usernamep\")")
     }
-    fun deleteAccount(username: String)
+    fun deleteAccount(username: String,platform:String)
     {
-        writableDatabase.execSQL("delete from UserAccounts where username = \"$username\"")
+        writableDatabase.execSQL("delete from UserAccounts where username = \"$username\" and platform = \"$platform\"")
     }
     fun getAllUsernames():ArrayList<UsernameData>
     {
@@ -40,22 +40,7 @@ class UserAccountDatabase(
                 val temp = UsernameData()
                 temp.setUsername(cursor.getString(cursor.getColumnIndex("username")))
                 var res = 0
-                when(cursor.getString(cursor.getColumnIndex("platform")))
-                {
-                    "Instagram"->
-                    {
-                        res = R.drawable.instagram
-                    }
-                    "Twitter"->
-                    {
-                        res = R.drawable.twitter
-                    }
-                    "Youtube"->
-                    {
-                        res = R.drawable.youtube
-                    }
-                }
-                temp.setImageResourceId(res)
+                temp.platform = cursor.getString(cursor.getColumnIndex("platform"))
                 list.add(temp)
 
 

@@ -11,6 +11,7 @@ open class Items {
     private lateinit var stickerBitmap: Bitmap
     private lateinit var defaultStickerBitmap: Bitmap
     private lateinit var stickerThumbnail:Bitmap
+    var usernameData:UsernameData? = null
     var locationX = 0f
     var locationY = 0f
     var rotation = 0f
@@ -94,6 +95,7 @@ open class Items {
     fun getDefaultStickerDimen(): IntArray {
         return originalStickerDimension
     }
+
     inner class Margins
     {
          var marginX = 0f
