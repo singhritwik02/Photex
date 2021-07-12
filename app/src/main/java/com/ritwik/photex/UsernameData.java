@@ -1,16 +1,19 @@
 package com.ritwik.photex;
 
 public class UsernameData {
-    String image = "";
+    int imageResourceId = 0;
+
+    public int getImageResourceId() {
+        return imageResourceId;
+    }
+
+    public void setImageResourceId(int imageResourceId) {
+        this.imageResourceId = imageResourceId;
+    }
+
     String username = "";
 
-    public String getImage() {
-        return image;
-    }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public String getUsername() {
         return username;

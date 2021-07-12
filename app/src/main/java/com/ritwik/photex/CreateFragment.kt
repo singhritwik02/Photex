@@ -34,6 +34,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -1968,12 +1969,27 @@ class CreateFragment : Fragment() {
         val window = PopupWindow(usernameBinding.root,WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT,true)
         window.animationStyle = R.style.pAnimation
         window.showAtLocation(usernameBinding.root,Gravity.CENTER,0,0)
-        val arrayList = arrayListOf<UsernameData>()
-        val temp = UsernameData()
-        temp.setUsername("instagram")
+        val arrayList = prepareList()
         val spinner = usernameBinding.psnpSpinner
-        val adapter = UsernameAdapter(context!!,1,arrayList)
+        val adapter = UsernameAdapter(context!!,0,arrayList)
         spinner.adapter = adapter
+    }
+    fun prepareList():ArrayList<UsernameData>
+    {
+        val icons = arrayOf(R.drawable.choose_color_image,R.drawable.select_move)
+        val names = arrayOf("Instagram","Twitter")
+        val list = arrayListOf<UsernameData>()
+
+        for(n in 0 until names.size-1)
+        {
+            var temp = UsernameData()
+            temp.setUsername(names[n])
+            temp.setImageResourceId(icons[n])
+            list.add(temp)
+
+        }
+        return list
+
     }
 
 }
