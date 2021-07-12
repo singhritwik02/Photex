@@ -87,7 +87,7 @@ class BitmapFunctions {
                 }
                 "TWITTER"->
                 {
-                    "twitter.png"
+                   fileName = "twitter.png"
                 }
             }
             val tempIcon = getBitmapFromAssets(context,fileName)
@@ -114,7 +114,7 @@ class BitmapFunctions {
             val rectPaint = Paint()
             paint.color = Color.WHITE
             canvas.drawRoundRect(0f,0f,
-                mainBitmap.width.toFloat(), mainBitmap.height.toFloat(),10f,10f,rectPaint)
+                mainBitmap.width.toFloat(), mainBitmap.height.toFloat(),15f,15f,rectPaint)
             val bitmapY = (mainBitmap.height/2) - (finalIcon.height/2)
             val bitmapX = margin
             // drawing the icon bitmap
@@ -124,7 +124,7 @@ class BitmapFunctions {
             val fontMetrics =  Paint.FontMetrics()
             paint.getFontMetrics(fontMetrics)
             val textHeight = fontMetrics.bottom - fontMetrics.top
-            val textY = mainBitmap.height-margin
+            val textY = mainBitmap.height- (textHeight/2)
 
             // drawing the text on canvas
             canvas.drawText(text,textX.toFloat(),textY.toFloat(),paint)

@@ -112,6 +112,13 @@ open class Items {
 
 
     }
+    fun setCustomThumbnail(bitmap: Bitmap)
+    {
+        generateStickerThumbnail(bitmap)
+        {
+            stickerThumbnail = it
+        }
+    }
     companion object
     {
         private const val TAG = "Items"

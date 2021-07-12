@@ -491,7 +491,7 @@ class CreateFragment : Fragment() {
                 if (item.rotation != 0f) {
                     canvas.restore()
                 }
-            } else if (item.type == "STICKER") {
+            } else if (item.type == "STICKER" || item.type == "NAME_PRINT") {
 
                 item.getStickerBitmap().let {
                     canvas.save()
@@ -565,7 +565,9 @@ class CreateFragment : Fragment() {
                         holder.image.visibility = View.GONE
                         holder.text.text = itemArray[position].text
                     } else {
+                        if(itemArray[position].type == "NAME_PRINT")
                         holder.image.visibility = View.VISIBLE
+                        holder.text.text = itemArray[position].text
                         holder.image.setImageBitmap(itemArray[position].getStickerThumbail())
 
                     }
@@ -1430,9 +1432,10 @@ class CreateFragment : Fragment() {
         srpBinding.pcsExtraAdd.setOnClickListener {
 
             val originalWidth = selectedItem!!.getOriginalStickerBitmap().width
+            val originalHeight =  selectedItem!!.getOriginalStickerBitmap().height
             val difference = selectedItem!!.getStickerBitmap().width - originalWidth
             val newDifference = difference + 50
-            if (originalWidth + newDifference > mainBitmap.height) {
+            if (originalWidth + newDifference > mainBitmap.width ||originalHeight + newDifference > mainBitmap.height ) {
                 Toast.makeText(context, "Cannot increase Size anymore!!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -1935,10 +1938,28 @@ class CreateFragment : Fragment() {
         val temp = BitmapFunctions.createWatermark(context!!, "TWITTER", "singhritwik02", mainBitmap)
         if (temp != null) {
             Log.d(TAG, "getNamePrint: temp is not null")
-            addSticker(temp)
+            addNamePrintSticker(temp,"singhritwik02"," ")
         } else {
             Log.d(TAG, "getNamePrint: temp is null")
         }
+
+    }
+    fun addNamePrintSticker(bitmap: Bitmap, name:String,platform:String) {
+        val itemRef = Items()
+        itemRef.type = "NAME_PRINT"
+        itemRef.text = name
+        val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!,"instagram.png")
+        itemRef.setStickerBitmap(bitmap)
+        if (thumbnail != null) {
+            itemRef.setCustomThumbnail(thumbnail)
+        }
+        itemRef.locationY = (mainBitmap.height / 2).toFloat()
+        itemRef.locationX - mainBitmap.width / 2
+        itemRef.paint = Paint()
+        itemArray.add(itemRef)
+        selectedItem = itemRef
+        layerRecycler.updateAdapter()
+        reDrawBitmap()
 
     }
 
