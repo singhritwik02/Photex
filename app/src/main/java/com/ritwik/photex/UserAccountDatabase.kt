@@ -3,16 +3,13 @@ package com.ritwik.photex
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 
-@RequiresApi(Build.VERSION_CODES.P)
+
 class UserAccountDatabase(
     context: Context?,
-    version: Int,
-    openParams: SQLiteDatabase.OpenParams
-) : SQLiteOpenHelper(context, "UserAccounts.db", version, openParams) {
+
+) : SQLiteOpenHelper(context, "UserAccounts.db", null, 1) {
     override fun onCreate(database: SQLiteDatabase?) {
 
         database?.let {
@@ -24,13 +21,13 @@ class UserAccountDatabase(
         p0?.execSQL("drop table if exists UserAccounts")
         onCreate(p0)
     }
-    fun addAccount(platform:String,username:String)
+    fun addAccount(platformp:String, usernamep:String)
     {
-        writableDatabase.execSQL("insert into UserAccounts values($platform,$username)")
+        writableDatabase.execSQL("insert into UserAccounts values(\"$platformp\",\"$usernamep\")")
     }
     fun deleteAccount(username: String)
     {
-        writableDatabase.execSQL("delete from UserAccounts where username = $username")
+        writableDatabase.execSQL("delete from UserAccounts where username = \"$username\"")
     }
     fun getAllUsernames():ArrayList<UsernameData>
     {

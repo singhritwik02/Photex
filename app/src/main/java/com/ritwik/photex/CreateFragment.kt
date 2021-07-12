@@ -1966,14 +1966,43 @@ class CreateFragment : Fragment() {
     fun showUsernames()
     {
         val usernameBinding = PopupShowNamePrintsBinding.inflate(layoutInflater)
-        val displayMetrics = context!!.resources.displayMetrics
-        val window = PopupWindow(usernameBinding.root,(displayMetrics.widthPixels *0.95.toInt()),WindowManager.LayoutParams.WRAP_CONTENT,true)
+        val displayMetrics =resources.displayMetrics
+        val window = PopupWindow(usernameBinding.root,(displayMetrics.widthPixels *0.95).toInt(),WindowManager.LayoutParams.WRAP_CONTENT,true)
         window.animationStyle = R.style.pAnimation
         window.showAtLocation(usernameBinding.root,Gravity.CENTER,0,0)
+        val usernameDatabase = UserAccountDatabase(context)
+        val usernameList = usernameDatabase.getAllUsernames()
+        usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
         val arrayList = prepareList()
         val spinner = usernameBinding.psnpSpinner
         val adapter = UsernameAdapter(context!!,0,arrayList)
+        val recycler = usernameBinding.psnpAvailableWatermarkRecycler
+        recycler.layoutManager = LinearLayoutManager(context)
+        val recyclerClass = UserAccountRecycler(recycler)
+        recycler.adapter = recyclerClass.adapter()
+        recycler?.adapter?.notifyDataSetChanged()
         spinner.adapter = adapter
+        usernameBinding.psnpAddButton
+            .setOnClickListener {
+                val item = spinner.selectedItem as UsernameData
+                val platform = item.getUsername()
+                val username = usernameBinding.psnpNewName.text.toString()
+                if( username != "") {
+                    Log.d(TAG, "showUsernames: $platform")
+                    Log.d(TAG, "showUsernames: $username")
+                    if (!TextUtils.isEmpty(platform) && !TextUtils.isEmpty(username)) {
+                        usernameDatabase.addAccount(platform, username)
+                        usernameBinding.psnpNewName.setText("")
+                       recyclerClass.update()
+
+                    }
+                }
+                else
+                {
+                    Toast.makeText(context, "Enter Username", Toast.LENGTH_SHORT).show()
+                }
+
+            }
     }
     fun prepareList():ArrayList<UsernameData>
     {
@@ -1991,6 +2020,54 @@ class CreateFragment : Fragment() {
         }
         return list
 
+    }
+    inner class UserAccountRecycler (val recyclerView: RecyclerView){
+        val userData = UserAccountDatabase(context)
+        var arrayList = userData.getAllUsernames()
+        inner class adapter:RecyclerView.Adapter<ViewHolder>()
+        {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+                val view = LayoutInflater.from(context).inflate(R.layout.single_name_print,parent,false)
+                return ViewHolder(view)
+            }
+
+            override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+                holder.setImage(arrayList[position].getImageResourceId())
+                holder.setText(arrayList[position].getUsername())
+                holder.setIsRecyclable(false)
+                holder.removeIcon.setOnClickListener {
+                    userData.deleteAccount(arrayList[position].getUsername())
+                    arrayList = userData.getAllUsernames()
+                    recyclerView?.adapter?.notifyDataSetChanged()
+                }
+
+            }
+
+            override fun getItemCount(): Int {
+                return arrayList.size
+            }
+
+        }
+        fun update()
+        {
+            arrayList = userData.getAllUsernames()
+            recyclerView?.adapter?.notifyDataSetChanged()
+        }
+        inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
+        {
+            private val image = itemView.findViewById<ImageView>(R.id.snp_Thumbnail)
+            private val username = itemView.findViewById<TextView>(R.id.snp_Username)
+             val removeIcon = itemView.findViewById<ImageView>(R.id.snp_delete)
+
+            fun setImage(res:Int)
+            {
+                image.setImageResource(res)
+            }
+            fun setText(text:String)
+            {
+                username.setText(text)
+            }
+        }
     }
 
 }

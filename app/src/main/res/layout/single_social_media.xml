@@ -3,12 +3,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/white">
+    android:background="@android:color/transparent">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/select_insert"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:maxHeight="50dp"
         android:maxWidth="50dp"
         android:id="@+id/ssm_Image"
@@ -21,10 +21,10 @@
         android:maxLines="1"
         android:fontFamily="@font/avenir_next_bold"
         android:textColor="@color/black"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:layout_gravity="center"
         android:id="@+id/ssm_Name"
-        android:textSize="16sp"
+        android:textSize="12sp"
         />
 
 </LinearLayout>

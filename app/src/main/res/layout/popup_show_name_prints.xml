@@ -24,8 +24,11 @@
         android:textColor="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/psnp_TopLabel"
-        android:layout_margin="16dp"
-        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+
+        android:textSize="12sp"
         android:id="@+id/psnp_NameCount"
         />
     <androidx.recyclerview.widget.RecyclerView
@@ -47,35 +50,39 @@
     app:layout_constraintTop_toBottomOf="@id/psnp_AvailableWatermarkRecycler"
     android:id="@+id/psnp_AddLabel"
     android:layout_margin="16dp"
-    android:textSize="16sp"
+    android:textSize="14sp"
     />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="100"
-        android:layout_margin="16dp"
+        android:layout_margin="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/psnp_AddLabel"
         >
         <Spinner
             android:layout_width="0dp"
-            android:layout_weight="30"
+            android:layout_weight="45"
             android:layout_height="wrap_content"
             android:id="@+id/psnp_Spinner"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:layout_margin="8dp"
             />
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="\@username"
-            android:layout_weight="55"
+            android:layout_weight="40"
             android:fontFamily="@font/avenir_next_bold"
             android:textColor="@color/black"
             android:layout_gravity="center"
             android:padding="4dp"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:id="@+id/psnp_NewName"
             android:background="@android:color/transparent"
             />
@@ -83,7 +90,7 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:src="@drawable/add_image"
-          android:layout_weight="14"
+          android:layout_weight="15"
           android:layout_gravity="center"
           android:id="@+id/psnp_AddButton"
           />
