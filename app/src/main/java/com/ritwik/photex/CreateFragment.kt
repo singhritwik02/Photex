@@ -1932,7 +1932,7 @@ class CreateFragment : Fragment() {
     }
 
     fun getNamePrint() {
-        val temp = BitmapFunctions.createWatermark(context!!, "", "singhritwik02", mainBitmap)
+        val temp = BitmapFunctions.createWatermark(context!!, "TWITTER", "singhritwik02", mainBitmap)
         if (temp != null) {
             Log.d(TAG, "getNamePrint: temp is not null")
             addSticker(temp)

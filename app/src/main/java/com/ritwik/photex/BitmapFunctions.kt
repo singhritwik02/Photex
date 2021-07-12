@@ -1,10 +1,7 @@
 package com.ritwik.photex
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
+import android.graphics.*
 import android.util.Log
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toIcon
@@ -81,7 +78,19 @@ class BitmapFunctions {
             // getting the size of font
             val newHeight = referenceBitmap.height*0.03
             paint.textSize = newHeight.toFloat()
-            val tempIcon = getBitmapFromAssets(context,"instagram.png")
+            var fileName = ""
+            when(platform)
+            {
+                "INSTAGRAM"->
+                {
+                    fileName = "instagram.png"
+                }
+                "TWITTER"->
+                {
+                    "twitter.png"
+                }
+            }
+            val tempIcon = getBitmapFromAssets(context,fileName)
             // resizing the icon
             var icon = tempIcon
             if(tempIcon!=null) {
@@ -102,12 +111,20 @@ class BitmapFunctions {
             val mainBitmap = Bitmap.createBitmap(canvasWidth.toInt(), canvasHeight.toInt(),Bitmap.Config.ARGB_8888)
             // drawing the icon to the bitmap
             val canvas = Canvas(mainBitmap)
+            val rectPaint = Paint()
+            paint.color = Color.WHITE
+            canvas.drawRoundRect(0f,0f,
+                mainBitmap.width.toFloat(), mainBitmap.height.toFloat(),10f,10f,rectPaint)
             val bitmapY = (mainBitmap.height/2) - (finalIcon.height/2)
             val bitmapX = margin
             // drawing the icon bitmap
             canvas.drawBitmap(finalIcon,bitmapX.toFloat(),bitmapY.toFloat(),null)
             val textX = (finalIcon.width) + margin
-            val textY = margin
+            // getting the height of text
+            val fontMetrics =  Paint.FontMetrics()
+            paint.getFontMetrics(fontMetrics)
+            val textHeight = fontMetrics.bottom - fontMetrics.top
+            val textY = mainBitmap.height-margin
 
             // drawing the text on canvas
             canvas.drawText(text,textX.toFloat(),textY.toFloat(),paint)
