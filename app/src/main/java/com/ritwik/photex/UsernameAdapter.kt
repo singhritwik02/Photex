@@ -24,8 +24,13 @@ class UsernameAdapter(context: Context, resource: Int, list: ArrayList<UsernameD
         val view = LayoutInflater.from(context).inflate(R.layout.single_social_media,parent,false)
         val imageView = view.findViewById<ImageView>(R.id.ssm_Image)
         val text = view.findViewById<TextView>(R.id.ssm_Name)
+
         if (item != null) {
             text.text = item.getUsername()
+            if(item.getImageResourceId()!=0)
+            {
+                imageView.setImageResource(item.getImageResourceId())
+            }
         }
         return view
 

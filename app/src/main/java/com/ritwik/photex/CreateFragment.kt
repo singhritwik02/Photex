@@ -1966,7 +1966,8 @@ class CreateFragment : Fragment() {
     fun showUsernames()
     {
         val usernameBinding = PopupShowNamePrintsBinding.inflate(layoutInflater)
-        val window = PopupWindow(usernameBinding.root,WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT,true)
+        val displayMetrics = context!!.resources.displayMetrics
+        val window = PopupWindow(usernameBinding.root,(displayMetrics.widthPixels *0.95.toInt()),WindowManager.LayoutParams.WRAP_CONTENT,true)
         window.animationStyle = R.style.pAnimation
         window.showAtLocation(usernameBinding.root,Gravity.CENTER,0,0)
         val arrayList = prepareList()
@@ -1976,11 +1977,11 @@ class CreateFragment : Fragment() {
     }
     fun prepareList():ArrayList<UsernameData>
     {
-        val icons = arrayOf(R.drawable.choose_color_image,R.drawable.select_move)
-        val names = arrayOf("Instagram","Twitter")
+        val icons = arrayOf(R.drawable.instagram,R.drawable.twitter,R.drawable.youtube)
+        val names = arrayOf("Instagram","Twitter","Youtube")
         val list = arrayListOf<UsernameData>()
 
-        for(n in 0 until names.size-1)
+        for(n in 0 until names.size)
         {
             var temp = UsernameData()
             temp.setUsername(names[n])
