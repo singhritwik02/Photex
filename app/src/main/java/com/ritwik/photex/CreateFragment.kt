@@ -34,7 +34,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -567,12 +566,12 @@ class CreateFragment : Fragment() {
                         holder.image.visibility = View.GONE
                         holder.text.text = itemArray[position].text
                     } else {
-                        if(itemArray[position].type == "NAME_PRINT")
-                        holder.image.visibility = View.VISIBLE
+                        if (itemArray[position].type == "NAME_PRINT")
+                            holder.image.visibility = View.VISIBLE
                         itemArray[position].usernameData?.let {
 
-                        holder.text.text = it.getUsername()
-                        holder.image.setImageBitmap(itemArray[position].getStickerThumbail())
+                            holder.text.text = it.getUsername()
+                            holder.image.setImageBitmap(itemArray[position].getStickerThumbail())
                         }
 
                     }
@@ -1437,10 +1436,10 @@ class CreateFragment : Fragment() {
         srpBinding.pcsExtraAdd.setOnClickListener {
 
             val originalWidth = selectedItem!!.getOriginalStickerBitmap().width
-            val originalHeight =  selectedItem!!.getOriginalStickerBitmap().height
+            val originalHeight = selectedItem!!.getOriginalStickerBitmap().height
             val difference = selectedItem!!.getStickerBitmap().width - originalWidth
             val newDifference = difference + 50
-            if (originalWidth + newDifference > mainBitmap.width ||originalHeight + newDifference > mainBitmap.height ) {
+            if (originalWidth + newDifference > mainBitmap.width || originalHeight + newDifference > mainBitmap.height) {
                 Toast.makeText(context, "Cannot increase Size anymore!!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -1939,17 +1938,19 @@ class CreateFragment : Fragment() {
 
     }
 
-    fun getNamePrint() {
-        val temp = BitmapFunctions.createWatermark(context!!, "TWITTER", "singhritwik02", mainBitmap)
+    fun getNamePrint(platfrom: String, username: String) {
+        val temp =
+            BitmapFunctions.createWatermark(context!!, platfrom, username, mainBitmap)
         if (temp != null) {
             Log.d(TAG, "getNamePrint: temp is not null")
-            addNamePrintSticker(temp,"singhritwik02"," ")
+            addNamePrintSticker(temp, username, platfrom)
         } else {
             Log.d(TAG, "getNamePrint: temp is null")
         }
 
     }
-    fun addNamePrintSticker(bitmap: Bitmap, name:String,platform:String) {
+
+    fun addNamePrintSticker(bitmap: Bitmap, name: String, platform: String) {
         val itemRef = Items()
         itemRef.type = "NAME_PRINT"
         itemRef.usernameData = UsernameData()
@@ -1957,7 +1958,7 @@ class CreateFragment : Fragment() {
             it.setUsername(name)
             it.platform = platform
         }
-        val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!,"instagram.png")
+        val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!, "instagram.png")
         itemRef.setStickerBitmap(bitmap)
         if (thumbnail != null) {
             itemRef.setCustomThumbnail(thumbnail)
@@ -1971,19 +1972,24 @@ class CreateFragment : Fragment() {
         reDrawBitmap()
 
     }
-    fun showUsernames()
-    {
+
+    fun showUsernames() {
         val usernameBinding = PopupShowNamePrintsBinding.inflate(layoutInflater)
-        val displayMetrics =resources.displayMetrics
-        val window = PopupWindow(usernameBinding.root,(displayMetrics.widthPixels *0.95).toInt(),WindowManager.LayoutParams.WRAP_CONTENT,true)
+        val displayMetrics = resources.displayMetrics
+        val window = PopupWindow(
+            usernameBinding.root,
+            (displayMetrics.widthPixels * 0.95).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
         window.animationStyle = R.style.pAnimation
-        window.showAtLocation(usernameBinding.root,Gravity.CENTER,0,0)
+        window.showAtLocation(usernameBinding.root, Gravity.CENTER, 0, 0)
         val usernameDatabase = UserAccountDatabase(context)
         val usernameList = usernameDatabase.getAllUsernames()
         usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
         val arrayList = prepareList()
         val spinner = usernameBinding.psnpSpinner
-        val adapter = UsernameAdapter(context!!,0,arrayList)
+        val adapter = UsernameAdapter(context!!, 0, arrayList)
         val recycler = usernameBinding.psnpAvailableWatermarkRecycler
         recycler.layoutManager = LinearLayoutManager(context)
         val recyclerClass = UserAccountRecycler(recycler)
@@ -1995,31 +2001,28 @@ class CreateFragment : Fragment() {
                 val item = spinner.selectedItem as UsernameData
                 val platform = item.getUsername()
                 val username = usernameBinding.psnpNewName.text.toString()
-                if( username != "") {
+                if (username != "") {
                     Log.d(TAG, "showUsernames: $platform")
                     Log.d(TAG, "showUsernames: $username")
                     if (!TextUtils.isEmpty(platform) && !TextUtils.isEmpty(username)) {
                         usernameDatabase.addAccount(platform, username)
                         usernameBinding.psnpNewName.setText("")
-                       recyclerClass.update()
+                        recyclerClass.update()
 
                     }
-                }
-                else
-                {
+                } else {
                     Toast.makeText(context, "Enter Username", Toast.LENGTH_SHORT).show()
                 }
 
             }
     }
-    fun prepareList():ArrayList<UsernameData>
-    {
-        val icons = arrayOf(R.drawable.instagram,R.drawable.twitter,R.drawable.youtube)
-        val names = arrayOf("Instagram","Twitter","Youtube")
+
+    fun prepareList(): ArrayList<UsernameData> {
+        val icons = arrayOf(R.drawable.instagram, R.drawable.twitter, R.drawable.youtube)
+        val names = arrayOf("Instagram", "Twitter", "Youtube")
         val list = arrayListOf<UsernameData>()
 
-        for(n in 0 until names.size)
-        {
+        for (n in 0 until names.size) {
             var temp = UsernameData()
             temp.setUsername(names[n])
             temp.platform = names[n]
@@ -2029,13 +2032,16 @@ class CreateFragment : Fragment() {
         return list
 
     }
-    inner class UserAccountRecycler (val recyclerView: RecyclerView){
+
+    inner class UserAccountRecycler(val recyclerView: RecyclerView) {
         val userData = UserAccountDatabase(context)
         var arrayList = userData.getAllUsernames()
-        inner class adapter:RecyclerView.Adapter<ViewHolder>()
-        {
+        val watermarkFunctions = WatermarkFunctions()
+
+        inner class adapter : RecyclerView.Adapter<ViewHolder>() {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                val view = LayoutInflater.from(context).inflate(R.layout.single_name_print,parent,false)
+                val view =
+                    LayoutInflater.from(context).inflate(R.layout.single_name_print, parent, false)
                 return ViewHolder(view)
             }
 
@@ -2044,7 +2050,23 @@ class CreateFragment : Fragment() {
                 holder.setText(arrayList[position].getUsername())
                 holder.setIsRecyclable(false)
                 holder.removeIcon.setOnClickListener {
-                    userData.deleteAccount(arrayList[position].getUsername(),arrayList[position].platform)
+                    userData.deleteAccount(
+                        arrayList[position].getUsername(),
+                        arrayList[position].platform
+                    )
+                    holder.itemView.setOnClickListener {
+                        if (watermarkFunctions.isSelected(arrayList[position])) {
+                            Log.d(TAG, "onBindViewHolder: available at index = ${watermarkFunctions.getIndexIfAvailable(arrayList[position].getUsername(),arrayList[position].platform
+                                )}")
+                            Toast.makeText(context, "Deselecting", Toast.LENGTH_SHORT).show()
+                        } else {
+                            getNamePrint(
+                                arrayList[position].platform,
+                                arrayList[position].getUsername()
+                            )
+                            Toast.makeText(context, "Selecting", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                     arrayList = userData.getAllUsernames()
                     recyclerView?.adapter?.notifyDataSetChanged()
                 }
@@ -2056,39 +2078,86 @@ class CreateFragment : Fragment() {
             }
 
         }
-        fun update()
-        {
+
+        fun update() {
             arrayList = userData.getAllUsernames()
             recyclerView?.adapter?.notifyDataSetChanged()
         }
-        inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
-        {
+
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             private val image = itemView.findViewById<ImageView>(R.id.snp_Thumbnail)
             private val username = itemView.findViewById<TextView>(R.id.snp_Username)
-             val removeIcon = itemView.findViewById<ImageView>(R.id.snp_delete)
+            val removeIcon = itemView.findViewById<ImageView>(R.id.snp_delete)
 
-            fun setImage(res:Int)
-            {
+
+            fun setImage(res: Int) {
                 image.setImageResource(res)
             }
-            fun setText(text:String)
-            {
+
+            fun setText(text: String) {
                 username.setText(text)
             }
         }
     }
-//    inner class watermarkFunctions
-//    {
-//        fun isSelected(data:UsernameData):Boolean
-//        {
-//            for(item in itemArray)
-//            {
-//                if(item.type == "NAME_PRINT")
-//                {
-//                    if( data.getUsername() == item.text)
-//                }
-//            }
-//        }
-//    }
+
+    inner class WatermarkFunctions {
+
+
+        fun isSelected(data: UsernameData): Boolean {
+            for (item in itemArray) {
+                if (item.type == "NAME_PRINT") {
+                    if (item.usernameData == null) {
+                        break;
+                    }
+                    if (data.getUsername() == item.usernameData!!.getUsername() && data.platform == item.usernameData!!.platform) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        fun isSelected(name: String, platform: String): Boolean {
+            for (item in itemArray) {
+                if (item.type == "NAME_PRINT") {
+                    if (item.usernameData == null) {
+                        break;
+                    }
+                    if (name == item.usernameData!!.getUsername() && platform == item.usernameData!!.platform) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+        fun getIndexIfAvailable(name:String,platform: String)
+        {
+            if(isSelected(name,platform))
+            {
+                for (n  in 0 until itemArray.size) {
+                    val item = itemArray[n]
+                    if (item.type == "NAME_PRINT") {
+                        if (item.usernameData == null) {
+                            break;
+                        }
+                        if (name == item.usernameData!!.getUsername() && platform == item.usernameData!!.platform) {
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    fun deleteItemAt(index: Int) {
+
+
+        itemArray.removeAt(index)
+        layerRecycler.updateAdapter()
+        reDrawBitmap()
+        selectedItem = null
+
+    }
 
 }
