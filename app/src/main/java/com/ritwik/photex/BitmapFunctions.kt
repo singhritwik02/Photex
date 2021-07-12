@@ -106,7 +106,11 @@ class BitmapFunctions {
             val bitmapX = margin
             // drawing the icon bitmap
             canvas.drawBitmap(finalIcon,bitmapX.toFloat(),bitmapY.toFloat(),null)
+            val textX = (finalIcon.width) + margin
+            val textY = margin
 
+            // drawing the text on canvas
+            canvas.drawText(text,textX.toFloat(),textY.toFloat(),paint)
             return mainBitmap
         }
 
