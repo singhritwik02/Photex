@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/white">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/select_insert"
+        android:layout_margin="8dp"
+        android:maxHeight="50dp"
+        android:maxWidth="50dp"
+        android:id="@+id/ssm_Image"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:fontFamily="@font/avenir_next_bold"
+        android:textColor="@color/black"
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        android:id="@+id/ssm_Name"
+        android:textSize="16sp"
+        />
+
+</LinearLayout>

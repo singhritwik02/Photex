@@ -1962,5 +1962,18 @@ class CreateFragment : Fragment() {
         reDrawBitmap()
 
     }
+    fun showUsernames()
+    {
+        val usernameBinding = PopupShowNamePrintsBinding.inflate(layoutInflater)
+        val window = PopupWindow(usernameBinding.root,WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT,true)
+        window.animationStyle = R.style.pAnimation
+        window.showAtLocation(usernameBinding.root,Gravity.CENTER,0,0)
+        val arrayList = arrayListOf<UsernameData>()
+        val temp = UsernameData()
+        temp.setUsername("instagram")
+        val spinner = usernameBinding.psnpSpinner
+        val adapter = UsernameAdapter(context!!,1,arrayList)
+        spinner.adapter = adapter
+    }
 
 }

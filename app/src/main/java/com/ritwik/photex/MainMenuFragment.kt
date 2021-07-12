@@ -62,7 +62,7 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
         }
         binding.fmmAddImage.setOnClickListener {
            // fragment.chooseImage(1024)
-            fragment.getNamePrint()
+            fragment.showUsernames()
         }
 
         return binding.root
