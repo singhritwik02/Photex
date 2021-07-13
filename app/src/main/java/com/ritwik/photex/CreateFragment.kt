@@ -568,6 +568,7 @@ class CreateFragment : Fragment() {
                     } else {
                         if (itemArray[position].type == "NAME_PRINT")
                             holder.image.visibility = View.VISIBLE
+                        menuFragmentManager.showStickerOptions()
                         itemArray[position].usernameData?.let {
 
                             holder.text.text = it.getUsername()
@@ -1318,6 +1319,14 @@ class CreateFragment : Fragment() {
         if (selectedItem == null) {
             return
         }
+        if(selectedItem!!.type == "NAME_PRINT")
+        {
+            srpBinding.pcsCustomSizeLayout.visibility = View.GONE
+        }
+        else
+        {
+            srpBinding.pcsCustomSizeLayout.visibility = View.VISIBLE
+        }
         when (selectedItem!!.stickerDimension) {
             "ORIGINAL" -> {
                 srpBinding.pcsLarge.setBackgroundResource(0)
@@ -1958,7 +1967,8 @@ class CreateFragment : Fragment() {
             it.setUsername(name)
             it.platform = platform
         }
-        val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!, "instagram.png")
+        val fName = "$platform.png".lowercase()
+        val thumbnail = BitmapFunctions.getBitmapFromAssets(context!!, fName)
         itemRef.setStickerBitmap(bitmap)
         if (thumbnail != null) {
             itemRef.setCustomThumbnail(thumbnail)
@@ -1985,14 +1995,20 @@ class CreateFragment : Fragment() {
         window.animationStyle = R.style.pAnimation
         window.showAtLocation(usernameBinding.root, Gravity.CENTER, 0, 0)
         val usernameDatabase = UserAccountDatabase(context)
-        val usernameList = usernameDatabase.getAllUsernames()
-        usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
+        var usernameList = usernameDatabase.getAllUsernames()
+        if(usernameList.size >0) {
+            usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
+        }
+        else
+        {
+            usernameBinding.psnpNameCount.setText("No watermarks found, Add new Watermarks")
+        }
         val arrayList = prepareList()
         val spinner = usernameBinding.psnpSpinner
         val adapter = UsernameAdapter(context!!, 0, arrayList)
         val recycler = usernameBinding.psnpAvailableWatermarkRecycler
         recycler.layoutManager = LinearLayoutManager(context)
-        val recyclerClass = UserAccountRecycler(recycler)
+        val recyclerClass = UserAccountRecycler(recycler, usernameBinding.psnpNameCount)
         recycler.adapter = recyclerClass.adapter()
         recycler?.adapter?.notifyDataSetChanged()
         spinner.adapter = adapter
@@ -2007,6 +2023,14 @@ class CreateFragment : Fragment() {
                     if (!TextUtils.isEmpty(platform) && !TextUtils.isEmpty(username)) {
                         usernameDatabase.addAccount(platform, username)
                         usernameBinding.psnpNewName.setText("")
+                        usernameList = usernameDatabase.getAllUsernames()
+                        if(usernameList.size >0) {
+                            usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
+                        }
+                        else
+                        {
+                            usernameBinding.psnpNameCount.setText("No watermarks found, Add new Watermarks")
+                        }
                         recyclerClass.update()
 
                     }
@@ -2018,8 +2042,8 @@ class CreateFragment : Fragment() {
     }
 
     fun prepareList(): ArrayList<UsernameData> {
-        val icons = arrayOf(R.drawable.instagram, R.drawable.twitter, R.drawable.youtube)
-        val names = arrayOf("Instagram", "Twitter", "Youtube")
+        val icons = arrayOf(R.drawable.instagram, R.drawable.twitter, R.drawable.youtube,R.drawable.facebook)
+        val names = arrayOf("Instagram", "Twitter", "Youtube","Facebook")
         val list = arrayListOf<UsernameData>()
 
         for (n in 0 until names.size) {
@@ -2033,7 +2057,7 @@ class CreateFragment : Fragment() {
 
     }
 
-    inner class UserAccountRecycler(val recyclerView: RecyclerView) {
+    inner class UserAccountRecycler(val recyclerView: RecyclerView,val textView: TextView) {
         val userData = UserAccountDatabase(context)
         var arrayList = userData.getAllUsernames()
         val watermarkFunctions = WatermarkFunctions()
@@ -2049,26 +2073,50 @@ class CreateFragment : Fragment() {
                 holder.setImage(arrayList[position].getImageResourceId())
                 holder.setText(arrayList[position].getUsername())
                 holder.setIsRecyclable(false)
+                if (watermarkFunctions.isSelected(arrayList[position])) {
+                    holder.snpSelection.setImageResource(R.drawable.name_print_selected)
+                }
+                else
+                {
+                    holder.snpSelection.setImageResource(R.drawable.name_print_unselected)
+                }
                 holder.removeIcon.setOnClickListener {
                     userData.deleteAccount(
                         arrayList[position].getUsername(),
                         arrayList[position].platform
                     )
-                    holder.itemView.setOnClickListener {
-                        if (watermarkFunctions.isSelected(arrayList[position])) {
-                            Log.d(TAG, "onBindViewHolder: available at index = ${watermarkFunctions.getIndexIfAvailable(arrayList[position].getUsername(),arrayList[position].platform
-                                )}")
-                            Toast.makeText(context, "Deselecting", Toast.LENGTH_SHORT).show()
-                        } else {
-                            getNamePrint(
-                                arrayList[position].platform,
-                                arrayList[position].getUsername()
-                            )
-                            Toast.makeText(context, "Selecting", Toast.LENGTH_SHORT).show()
-                        }
-                    }
+
                     arrayList = userData.getAllUsernames()
+                    if(arrayList.size >0) {
+                        textView.setText("Saved Watermarks (${arrayList.size})")
+                    }
+                    else
+                    {
+                        textView.setText("No watermarks found, Add new Watermarks")
+                    }
                     recyclerView?.adapter?.notifyDataSetChanged()
+                }
+                holder.itemView.setOnClickListener {
+                    Log.d(TAG, "onBindViewHolder: clicked")
+                    if (watermarkFunctions.isSelected(arrayList[position])) {
+                        val index = watermarkFunctions.getIndexIfAvailable(
+                            arrayList[position].getUsername(),
+                            arrayList[position].platform
+                        )
+                        Log.d(
+                            TAG, "onBindViewHolder: available at index = $index"
+                        )
+                       deleteItemAt(index)
+                        notifyDataSetChanged()
+                        Toast.makeText(context, "Deselecting", Toast.LENGTH_SHORT).show()
+                    } else {
+                        getNamePrint(
+                            arrayList[position].platform,
+                            arrayList[position].getUsername()
+                        )
+                        notifyDataSetChanged()
+                        Toast.makeText(context, "Selecting", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
             }
@@ -2088,6 +2136,7 @@ class CreateFragment : Fragment() {
             private val image = itemView.findViewById<ImageView>(R.id.snp_Thumbnail)
             private val username = itemView.findViewById<TextView>(R.id.snp_Username)
             val removeIcon = itemView.findViewById<ImageView>(R.id.snp_delete)
+            val snpSelection = itemView.findViewById<ImageView>(R.id.snp_selection)
 
 
             fun setImage(res: Int) {
@@ -2107,9 +2156,11 @@ class CreateFragment : Fragment() {
             for (item in itemArray) {
                 if (item.type == "NAME_PRINT") {
                     if (item.usernameData == null) {
+                        Log.d(TAG, "isSelected: username data is null")
                         break;
                     }
                     if (data.getUsername() == item.usernameData!!.getUsername() && data.platform == item.usernameData!!.platform) {
+                        Log.d(TAG, "isSelected: selected")
                         return true
                     }
                 }
@@ -2130,22 +2181,23 @@ class CreateFragment : Fragment() {
             }
             return false
         }
-        fun getIndexIfAvailable(name:String,platform: String)
-        {
-            if(isSelected(name,platform))
-            {
-                for (n  in 0 until itemArray.size) {
+
+        fun getIndexIfAvailable(name: String, platform: String): Int {
+            var selectedIndex = -1
+            if (isSelected(name, platform)) {
+                for (n in 0 until itemArray.size) {
                     val item = itemArray[n]
                     if (item.type == "NAME_PRINT") {
                         if (item.usernameData == null) {
                             break;
                         }
                         if (name == item.usernameData!!.getUsername() && platform == item.usernameData!!.platform) {
-
+                            selectedIndex = n
                         }
                     }
                 }
             }
+            return selectedIndex
         }
 
     }
@@ -2160,4 +2212,5 @@ class CreateFragment : Fragment() {
 
     }
 
+    // TODO: 13/07/21 disable custom sizing on name print watermarks
 }

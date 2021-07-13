@@ -15,12 +15,16 @@ public class UsernameData {
             case "Instagram":
                 setImageResourceId(R.drawable.instagram);
                 break;
+            case "Facebook":
+                setImageResourceId(R.drawable.facebook);
+                break;
             case "Twitter":
                 setImageResourceId(R.drawable.twitter);
                 break;
             case "Youtube":
                 setImageResourceId(R.drawable.youtube);
                 break;
+
         }
     }
 

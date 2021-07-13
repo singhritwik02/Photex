@@ -81,13 +81,21 @@ class BitmapFunctions {
             var fileName = ""
             when(platform)
             {
-                "INSTAGRAM"->
+                "Instagram"->
                 {
                     fileName = "instagram.png"
                 }
-                "TWITTER"->
+                "Twitter"->
                 {
                    fileName = "twitter.png"
+                }
+                "Youtube"->
+                {
+                    fileName = "youtube.png"
+                }
+                "Facebook" ->
+                {
+                    fileName = "facebook.png"
                 }
             }
             val tempIcon = getBitmapFromAssets(context,fileName)
