@@ -1,19 +1,20 @@
 package com.ritwik.photex
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import android.widget.PopupWindow
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.ritwik.colortest.ColorDatabase
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
+import com.mopub.common.MoPub
+import com.mopub.common.SdkConfiguration
+import com.mopub.common.SdkInitializationListener
+import com.mopub.common.logging.MoPubLog
+import com.mopub.mobileads.MoPubErrorCode
+import com.mopub.mobileads.MoPubView
+import com.mopub.mobileads.VastResource
 import com.ritwik.photex.databinding.FragmentHomeBinding
-import com.ritwik.photex.databinding.PopupChooseColorBinding
-import com.ritwik.photex.databinding.SingleColorBinding
 
 
 class HomeFragment : Fragment() {
@@ -21,6 +22,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private  var containerId:Int = 0
     private lateinit var fragment: Fragment
+    private lateinit var adView:AdView
+    private lateinit var moPubView: MoPubView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,6 +31,36 @@ class HomeFragment : Fragment() {
         containerId = container?.id!!
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
+        val bannerListener = object:MoPubView.BannerAdListener
+        {
+            override fun onBannerLoaded(p0: MoPubView) {
+                Log.d(TAG, "onBannerLoaded: ")
+            }
+
+            override fun onBannerFailed(p0: MoPubView?, p1: MoPubErrorCode?) {
+                Log.d(TAG, "onBannerFailed: ")
+                Log.d(TAG, "onBannerFailed: Error = ${p1?.name}, code = ${p1?.intCode}")
+            }
+
+            override fun onBannerClicked(p0: MoPubView?) {
+                Log.d(TAG, "onBannerClicked: ")
+            }
+
+            override fun onBannerCollapsed(p0: MoPubView?) {
+                Log.d(TAG, "onBannerCollapsed: ")
+            }
+
+            override fun onBannerExpanded(p0: MoPubView?) {
+                Log.d(TAG, "onBannerExpanded: ")
+            }
+
+        }
+        moPubView = binding.fhBanner
+        moPubView.bannerAdListener = bannerListener
+        moPubView.setAdUnitId("b195f8dd8ded45fe847ad89ed1d016da");
+        moPubView.adSize = MoPubView.MoPubAdSize.HEIGHT_90// Call this if you want to set an ad size programmatically
+        moPubView.loadAd();
+
         binding.fhBlankButton
             .setOnClickListener {
 
@@ -55,6 +88,31 @@ class HomeFragment : Fragment() {
            }
 
         }
+    val  configBuilder =  SdkConfiguration.Builder("fa12054b7ca14736ae59d8bba5b66217");
+
+        configBuilder.withLogLevel(MoPubLog.LogLevel.NONE);
+        val listener =object :SdkInitializationListener
+        {
+            override fun onInitializationFinished() {
+                Log.d(TAG, "onInitializationFinished: ")
+
+            }
+
+        }
+        MoPub.initializeSdk(context!!, configBuilder.build(), listener);
+
+
+// Find the Ad Container
+
+// Find the Ad Container
+
+// Add the ad view to your activity layout
+
+// Add the ad view to your activity layout
+
+// Request an ad
+
+// Request an ad
         return binding.root
     }
 

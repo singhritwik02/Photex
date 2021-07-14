@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 270 270">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+
+      .cls-3 {
+        filter: url(#Rectangle_75);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.065" y1="0.033" x2="0.963" y2="0.95" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#fff7c1"/>
+    </linearGradient>
+    <filter id="Rectangle_75" x="0" y="0" width="270" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="icon" transform="translate(-885 -1080)">
+    <g class="cls-3" transform="matrix(1, 0, 0, 1, 885, 1080)">
+      <rect id="Rectangle_75-2" data-name="Rectangle 75" class="cls-1" width="252" height="252" rx="25" transform="translate(9 6)"/>
+    </g>
+    <g id="format_paint_black_24dp" transform="translate(1065.075 1262.075) rotate(180)">
+      <path id="Path_105" data-name="Path 105" class="cls-2" d="M0,0H90.149V90.149H0Z"/>
+      <path id="Path_106" data-name="Path 106" d="M56.587,9.512V5.756A3.767,3.767,0,0,0,52.831,2H7.756A3.767,3.767,0,0,0,4,5.756V20.781a3.767,3.767,0,0,0,3.756,3.756H52.831a3.767,3.767,0,0,0,3.756-3.756V17.025h3.756V32.05H22.781V73.368a3.767,3.767,0,0,0,3.756,3.756H34.05a3.767,3.767,0,0,0,3.756-3.756V39.562h30.05V9.512Zm-7.512,7.512H11.512V9.512H49.075Z" transform="translate(11.025 5.512)"/>
+    </g>
+    <image id="Symbol_2_1" data-name="Symbol 2 – 1" width="93" height="37" transform="translate(974 1112)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF0AAAAlCAYAAAAgAOVvAAAAAXNSR0IArs4c6QAABUFJREFUaAXtmGmIlVUcxkfbDCqJVm2zLDJbppVsVYk+2IdC+1BCYDtkkWBpfZAgCC2KooUWoijKyBZKiciIiKKiRdLEhpJspqmIVmdKyzLr99B7Ls/859xlyoYbnD88nP96zvs+79nu7egoUhgoDBQGCgOFgcJAYeD/xMCIrfywl9PfNtbn2+grzS4qDDjp+zVgpJ9YX4N4Cv2CMioZtPPBrWYXFQa2rVjYgfbzJoxsIP4leBHcC9aCIv+CAZH+5xCwhdzcDNZM937mYRcJDIwMdqumtqVrwdxWC4Y5733G+92wcJjHbzhc2l5ySV043wIieDQ4GYwBLnqZu4FesJ1E7+Xv9k8n13/yTv5gcYDXcMw2p24lj4GZ5tO21Ak0s4q0yEAj0mMXf+C4BzjpyjkWNCJ9e+JngzPAEWA1eB08CZrJNBKmgsPBONAN1gDVvwCiXIVD4+0RAidgp63wU/SlIa7VPANoNR8F9gYfgVVgMegBLpdh7OwO9CVAF40k26FcAZzjTdj3p4TcQaobSpTpOPyglH6OJcWDdAGxZZka1Yl0v15i1uRQtOUgjuX2K8Qn1ir+Vvqb1Kg+En4YPn1E79t19XkpcNHE8xzprwJ9vCSLUGLOlSmothnp6mwq0BePHe2FL0kk/WcCMd/t61OhtQej/9SkLvWxgTyRlmSopE+gcCNI/TVq56RBqva+TN01VWwyrXYG708rYYDkSNeLi+ReEMlMnX0woJf6eSJDh22qS+3X+Hz5aUm+m8n7Dd/HQG2qTa1+8er5Jdq6PgNaximutq/yK/YgkOiMimNpxs8A2gofAj5p1McYkERjrgA+zq/Yp4E4OT/BF7ej7Ez3znL6V3Q0DrjkPs4sEkYADfoGiH2Nx5fkYpQY1za3Y5Wg7eiuTI72cpd3MLyfmz1Y6ReFHBGuD+EyH8P7ucOD6AeB9SFnc7DFSSeoycia1rqih3gZnAm6QSPpIvgoUI1Wzm0gygHmmGS61PeA9kE9uEQz6WogglxOdKNFPTfWFGo1yxO0El2OcQN9Hbgw+OKH0/Ou8hxf2u6X/g3oqZw/0PZW9tO0WuqtSLxhdGeK0tag0HEh/gy2PliUJ3Ccbs5YZ6G6aiRwLplCI/HzI+U9j3I7yNUuxp+2s5Q/YD+tOSvlWdrZ0TlE+9uQ3+xH1O4h/8dgJ1OTwCVeET1WTx9bL9DAvyexnYD2epfd3DB9V3RtrQMmTqOZbrXDpupQ3N9GOx590EzBJ79LPNA9Vk9fQ2AfCz6H3ko/OsxdLsGY5Q7Tz0LXuXCL+Wqqlri+hkMH2FBFe6/3MS90MDHElTvNcm4Ice3hR1pc6njQD3ycRQqYvInu8SUWS6pqPEfbRE6OzjkrXydtfOd4kGp160YzSNqFdH0UEe1kiOCFYCa4EXwPPK6ZF4l5KuRoO7oA6IMdCCSngi3A+3ocewLQ1VV93gkUXw50U3HZBWMt8Pr12KcAjef+L7AHbYHtQjrP1jEnPLA/fE6/TkVB4orxupssV7cpjyU9fgz5N4KTrDYd8qlG7flV/Dxa90vXhxtwW2wn0nXwPAByLx5f5OH4ItgSHWx9IObL9ju7/qd5qU6e1+pZtDcnyU2MR1KwarVqvA/pCzynnUhPz6Xlr4MtPrjsD8Fk0Eh0JVwJYn3uUDuXvHWZXG1dK8B0kGQSivzer7YZ3WpcRmP0AM/bjD1Fs6rdRbNWh6n2YxGzGnwHWpWxJB4CRoFe0AVERE72xalzRa1uN/pom0CRwkBhoDBQGCgMFAYKA4WBwkBhoDBQGNjaDPwFgO5UdZehS3kAAAAASUVORK5CYII="/>
+  </g>
+</svg>

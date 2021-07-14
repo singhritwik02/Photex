@@ -143,7 +143,9 @@ class CreateFragment : Fragment() {
 //                        }
                         val cropClass = PopupImageCrop(context!!, it)
                         {
-
+                            mainBitmap = it
+                            setMainBitmapAs(it)
+                            modifiedBitmap = mainBitmap
                         }
                         cropClass.showWindow()
 
@@ -853,19 +855,23 @@ class CreateFragment : Fragment() {
                             stickerLinks.clear()
                             stickerRecycler.adapter.notifyDataSetChanged()
                             for (child in snapshot.children) {
+
                                 if (TextUtils.isEmpty(searchString)) {
+
                                     Log.d(TAG, "onDataChange: No search string")
                                     if (this@StickerPopup::stickerRecycler.isInitialized) {
                                         stickerRecycler.addLink(child.value.toString())
                                     }
                                 } else {
-                                    if (child.key?.contains(searchString) == true) {
+                                    if (child.key?.contains(searchString, true) == true) {
+
                                         Log.d(TAG, "onDataChange: searching for $searchString")
                                         if (this@StickerPopup::stickerRecycler.isInitialized) {
                                             Log.d(
                                                 TAG,
                                                 "onDataChange: found ${child.key ?: "no key found"}"
                                             )
+
                                             stickerRecycler.addLink(child.value.toString())
                                         }
                                     }
@@ -1319,12 +1325,9 @@ class CreateFragment : Fragment() {
         if (selectedItem == null) {
             return
         }
-        if(selectedItem!!.type == "NAME_PRINT")
-        {
+        if (selectedItem!!.type == "NAME_PRINT") {
             srpBinding.pcsCustomSizeLayout.visibility = View.GONE
-        }
-        else
-        {
+        } else {
             srpBinding.pcsCustomSizeLayout.visibility = View.VISIBLE
         }
         when (selectedItem!!.stickerDimension) {
@@ -1996,11 +1999,9 @@ class CreateFragment : Fragment() {
         window.showAtLocation(usernameBinding.root, Gravity.CENTER, 0, 0)
         val usernameDatabase = UserAccountDatabase(context)
         var usernameList = usernameDatabase.getAllUsernames()
-        if(usernameList.size >0) {
+        if (usernameList.size > 0) {
             usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
-        }
-        else
-        {
+        } else {
             usernameBinding.psnpNameCount.setText("No watermarks found, Add new Watermarks")
         }
         val arrayList = prepareList()
@@ -2024,11 +2025,9 @@ class CreateFragment : Fragment() {
                         usernameDatabase.addAccount(platform, username)
                         usernameBinding.psnpNewName.setText("")
                         usernameList = usernameDatabase.getAllUsernames()
-                        if(usernameList.size >0) {
+                        if (usernameList.size > 0) {
                             usernameBinding.psnpNameCount.setText("Saved Watermarks (${usernameList.size})")
-                        }
-                        else
-                        {
+                        } else {
                             usernameBinding.psnpNameCount.setText("No watermarks found, Add new Watermarks")
                         }
                         recyclerClass.update()
@@ -2042,8 +2041,13 @@ class CreateFragment : Fragment() {
     }
 
     fun prepareList(): ArrayList<UsernameData> {
-        val icons = arrayOf(R.drawable.instagram, R.drawable.twitter, R.drawable.youtube,R.drawable.facebook)
-        val names = arrayOf("Instagram", "Twitter", "Youtube","Facebook")
+        val icons = arrayOf(
+            R.drawable.instagram,
+            R.drawable.twitter,
+            R.drawable.youtube,
+            R.drawable.facebook
+        )
+        val names = arrayOf("Instagram", "Twitter", "Youtube", "Facebook")
         val list = arrayListOf<UsernameData>()
 
         for (n in 0 until names.size) {
@@ -2057,7 +2061,7 @@ class CreateFragment : Fragment() {
 
     }
 
-    inner class UserAccountRecycler(val recyclerView: RecyclerView,val textView: TextView) {
+    inner class UserAccountRecycler(val recyclerView: RecyclerView, val textView: TextView) {
         val userData = UserAccountDatabase(context)
         var arrayList = userData.getAllUsernames()
         val watermarkFunctions = WatermarkFunctions()
@@ -2075,9 +2079,7 @@ class CreateFragment : Fragment() {
                 holder.setIsRecyclable(false)
                 if (watermarkFunctions.isSelected(arrayList[position])) {
                     holder.snpSelection.setImageResource(R.drawable.name_print_selected)
-                }
-                else
-                {
+                } else {
                     holder.snpSelection.setImageResource(R.drawable.name_print_unselected)
                 }
                 holder.removeIcon.setOnClickListener {
@@ -2087,11 +2089,9 @@ class CreateFragment : Fragment() {
                     )
 
                     arrayList = userData.getAllUsernames()
-                    if(arrayList.size >0) {
+                    if (arrayList.size > 0) {
                         textView.setText("Saved Watermarks (${arrayList.size})")
-                    }
-                    else
-                    {
+                    } else {
                         textView.setText("No watermarks found, Add new Watermarks")
                     }
                     recyclerView?.adapter?.notifyDataSetChanged()
@@ -2106,7 +2106,7 @@ class CreateFragment : Fragment() {
                         Log.d(
                             TAG, "onBindViewHolder: available at index = $index"
                         )
-                       deleteItemAt(index)
+                        deleteItemAt(index)
                         notifyDataSetChanged()
                         Toast.makeText(context, "Deselecting", Toast.LENGTH_SHORT).show()
                     } else {

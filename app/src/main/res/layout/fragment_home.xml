@@ -15,6 +15,14 @@
         android:id="@+id/fh_TopLabel"
         android:layout_margin="16dp"
         />
+    <com.mopub.mobileads.MoPubView
+        android:layout_width='320dp'
+        android:layout_height='50dp'
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/fh_Banner"
+        app:layout_constraintTop_toBottomOf="@id/fh_TopLabel"
+        app:moPubAdSize='match_view'></com.mopub.mobileads.MoPubView>
     <ImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
