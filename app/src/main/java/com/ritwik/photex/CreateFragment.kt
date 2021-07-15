@@ -29,6 +29,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ritwik.photex.databinding.*
+import com.unity3d.services.banners.BannerErrorInfo
+import com.unity3d.services.banners.BannerView
+import com.unity3d.services.banners.UnityBannerSize
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -65,6 +68,7 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val bundle = arguments
+        setUpBannerAd()
 
         if (container != null) {
             fragmentContainer = container.id
@@ -230,6 +234,34 @@ class CreateFragment : Fragment() {
         }
         if (bitmap != null) {
             watermarkBitmap = BitmapFunctions.getResizedBitmap(bitmap, mainBitmap, 0.05F, "H")
+        }
+
+    }
+    fun setUpBannerAd()
+    {
+        val bottomBanner = BannerView(activity!!,"Banner_Android", UnityBannerSize.getDynamicSize(context!!))
+        val bannerListener = BannerListener()
+        bottomBanner.listener = bannerListener
+        bottomBanner.load()
+        // adding the banner ad to the layout
+        (binding.fcBannerContainer as ViewGroup).addView(bottomBanner)
+    }
+    inner class BannerListener:BannerView.IListener
+    {
+        override fun onBannerLoaded(p0: BannerView?) {
+            Log.d(TAG, "onBannerLoaded: ")
+        }
+
+        override fun onBannerClick(p0: BannerView?) {
+            Log.d(TAG, "onBannerClick: ")
+        }
+
+        override fun onBannerFailedToLoad(p0: BannerView?, p1: BannerErrorInfo?) {
+            Log.d(TAG, "onBannerFailedToLoad: ")
+        }
+
+        override fun onBannerLeftApplication(p0: BannerView?) {
+            Log.d(TAG, "onBannerLeftApplication: ")
         }
 
     }

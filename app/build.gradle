@@ -36,6 +36,11 @@ android {
     }
 
 }
+repositories {
+    maven {
+        url  "https://android-sdk.is.com/"
+    }
+}
 
 
 dependencies {
@@ -48,6 +53,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-auth:20.0.4'
     implementation 'com.google.firebase:firebase-storage:20.0.0'
+    implementation files('/Users/ritwiksingh/Downloads/unity_ads.aar')
+    implementation files('/Users/ritwiksingh/Downloads/unity_ads.aar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -65,9 +72,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0' //bumped from 4.8.0 to 4.9.0
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation "com.github.skydoves:colorpickerview:2.2.3"
-    implementation 'com.facebook.android:audience-network-sdk:6.5.1'
-    implementation('com.mopub:mopub-sdk:5.17.0@aar') {
-        transitive = true
-    }
-    implementation 'com.mopub.mediation:facebookaudiencenetwork:6.5.1.0'
+
+// Add Facebook Network
+
+
 }

@@ -7,13 +7,10 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
-import com.facebook.ads.AdSettings
-import com.facebook.ads.AudienceNetworkAds
-import com.facebook.ads.AudienceNetworkAds.InitListener
-import com.facebook.ads.AudienceNetworkAds.InitResult
-import com.ritwik.photex.BuildConfig.DEBUG
 import com.ritwik.photex.databinding.ActivityMainBinding
 import com.ritwik.photex.databinding.PopupExitConfirmationBinding
+import com.unity3d.ads.IUnityAdsListener;
+import com.unity3d.ads.UnityAds;
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,35 +31,9 @@ class MainActivity : AppCompatActivity() {
 
         val view = binding.root
         setContentView(view)
-        AudienceNetworkAds.initialize(this);
 
     }
-    class AudienceNetworkInitializeHelper : InitListener {
-        override fun onInitialized(result: InitResult) {
-            Log.d(AudienceNetworkAds.TAG, result.message)
-        }
 
-        companion object {
-            /**
-             * It's recommended to call this method from Application.onCreate().
-             * Otherwise you can call it from all Activity.onCreate()
-             * methods for Activities that contain ads.
-             *
-             * @param context Application or Activity.
-             */
-            fun initialize(context: Context?) {
-                if (!AudienceNetworkAds.isInitialized(context)) {
-                    if (DEBUG) {
-                        AdSettings.turnOnSDKDebugger(context)
-                    }
-                    AudienceNetworkAds
-                        .buildInitSettings(context)
-                        .withInitListener(AudienceNetworkInitializeHelper())
-                        .initialize()
-                }
-            }
-        }
-    }
     fun showExitConfirmation(fragment: CreateFragment)
     {
         val confirmationBinding = PopupExitConfirmationBinding.inflate(layoutInflater)
@@ -128,6 +99,15 @@ class MainActivity : AppCompatActivity() {
     companion object
     {
         private const val TAG = "MainActivity"
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
 }
