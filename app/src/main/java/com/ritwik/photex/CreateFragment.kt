@@ -29,6 +29,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.ritwik.photex.databinding.*
+import com.unity3d.ads.IUnityAdsListener
+import com.unity3d.ads.UnityAds
 import com.unity3d.services.banners.BannerErrorInfo
 import com.unity3d.services.banners.BannerView
 import com.unity3d.services.banners.UnityBannerSize
@@ -216,6 +218,22 @@ class CreateFragment : Fragment() {
                 }
                 true
             }
+        val myAdsListener = UnityAdsListener()
+        // Add the listener to the SDK:
+        // Add the listener to the SDK:
+        UnityAds.addListener(myAdsListener)
+        // Initialize the SDK:
+        // Initialize the SDK:
+        UnityAds.initialize(context, "4218265", false)
+        binding.fcSaveButton
+            .setOnClickListener {
+                if (UnityAds.isReady ("Interstitial_Android")) {
+                    UnityAds.show (activity, "Interstitial_Android");
+                }
+
+                saveImage()
+            }
+
 
         return binding.root
     }
@@ -2241,6 +2259,25 @@ class CreateFragment : Fragment() {
         layerRecycler.updateAdapter()
         reDrawBitmap()
         selectedItem = null
+
+    }
+    inner class InterstitialListener:IUnityAdsListener
+    {
+        override fun onUnityAdsReady(p0: String?) {
+            Log.d(TAG, "onUnityAdsReady: ")
+        }
+
+        override fun onUnityAdsStart(p0: String?) {
+            Log.d(TAG, "onUnityAdsStart: ")
+        }
+
+        override fun onUnityAdsFinish(p0: String?, p1: UnityAds.FinishState?) {
+            Log.d(TAG, "onUnityAdsFinish: ")
+        }
+
+        override fun onUnityAdsError(p0: UnityAds.UnityAdsError?, p1: String?) {
+            Log.d(TAG, "onUnityAdsError: ")
+        }
 
     }
 

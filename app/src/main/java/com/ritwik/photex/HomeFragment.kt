@@ -37,8 +37,7 @@ class HomeFragment : Fragment() {
 
                     val bundle = Bundle()
                     bundle.putString("MODE","BLANK")
-                       // showCreateFragment(bundle)
-                DisplayInterstitialAd()
+                        showCreateFragment(bundle)
 
 
 
@@ -50,37 +49,33 @@ class HomeFragment : Fragment() {
                 bundle.putString("MODE","GALLERY")
                 showCreateFragment(bundle)
             }
+
+        UnityAds.initialize (context, "4218265", false);
+        val banner = setUpTopBanner()
         binding.fhTemplateButton.setOnClickListener {
-           activity?.let {
-               if (container != null) {
-                   it.supportFragmentManager.beginTransaction().replace(container.id, Template(),"TEMPLATE_FRAGMENT").addToBackStack("")
-                       .commit()
-               }
-           }
+            activity?.let {
+                if (container != null) {
+                    it.supportFragmentManager.beginTransaction().replace(container.id, Template(),"TEMPLATE_FRAGMENT").addToBackStack("")
+                        .commit()
+                    banner.destroy()
+                }
+            }
 
         }
 
-        val myAdsListener = UnityAdsListener()
-        UnityAds.addListener(myAdsListener)
-        UnityAds.initialize (activity, "4218265", myAdsListener, true);
-        setUpTopBanner()
-
         return binding.root
     }
-    fun setUpTopBanner()
+    fun setUpTopBanner():BannerView
     {
         val topBanner = BannerView(activity!!,"Home_Screen_Banner", UnityBannerSize(320,50))
         val bannerListener = topBannerListener()
         topBanner.listener = bannerListener
         topBanner.load()
         (binding.fhBanner as ViewGroup).addView(topBanner)
+        return topBanner
     }
 
 
-    fun DisplayInterstitialAd() {
-            UnityAds.show(activity, "Interstitial_Android")
-
-    }
     inner class topBannerListener:BannerView.IListener
     {
         override fun onBannerLoaded(p0: BannerView?) {
@@ -99,27 +94,6 @@ class HomeFragment : Fragment() {
             Log.d(TAG, "onBannerLeftApplication: ")
         }
 
-    }
-    inner class UnityAdsListener : IUnityAdsListener {
-        override fun onUnityAdsReady(surfacingId: String) {
-            // Implement functionality for an ad being ready to show.
-            Log.d(TAG, "InterstitialonUnityAdsReady: ")
-        }
-
-        override fun onUnityAdsStart(surfacingId: String) {
-            // Implement functionality for a user starting to watch an ad.
-            Log.d(TAG, "InterstitialonUnityAdsStart: ")
-        }
-
-        override fun onUnityAdsFinish(surfacingId: String, finishState: FinishState) {
-            // Implement functionality for a user finishing an ad.
-            Log.d(TAG, "InterstitialonUnityAdsFinish: ")
-        }
-
-        override fun onUnityAdsError(error: UnityAdsError, message: String) {
-            // Implement functionality for a Unity Ads service error occurring.
-            Log.d(TAG, "InterstitialonUnityAdsError: $message")
-        }
     }
     companion object {
         private const val TAG = "HomeFragment"

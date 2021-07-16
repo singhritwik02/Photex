@@ -50,9 +50,9 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
             .setOnClickListener {
                 fragment.deleteItem()
             }
-        binding.fmmSaveImage
+        binding.fmmAddWatermarkButton
             .setOnClickListener {
-                fragment.saveImage()
+                fragment.showUsernames()
             }
         binding.fmmStickerSettings.setOnClickListener {
             fragment.stickerPopup.showPopup()
@@ -61,8 +61,8 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
             fragment.showAlphaPopup()
         }
         binding.fmmAddImage.setOnClickListener {
-           // fragment.chooseImage(1024)
-            fragment.showUsernames()
+            fragment.chooseImage(1024)
+
         }
 
         return binding.root

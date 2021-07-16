@@ -163,9 +163,9 @@
                     android:layout_width="0dp"
                     android:layout_weight="10"
                     android:layout_gravity="center"
-                    android:id="@+id/fmm_SaveImage"
+                    android:id="@+id/fmm_AddWatermarkButton"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/save_button"
+                    android:src="@drawable/watermark_button"
                     />
 
             </LinearLayout>
