@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <TextView
+        android:id="@+id/ft_TopLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Templates"
-        android:fontFamily="@font/avenir_next_bold"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="16dp"
+        android:fontFamily="@font/avenir_next_bold"
+        android:text="Templates"
+        android:textColor="@color/black"
         android:textSize="24sp"
-        android:id="@+id/ft_TopLabel"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <EditText
+        android:id="@+id/ft_SearchField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
-android:background="@drawable/search_back"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/search_back"
         android:drawableStart="@drawable/search_icon"
-        android:padding="16dp"
-        android:fontFamily="@font/avenir_next_bold"
+        android:fontFamily="@font/avenir_next_regular"
         android:hint="search"
-        android:id="@+id/ft_SearchField"
+        android:padding="16dp"
+        android:textSize="14sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/ft_TopLabel"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ft_TopLabel" />
+
     <TextView
+        android:id="@+id/ft_TemplateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loading Templates"
-        android:fontFamily="@font/avenir_next_bold"
-        android:textColor="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ft_SearchField"
         android:layout_marginTop="8dp"
-        android:id="@+id/ft_TemplateLabel"
-        />
+        android:fontFamily="@font/avenir_next_bold"
+        android:text="Loading Templates"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ft_SearchField" />
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ft_Recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ft_TemplateLabel"
-        app:layout_constrainedHeight="true"
         android:layout_margin="8dp"
-        android:id="@+id/ft_Recycler"
-        />
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ft_TemplateLabel" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

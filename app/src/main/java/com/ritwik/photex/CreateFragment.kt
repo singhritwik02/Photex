@@ -105,7 +105,6 @@ class CreateFragment : Fragment() {
                 binding.fcWaitingImage.visibility = View.GONE
                 chooseImage(GALLERY_IMAGE)
 
-
             }
         }
         binding.root.post {
@@ -123,8 +122,6 @@ class CreateFragment : Fragment() {
         } else if (this::imageLink.isInitialized) {
             getBitmapFromURL(imageLink)
             {
-
-
                 if (it != null) {
                     mainBitmap = it
                 }
@@ -133,20 +130,6 @@ class CreateFragment : Fragment() {
                     setMainBitmapAs(it)
                     val chooseColorClass = context?.let { ChooseColorClass(it) }
                     binding.root.post {
-
-//                        chooseColorClass?.showChooseColorPopup("TEMPLATE", it)
-//                        {
-//                            mainBitmap = it
-//                            binding.fcMainImage.setImageBitmap(it)
-//                            Log.d(
-//                                TAG,
-//                                "onCreateView: image View width = ${binding.fcMainImage.width}, height = ${binding.fcMainImage.height}"
-//                            )
-//                            Log.d(
-//                                TAG,
-//                                "onCreateView: bitmap width = ${it.height}, height  = ${it.height}"
-//                            )
-//                        }
                         val cropClass = PopupImageCrop(context!!, it)
                         {
                             mainBitmap = it
@@ -1616,6 +1599,19 @@ class CreateFragment : Fragment() {
             }
         }
         if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK) {
+            if(data == null)
+            {
+                Toast.makeText(
+                    context,
+                    "Unable to load image,Please try again!!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                context?.let {
+                    activity!!.supportFragmentManager.beginTransaction()
+                        .replace(fragmentContainer, HomeFragment(), "HOME_FRAGMENT").commit()
+                }
+                Log.d(TAG, "onActivityResult: Bitmap is null")
+            }
             data?.let {
                 Log.d(TAG, "onActivityResult: Getting bitmap from uri, data is not null")
                 val bitmap = it.data?.let { it1 -> getBitmapFromUri(it1) }
@@ -1644,6 +1640,14 @@ class CreateFragment : Fragment() {
                     Log.d(TAG, "onActivityResult: Bitmap is null")
                 }
             }
+        }
+        if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_CANCELED)
+        {
+            context?.let {
+                activity!!.supportFragmentManager.beginTransaction()
+                    .replace(fragmentContainer, HomeFragment(), "HOME_FRAGMENT").commit()
+            }
+            Log.d(TAG, "onActivityResult: Cancelled")
         }
     }
 
