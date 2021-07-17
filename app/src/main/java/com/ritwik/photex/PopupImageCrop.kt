@@ -120,7 +120,7 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
         if (!this::toReturnBitmap.isInitialized) {
             toReturnBitmap = bitmap
         }
-        val topHeight = 0.2 * toReturnBitmap.height
+        val topHeight = 0.4 * toReturnBitmap.height
         // creating a new Bitmap
         val tempBitmap = Bitmap.createBitmap(
             toReturnBitmap.width,
@@ -161,7 +161,7 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
         if (!this::toReturnBitmap.isInitialized) {
             toReturnBitmap = bitmap
         }
-        val bottomHeight = 0.2 * toReturnBitmap.height
+        val bottomHeight = 0.4 * toReturnBitmap.height
         // creating a new Bitmap
         val tempBitmap = Bitmap.createBitmap(
             toReturnBitmap.width,
