@@ -1288,7 +1288,7 @@ class CreateFragment : Fragment() {
         Log.d(TAG, "saveImage: Saving image as $name")
         contentValues.apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/*")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
             }

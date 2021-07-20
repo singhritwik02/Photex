@@ -68,6 +68,7 @@ class HomeFragment : Fragment() {
                         .replace(container.id, Template(), "TEMPLATE_FRAGMENT").addToBackStack("")
                         .commit()
                     banner.destroy()
+
                 }
             }
 
