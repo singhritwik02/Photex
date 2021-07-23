@@ -207,11 +207,11 @@ class CreateFragment : Fragment() {
         UnityAds.addListener(myAdsListener)
         // Initialize the SDK:
         // Initialize the SDK:
-        UnityAds.initialize(context, "4218265", false)
+        UnityAds.initialize(context, "4218265", true)
         binding.fcSaveButton
             .setOnClickListener {
-                if (UnityAds.isReady ("Interstitial_Android")) {
-                    UnityAds.show (activity, "Interstitial_Android");
+                if (UnityAds.isReady("Interstitial_Android")) {
+                    UnityAds.show(activity, "Interstitial_Android");
                 }
 
                 saveImage()
@@ -238,17 +238,18 @@ class CreateFragment : Fragment() {
         }
 
     }
-    fun setUpBannerAd()
-    {
-        val bottomBanner = BannerView(activity!!,"Banner_Android", UnityBannerSize.getDynamicSize(context!!))
+
+    fun setUpBannerAd() {
+        val bottomBanner =
+            BannerView(activity!!, "Banner_Android", UnityBannerSize.getDynamicSize(context!!))
         val bannerListener = BannerListener()
         bottomBanner.listener = bannerListener
         bottomBanner.load()
         // adding the banner ad to the layout
         (binding.fcBannerContainer as ViewGroup).addView(bottomBanner)
     }
-    inner class BannerListener:BannerView.IListener
-    {
+
+    inner class BannerListener : BannerView.IListener {
         override fun onBannerLoaded(p0: BannerView?) {
             Log.d(TAG, "onBannerLoaded: ")
         }
@@ -494,36 +495,56 @@ class CreateFragment : Fragment() {
 
                 val text = item.text
 
-                if (item.backgroundMargins != null) {
-                    val xMargin = item.backgroundMargins!!.marginX
-                    val yMargin = item.backgroundMargins!!.marginY
-                    val fontMetrics = paint.fontMetrics
-                    paint.getFontMetrics(fontMetrics)
-                    val rect = Rect(
-                        (item.locationX - xMargin).toInt(),
-                        (item.locationY + fontMetrics.top - yMargin).toInt(),
-                        (paint.measureText(text) + item.locationX + xMargin).toInt(),
-                        (fontMetrics.bottom + item.locationY + yMargin).toInt()
-                    )
-                    val bPaint = item.backgroundMargins!!.backPaint
-                    Log.d(TAG, "reDrawBitmap: textX = ${item.locationX},y = ${item.locationY}")
-                    Log.d(
-                        TAG,
-                        "reDrawBitmap: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
-                    )
-                    bPaint.alpha = item.backgroundAlpha
-                    canvas.drawRect(rect, bPaint)
-                    Log.d(TAG, "reDrawBitmap: Drawn Rect")
 
-                } else {
-                    Log.d(TAG, "reDrawBitmap: Null Back")
+                val lines: List<String> = text.split("\n")
+
+                var yoff = 0
+                var yMarginOff = 0
+                var backgroundHeight = 0
+                for (i in lines.indices) {
+                    yMarginOff = 0
+                    if (item.backgroundMargins != null) {
+                        val xMargin = item.backgroundMargins!!.marginX
+                        val fontMetrics = paint.fontMetrics
+                        //val yMargin = item.backgroundMargins!!.marginY
+                        val yMargin = 0.1*(fontMetrics.descent - fontMetrics.ascent)
+                        paint.getFontMetrics(fontMetrics)
+                        val rect = Rect(
+                            (item.locationX - xMargin).toInt(),
+                            (item.locationY + fontMetrics.top - yMargin + yoff).toInt(),
+                            (paint.measureText(lines[i]) + item.locationX + xMargin).toInt(),
+                            (fontMetrics.bottom + item.locationY + yMargin + yoff).toInt()
+                        )
+                        backgroundHeight = ((fontMetrics.bottom + item.locationY + yMargin + yoff)-(item.locationY + fontMetrics.top - yMargin + yoff)).toInt()
+                        yMarginOff=(backgroundHeight/2)
+
+                        val bPaint = item.backgroundMargins!!.backPaint
+                        Log.d(TAG, "reDrawBitmap: textX = ${item.locationX},y = ${item.locationY}")
+                        Log.d(
+                            TAG,
+                            "reDrawBitmap: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
+                        )
+                        bPaint.alpha = item.backgroundAlpha
+                        canvas.drawRect(rect, bPaint)
+                        Log.d(TAG, "reDrawBitmap: Drawn Rect")
+
+
+                    } else {
+                        Log.d(TAG, "reDrawBitmap: Null Back")
+                    }
+                    canvas.drawText(lines[i], item.locationX, item.locationY + yoff, paint)
+                    paint.getTextBounds(lines[i], 0, lines[i].length, bounds)
+
+                    item.strokePaint?.let {
+                        it.textSize = paint.textSize
+                        it.typeface = paint.typeface
+                        canvas.drawText(lines[i], item.locationX, item.locationY + yoff, it)
+                    }
+
+                    yoff += bounds.height() + yMarginOff
                 }
-                canvas.drawText(text, item.locationX, item.locationY, paint)
-                item.strokePaint?.let {
-                    it.textSize = paint.textSize
-                    it.typeface = paint.typeface
-                    canvas.drawText(text, item.locationX, item.locationY, it)
-                }
+
+
                 if (item.rotation != 0f) {
                     canvas.restore()
                 }
@@ -1402,12 +1423,23 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsSmall.animate().alpha(1f).setDuration(150)
 
             }
+            if (selectedItem!!.type == "NAME_PRINT") {
+                val details = selectedItem!!.usernameData!!
+                val platfrom = details.platform
+                val name = details.username
+                val temp =
+                    BitmapFunctions.createWatermark(context!!, platfrom, name, mainBitmap, 0.5f)
+                if (temp != null) {
+                    selectedItem!!.setStickerBitmap(temp)
+                }
+                reDrawBitmap()
+                return@setOnClickListener
+            }
             val temp = resizeBitmap(0.5f)
             sticker = temp
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1416,6 +1448,7 @@ class CreateFragment : Fragment() {
 
         }
         srpBinding.pcsOriginal.setOnClickListener {
+
             srpBinding.pcsLarge.setBackgroundResource(0)
             srpBinding.pcsMedium.setBackgroundResource(0)
             srpBinding.pcsOriginal.animate().alpha(0.2f).setDuration(150).withEndAction {
@@ -1424,12 +1457,23 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsOriginal.animate().alpha(1f).duration = 150
             }
             srpBinding.pcsSmall.setBackgroundResource(0)
+            if (selectedItem!!.type == "NAME_PRINT") {
+                val details = selectedItem!!.usernameData!!
+                val platfrom = details.platform
+                val name = details.username
+                val temp =
+                    BitmapFunctions.createWatermark(context!!, platfrom, name, mainBitmap, 1f)
+                if (temp != null) {
+                    selectedItem!!.setStickerBitmap(temp)
+                }
+                reDrawBitmap()
+                return@setOnClickListener
+            }
             val temp = resizeBitmap(1f)
             sticker = temp
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1437,6 +1481,7 @@ class CreateFragment : Fragment() {
             selectedItem!!.stickerDimension = "ORIGINAL"
         }
         srpBinding.pcsMedium.setOnClickListener {
+
             srpBinding.pcsLarge.setBackgroundResource(0)
             srpBinding.pcsMedium.animate().alpha(0.2f).withEndAction {
 
@@ -1445,12 +1490,23 @@ class CreateFragment : Fragment() {
             }
             srpBinding.pcsOriginal.setBackgroundResource(0)
             srpBinding.pcsSmall.setBackgroundResource(0)
+            if (selectedItem!!.type == "NAME_PRINT") {
+                val details = selectedItem!!.usernameData!!
+                val platfrom = details.platform
+                val name = details.username
+                val temp =
+                    BitmapFunctions.createWatermark(context!!, platfrom, name, mainBitmap, 1.5f)
+                if (temp != null) {
+                    selectedItem!!.setStickerBitmap(temp)
+                }
+                reDrawBitmap()
+                return@setOnClickListener
+            }
             val temp = resizeBitmap(1.5f)
             sticker = temp
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1458,6 +1514,7 @@ class CreateFragment : Fragment() {
             selectedItem!!.stickerDimension = "MEDIUM"
         }
         srpBinding.pcsLarge.setOnClickListener {
+
             srpBinding.pcsLarge.animate().alpha(0.2f).setDuration(150).withEndAction {
 
                 srpBinding.pcsLarge.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
@@ -1466,12 +1523,23 @@ class CreateFragment : Fragment() {
             srpBinding.pcsMedium.setBackgroundResource(0)
             srpBinding.pcsOriginal.setBackgroundResource(0)
             srpBinding.pcsSmall.setBackgroundResource(0)
+            if (selectedItem!!.type == "NAME_PRINT") {
+                val details = selectedItem!!.usernameData!!
+                val platfrom = details.platform
+                val name = details.username
+                val temp =
+                    BitmapFunctions.createWatermark(context!!, platfrom, name, mainBitmap, 2f)
+                if (temp != null) {
+                    selectedItem!!.setStickerBitmap(temp)
+                }
+                reDrawBitmap()
+                return@setOnClickListener
+            }
             val temp = resizeBitmap(2f)
             sticker = temp
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1493,7 +1561,6 @@ class CreateFragment : Fragment() {
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1504,7 +1571,7 @@ class CreateFragment : Fragment() {
             val difference =
                 selectedItem!!.getStickerBitmap().width - selectedItem!!.getOriginalStickerBitmap().width
             val newDiff = difference - 50
-            if (selectedItem!!.getOriginalStickerBitmap().width - newDiff < 50) {
+            if (selectedItem!!.getStickerBitmap().width - newDiff < 50) {
                 Toast.makeText(context, "Cannot decrease Size anymore!!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -1514,7 +1581,6 @@ class CreateFragment : Fragment() {
             selectedItem!!.setStickerBitmap(sticker)
             srpBinding.pcsStickerImage.animate().alpha(0.5f).setDuration(150).withEndAction {
 
-                srpBinding.pcsStickerImage.setImageBitmap(sticker)
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
@@ -1599,8 +1665,7 @@ class CreateFragment : Fragment() {
             }
         }
         if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK) {
-            if(data == null)
-            {
+            if (data == null) {
                 Toast.makeText(
                     context,
                     "Unable to load image,Please try again!!",
@@ -1641,8 +1706,7 @@ class CreateFragment : Fragment() {
                 }
             }
         }
-        if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_CANCELED)
-        {
+        if (requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_CANCELED) {
             context?.let {
                 activity!!.supportFragmentManager.beginTransaction()
                     .replace(fragmentContainer, HomeFragment(), "HOME_FRAGMENT").commit()
@@ -1927,38 +1991,7 @@ class CreateFragment : Fragment() {
             return output
         }
 
-        //        fun getCircularBitmap(srcBitmap: Bitmap,rectP:Rect): Bitmap?
-//        {
-//
-//             // Initialize a new instance of Bitmap
-//             // Initialize a new instance of Bitmap
-//             val dstBitmap = Bitmap.createBitmap(
-//                 rectP.width(),  // Width
-//                 rectP.height(),  // Height
-//                 Bitmap.Config.ARGB_8888 // Config
-//             )
-//             val canvas = Canvas(dstBitmap)
-//             // Initialize a new Paint instance
-//             // Initialize a new Paint instance
-//             val paint = Paint()
-//             paint.isAntiAlias = true
-//             val rectT = Rect(0, 0, rectP.width(), rectP.height())
-//             val rectF = RectF(rectT)
-//             canvas.drawOval(rectF, paint)
-//             paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-//             // Calculate the left and top of copied bitmap
-//             // Calculate the left and top of copied bitmap
-//             val left = ((rectP.width() - srcBitmap.width) / 2).toFloat()
-//             val top = ((rectP.width() - srcBitmap.height) / 2).toFloat()
-//             val bitmap = createBitmapFromRect(rectP)
-//             canvas.drawBitmap(bitmap, left, top, paint)
-//             // Free the native object associated with this bitmap.
-//             // Free the native object associated with this bitmap.
-//             srcBitmap.recycle()
-//             // Return the circular bitmap
-//             // Return the circular bitmap
-//             return dstBitmap
-//        }
+
         fun resetBitmap() {
             finalBitmap = image.copy(Bitmap.Config.ARGB_8888, true)
             cropBinding.psipImage.setImageBitmap(finalBitmap)
@@ -2006,7 +2039,7 @@ class CreateFragment : Fragment() {
 
     fun getNamePrint(platfrom: String, username: String) {
         val temp =
-            BitmapFunctions.createWatermark(context!!, platfrom, username, mainBitmap)
+            BitmapFunctions.createWatermark(context!!, platfrom, username, mainBitmap, 1f)
         if (temp != null) {
             Log.d(TAG, "getNamePrint: temp is not null")
             addNamePrintSticker(temp, username, platfrom)
@@ -2265,8 +2298,8 @@ class CreateFragment : Fragment() {
         selectedItem = null
 
     }
-    inner class InterstitialListener:IUnityAdsListener
-    {
+
+    inner class InterstitialListener : IUnityAdsListener {
         override fun onUnityAdsReady(p0: String?) {
             Log.d(TAG, "onUnityAdsReady: ")
         }
@@ -2284,6 +2317,7 @@ class CreateFragment : Fragment() {
         }
 
     }
+
 
     // TODO: 13/07/21 disable custom sizing on name print watermarks
 }

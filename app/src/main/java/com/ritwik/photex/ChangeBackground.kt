@@ -36,7 +36,6 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         }
         if (item.backgroundMargins == null) {
 
-            binding.ptbVerticalSeekBar.progress = 0
             binding.ptbHorizontalSeekBar.progress = 0
         } else {
 
@@ -47,7 +46,6 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
             Log.d(TAG, "setBackground: Horizontal Progress = $progressH")
             Log.d(TAG, "setBackground: Vertical Progress = $progressV")
             binding.ptbHorizontalSeekBar.progress = progressH.toInt()
-            binding.ptbVerticalSeekBar.progress = progressV.toInt()
 
 
         }
@@ -70,7 +68,6 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
                 progress
             }
             if (item.backgroundMargins == null) {
-                binding.ptbVerticalSeekBar.progress = 0
                 binding.ptbHorizontalSeekBar.progress = 0
             } else {
 
@@ -81,7 +78,6 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
                 Log.d(TAG, "setBackground: Horizontal Progress = $progressH")
                 Log.d(TAG, "setBackground: Vertical Progress = $progressV")
                 binding.ptbHorizontalSeekBar.progress = progressH.toInt()
-                binding.ptbVerticalSeekBar.progress = progressV.toInt()
 
 
             }
@@ -113,33 +109,7 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
 
             }
         )
-        binding.ptbVerticalSeekBar.setOnSeekBarChangeListener(
-            object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                    p0?.let {
-                        val max = mainBitmap.height
-                        val height = (max / 100.toFloat()) * it.progress
-                        if (item.backgroundMargins == null) {
-                            item.setBackground(2f, height, null)
-                            fragment.reDrawBitmap()
-                        } else {
-                            val x = item.backgroundMargins!!.marginX
-                            item.setBackground(x, height, null)
-                            fragment.reDrawBitmap()
-                        }
-                    }
-                }
 
-                override fun onStartTrackingTouch(p0: SeekBar?) {
-                    Log.d(TAG, "onStartTrackingTouch: ")
-                }
-
-                override fun onStopTrackingTouch(p0: SeekBar?) {
-                    Log.d(TAG, "onStopTrackingTouch: ")
-                }
-
-            }
-        )
         binding.pcbAlphaSeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

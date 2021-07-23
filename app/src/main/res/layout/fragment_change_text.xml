@@ -21,6 +21,7 @@
         android:fontFamily="@font/avenir_next_regular"
         android:textColor="@color/black"
         android:id="@+id/fct_EditTextField"
+        android:inputType="textMultiLine"
         />
     <TextView
         android:layout_width="wrap_content"

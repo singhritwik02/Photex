@@ -47,7 +47,15 @@ class MainActivity : AppCompatActivity() {
         with(confirmationBinding)
         {
 
+            try {
                 pecPreview.setImageBitmap(fragment.getPreview())
+            }
+            catch (e:Exception)
+            {
+                e.printStackTrace()
+                super.onBackPressed()
+                window.dismiss()
+            }
 
             pecCancel.setOnClickListener {
                 window.dismiss()

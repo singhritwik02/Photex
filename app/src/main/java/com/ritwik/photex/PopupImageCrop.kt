@@ -9,20 +9,28 @@ import android.graphics.Paint
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.PopupWindow
+import android.widget.SeekBar
 import com.ritwik.photex.databinding.PopupImageCropBinding
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlin.math.roundToInt
 
-class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bitmap: Bitmap) -> Unit) {
+class PopupImageCrop(
+    val context: Context,
+    val bitmap: Bitmap,
+    val function: (bitmap: Bitmap) -> Unit
+) {
     private lateinit var toReturnBitmap: Bitmap
     private lateinit var imageOrientation: String
     private lateinit var window: PopupWindow
     private lateinit var binding: PopupImageCropBinding
     private var color: String = "#FFFFFF"
-    var  status = "O"
+    var status = "O"
     fun showWindow() {
         Log.d(TAG, "showWindow: showing window")
         if (!this::binding.isInitialized) {
@@ -47,7 +55,7 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
         }
         binding.picTopAlign.setOnClickListener {
             toReturnBitmap = bitmap
-         addBottom()
+            addBottom()
             status = "B"
         }
         binding.picBottomAlign.setOnClickListener {
@@ -62,6 +70,8 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
         }
         binding.picSquareCrop.setOnClickListener {
             cropToSquare()
+
+
         }
         binding.picChooseColorImage
             .setOnClickListener {
@@ -81,12 +91,85 @@ class PopupImageCrop(val context: Context, val bitmap: Bitmap, val function: (bi
 
             }
         binding.picNextButton.setOnClickListener {
-            if(!this::toReturnBitmap.isInitialized)
-            {
+            if (!this::toReturnBitmap.isInitialized) {
                 toReturnBitmap = bitmap
             }
             function(toReturnBitmap)
             window.dismiss()
+        }
+        binding.picBorderBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                Log.d(TAG, "onProgressChanged: ${p0?.progress}")
+                val progress = p0!!.progress
+                val percent = (.01) + ((progress - 1) * 0.001)
+                if (!this@PopupImageCrop::toReturnBitmap.isInitialized) {
+                    toReturnBitmap = BitmapFunctions.setBorders(bitmap, percent.toFloat(), color)
+                } else {
+                    toReturnBitmap = BitmapFunctions.setBorders(bitmap, percent.toFloat(), color)
+                }
+                binding.picImageView.setImageBitmap(toReturnBitmap)
+
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) {
+                Log.d(TAG, "onStartTrackingTouch: ")
+            }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                Log.d(TAG, "onStopTrackingTouch: ")
+            }
+
+        })
+        val slideUp = AnimationUtils.loadAnimation(context!!, R.anim.slide_up) as Animation
+        val slideDown = AnimationUtils.loadAnimation(context, R.anim.slide_down) as Animation
+        binding.picShowIndependentMargins.setOnClickListener {
+            if (binding.picIndependentMarginsLayout.visibility != View.VISIBLE) {
+                // animate to visible
+                binding.picShowIndependentMarginsImage.animate().rotation(180f).setDuration(150)
+                    .withEndAction {
+
+                        binding.picIndependentMarginsLayout.visibility = View.VISIBLE
+                        binding.picIndependentMarginsLayout.animate().alpha(1f).setDuration(150)
+                        binding.picSquareBorderLayout.visibility = View.GONE
+
+
+                    }
+            } else {
+                // animate to invisible
+                binding.picShowIndependentMarginsImage.animate().rotation(0f).setDuration(150)
+                    .withEndAction {
+                        binding.picIndependentMarginsLayout.animate().alpha(0f).setDuration(150)
+                            .withEndAction {
+                                binding.picIndependentMarginsLayout.visibility = View.GONE
+                                binding.picSquareBorderLayout.visibility = View.VISIBLE
+                            }
+
+                    }
+            }
+        }
+        binding.picPresetButton.setOnClickListener { view ->
+            if (binding.picPresetLayout.visibility != View.VISIBLE) {
+                binding.picPresetButtonImage.animate().rotation(180f).setDuration(150)
+                    .withEndAction {
+                        binding.picPresetLayout.startAnimation(slideDown)
+                        binding.picPresetLayout.visibility = View.VISIBLE
+                        binding.picPresetLayout.animate().alpha(1f).setDuration(150)
+
+                    }
+
+            } else {
+                binding.picPresetButtonImage.animate().rotation(0f).setDuration(150).withEndAction {
+
+                    binding.picPresetLayout.startAnimation(slideUp)
+                    binding.picPresetLayout.visibility = View.GONE
+
+
+                }
+
+
+            }
+
+
         }
     }
 

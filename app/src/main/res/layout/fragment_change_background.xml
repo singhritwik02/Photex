@@ -12,29 +12,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rounded Corners"
+                android:fontFamily="@font/avenir_next_bold"
+                android:layout_margin="8dp"
+                android:textSize="8sp"
+                android:buttonTint="@color/darkYellow"
+                android:id="@+id/ptb_RoundedCornersButtton"
+                />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vertical"
-        android:fontFamily="@font/avenir_next_bold"
-        android:textColor="@color/black"
-        android:layout_margin="8dp"
-        android:textSize="10sp"
-        />
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:id="@+id/ptb_VerticalSeekBar"
-        android:layout_marginTop="4dp"
-        android:thumb="@drawable/vertical_thumb"
-        android:progressTint="@color/darkYellow"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Horizontal"
+        android:text="Background Width"
         android:fontFamily="@font/avenir_next_bold"
         android:textColor="@color/black"
         android:layout_margin="8dp"
