@@ -82,6 +82,28 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
 
             }
         }
+        binding.fcbLineSpacingBar.setOnSeekBarChangeListener(
+            object :SeekBar.OnSeekBarChangeListener
+
+            {
+                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                    p0?.let {
+                        val spacing = it.progress * 0.001
+                        item.lineSpacing.setSpacing(spacing.toFloat())
+                        fragment.reDrawBitmap()
+                    }
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                    Log.d(TAG, "onStartTrackingTouch: ")
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    Log.d(TAG, "onStopTrackingTouch: ")
+                }
+
+            }
+        )
         binding.ptbHorizontalSeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -109,7 +131,19 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
 
             }
         )
+        binding.ptbRoundedCornersButtton.setOnCheckedChangeListener { compoundButton, b ->
+            if(item.backgroundMargins!=null)
+            {
+                item.backgroundMargins!!.rounded = b
+            }
+            else
+            {
+                item.setBackground(2f,2f,null)
+                item.backgroundMargins!!.rounded = b
+            }
+            fragment.reDrawBitmap()
 
+        }
         binding.pcbAlphaSeekBar.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
@@ -158,4 +192,5 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
     companion object {
         private const val TAG = "changeBackground"
     }
+
 }

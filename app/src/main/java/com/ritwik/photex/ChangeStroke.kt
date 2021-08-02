@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ritwik.photex.databinding.FragmentChangeStrokeBinding
 
-// TODO: 09/07/21 implement choose color button
 
 class ChangeStroke(val fragment: CreateFragment) : Fragment() {
     var _binding: FragmentChangeStrokeBinding? = null
@@ -17,7 +16,7 @@ class ChangeStroke(val fragment: CreateFragment) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentChangeStrokeBinding.inflate(layoutInflater,container,false)
+        _binding = FragmentChangeStrokeBinding.inflate(layoutInflater, container, false)
         val selectedItem = fragment.selectedItem!!
         var selectedColor = "#FFFFFF"
         val manager = LinearLayoutManager(context)
@@ -27,7 +26,7 @@ class ChangeStroke(val fragment: CreateFragment) : Fragment() {
             val width = it.strokeWidth
             binding.fcsStrokeWidthField.setText(width.toString())
         }
-        val colorRecycler = ColorRecycler(binding.fcsColorRecycler, context!!,false)
+        val colorRecycler = ColorRecycler(binding.fcsColorRecycler, context!!, false)
         { color ->
             selectedColor = color
             fragment.addStroke(2, color)

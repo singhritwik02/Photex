@@ -16,11 +16,84 @@
         android:layout_margin="16dp"
         android:id="@+id/psf_TopLabel"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/psf_UpdatingLayout"
+        android:orientation="horizontal"
+        android:background="@color/creamBack"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="8dp"
+        app:layout_constraintTop_toBottomOf="@id/psf_TopLabel"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Updating Fonts"
+            android:fontFamily="@font/avenir_next_regular"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/psf_UpdatingLayout"
+        android:weightSum="100"
+        android:background="@color/creamBack"
+        android:id="@+id/psf_UpdateLayout"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="60"
+            android:text="New Fonts Available"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textSize="12sp"
+            android:layout_gravity="center"
+            android:textColor="@color/black"
+            android:layout_margin="8dp"
+            />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="40"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:id="@+id/psf_Update"
+                android:fontFamily="@font/avenir_next_bold"
+                android:textColor="@color/darkYellow"
+                android:layout_margin="8dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dismiss"
+                android:fontFamily="@font/avenir_next_bold"
+                android:textColor="@color/black"
+                android:layout_margin="8dp"
+                android:id="@+id/psf_Dismiss"
+                />
+        </LinearLayout>
+    </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/psf_TopLabel"
+        app:layout_constraintTop_toBottomOf="@id/psf_UpdateLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constrainedHeight="true"
@@ -31,17 +104,6 @@
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:id="@+id/psf_OfflineFontsRecycler"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Loading Fonts..."
-            android:fontFamily="@font/avenir_next_bold"
-            android:layout_gravity="center"
-            android:id="@+id/psf_LoadingLabel"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="16sp"
             />
 
     </FrameLayout>

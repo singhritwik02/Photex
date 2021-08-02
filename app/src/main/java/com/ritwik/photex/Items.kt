@@ -13,6 +13,7 @@ open class Items {
     private lateinit var stickerThumbnail:Bitmap
     var usernameData:UsernameData? = null
     var locationX = 0f
+    var lineSpacing = LineSpacing()
     var locationY = 0f
     var rotation = 0f
     var paint = Paint()
@@ -101,6 +102,7 @@ open class Items {
          var marginX = 0f
          var marginY = 0f
         var backPaint:Paint = Paint()
+        var rounded = false
     }
     fun generateStickerThumbnail(bitmap: Bitmap, function: (bitmap: Bitmap) -> Unit) {
         val scaled = Bitmap.createScaledBitmap(bitmap, 50, 50, false)
@@ -120,6 +122,31 @@ open class Items {
         {
             stickerThumbnail = it
         }
+    }
+     inner class LineSpacing
+    {
+        private var spacing = 0f
+        fun setSpacing(value:Float)
+        {
+            spacing = value
+        }
+        fun getSpacing():Float
+        {
+            return spacing
+        }
+        fun addSpacing(value:Float)
+        {
+            spacing+=value
+        }
+        fun subtractSpacing(value: Float)
+        {
+            spacing-=value
+        }
+        fun resetSpacing()
+        {
+            spacing = 0f
+        }
+
     }
     companion object
     {

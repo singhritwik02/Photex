@@ -15,6 +15,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.*
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.toRectF
@@ -507,7 +508,7 @@ class CreateFragment : Fragment() {
                         val xMargin = item.backgroundMargins!!.marginX
                         val fontMetrics = paint.fontMetrics
                         //val yMargin = item.backgroundMargins!!.marginY
-                        val yMargin = 0.1*(fontMetrics.descent - fontMetrics.ascent)
+                        val yMargin = 0.1 * (fontMetrics.descent - fontMetrics.ascent)
                         paint.getFontMetrics(fontMetrics)
                         val rect = Rect(
                             (item.locationX - xMargin).toInt(),
@@ -515,8 +516,7 @@ class CreateFragment : Fragment() {
                             (paint.measureText(lines[i]) + item.locationX + xMargin).toInt(),
                             (fontMetrics.bottom + item.locationY + yMargin + yoff).toInt()
                         )
-                        backgroundHeight = ((fontMetrics.bottom + item.locationY + yMargin + yoff)-(item.locationY + fontMetrics.top - yMargin + yoff)).toInt()
-                        yMarginOff=(backgroundHeight/2)
+                        yMarginOff = (rect.height())
 
                         val bPaint = item.backgroundMargins!!.backPaint
                         Log.d(TAG, "reDrawBitmap: textX = ${item.locationX},y = ${item.locationY}")
@@ -525,7 +525,14 @@ class CreateFragment : Fragment() {
                             "reDrawBitmap: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
                         )
                         bPaint.alpha = item.backgroundAlpha
-                        canvas.drawRect(rect, bPaint)
+                        if (item.backgroundMargins!!.rounded) {
+                            val radius =
+                                getCornerRadius(rect.width().toFloat(), rect.height().toFloat())
+                            Log.d(TAG, "reDrawBitmap: xRadius = ${radius}")
+                            canvas.drawRoundRect(rect.toRectF(), radius, radius, bPaint)
+                        } else {
+                            canvas.drawRect(rect, bPaint)
+                        }
                         Log.d(TAG, "reDrawBitmap: Drawn Rect")
 
 
@@ -540,8 +547,12 @@ class CreateFragment : Fragment() {
                         it.typeface = paint.typeface
                         canvas.drawText(lines[i], item.locationX, item.locationY + yoff, it)
                     }
-
-                    yoff += bounds.height() + yMarginOff
+                    yoff += (item.lineSpacing.getSpacing() * mainBitmap.height).roundToInt()
+                    if (yMarginOff == 0) {
+                        yoff += bounds.height()
+                    } else {
+                        yoff += yMarginOff
+                    }
                 }
 
 
@@ -1190,7 +1201,6 @@ class CreateFragment : Fragment() {
         window.showAtLocation(fontBinding.root, Gravity.CENTER, 0, 0)
         val fontDatabase = FontDatabase(context!!)
         var offlineFonts = fontDatabase.getOfflineFonts()
-        fontBinding.psfLoadingLabel.visibility = View.VISIBLE
         class OfflineFonts {
             var recyclerView: RecyclerView = fontBinding.psfOfflineFontsRecycler
             val presets = Presets(context!!)
@@ -1279,14 +1289,45 @@ class CreateFragment : Fragment() {
 
         val offlineFontsRecycler = OfflineFonts()
         offlineFontsRecycler.showRecycler()
-        fontDatabase.loadFonts {
+        offlineFontsRecycler.updateRecycler()
+        val enterAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_down)
+        val exitAnimation = AnimationUtils.loadAnimation(context, R.anim.slide_up)
+        fontDatabase.checkForUpdate { updateAvailable ->
+            if (updateAvailable) {
+                fontBinding.psfUpdateLayout.visibility = View.VISIBLE
+                fontBinding.psfUpdateLayout.startAnimation(enterAnimation)
 
-            if (fontBinding.psfLoadingLabel.visibility == View.VISIBLE) {
-                fontBinding.psfLoadingLabel.visibility = View.GONE
+            } else {
+                fontBinding.psfUpdateLayout.visibility = View.GONE
+                fontBinding.psfUpdateLayout.startAnimation(exitAnimation)
             }
-            offlineFontsRecycler.updateRecycler()
-
         }
+
+        fontBinding.psfUpdate.setOnClickListener {
+
+            fontBinding.psfUpdateLayout.startAnimation(exitAnimation)
+            fontBinding.psfUpdateLayout.visibility = View.GONE
+            fontBinding.psfUpdatingLayout.visibility = View.VISIBLE
+            fontBinding.psfUpdatingLayout.startAnimation(enterAnimation)
+            fontDatabase.update()
+            {status->
+                if(status == 0) {
+                    Log.d(TAG, "showFontSelectionPopup: Update Complete")
+                    fontBinding.psfUpdatingLayout.startAnimation(exitAnimation)
+                    fontBinding.psfUpdatingLayout.visibility = View.GONE
+                    offlineFontsRecycler.updateRecycler()
+                }
+                else
+                {
+                    offlineFontsRecycler.updateRecycler()
+                }
+            }
+        }
+        fontBinding.psfDismiss.setOnClickListener {
+            fontBinding.psfUpdateLayout.startAnimation(exitAnimation)
+            fontBinding.psfUpdateLayout.visibility = View.GONE
+        }
+
 
 
         // on click listener for offline device fonts
@@ -1621,7 +1662,7 @@ class CreateFragment : Fragment() {
                     p0?.let {
                         val alpha = (255 / 100.toFloat()) * it.progress
                         Log.d(TAG, "onProgressChanged: alpha = ${alpha.toInt()}")
-                        item.paint.alpha = alpha.toInt()
+                        item.paint.alpha = alpha.roundToInt()
                         reDrawBitmap()
                     }
                 }
@@ -2318,6 +2359,11 @@ class CreateFragment : Fragment() {
 
     }
 
+    private fun getCornerRadius(width: Float, height: Float): Float {
+        var radius = 0f
+        radius = (height * 0.2).toFloat()
+        return radius
+    }
 
-    // TODO: 13/07/21 disable custom sizing on name print watermarks
+
 }
