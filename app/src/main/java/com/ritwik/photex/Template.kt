@@ -40,7 +40,7 @@ class Template : Fragment() {
         recyclerView.layoutManager = manager
         binding.ftTemplateLabel.text = "Loading Templates"
         val recyclerClass = DefaultRecyclerClass(recyclerView)
-        
+
         val firebaseRecycler = FirebaseRec()
         firebaseRecycler.showRecycler(recyclerView)
 
@@ -68,49 +68,16 @@ class Template : Fragment() {
             }
         )
         // Inflate the layout f or this fragment
+        binding.ftTrendingTab.setOnClickListener {
+            firebaseRecycler.showTrending()
+        }
+        binding.ftHotTab.setOnClickListener {
+            firebaseRecycler.showMostDownloaded()
+        }
 
         return binding.root
     }
 
-    inner class RecyclerClass(val recyclerView: RecyclerView) {
-        fun showReycler() {
-            val query = FirebaseDatabase.getInstance().reference.child("Templates")
-                .orderByChild("TIMES_USED")
-            val options = FirebaseRecyclerOptions.Builder<TemplateModel>()
-                .setQuery(query, TemplateModel::class.java).build()
-            val adapter = object : FirebaseRecyclerAdapter<TemplateModel, ViewHolder>(options) {
-                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                    val view = LayoutInflater.from(context)
-                        .inflate(R.layout.single_template, parent, false)
-                    return ViewHolder(view)
-                }
-
-                override fun onBindViewHolder(
-                    holder: ViewHolder,
-                    position: Int,
-                    model: TemplateModel
-                ) {
-                    Log.d(TAG, "onBindViewHolder: ")
-                    if (binding.ftTemplateLabel.text != "Available Templates") {
-                        binding.ftTemplateLabel.text = "Available Templates"
-                    }
-                    holder.setTemplateImage(model.LINK)
-                }
-
-            }
-            recyclerView.adapter = adapter
-            adapter.startListening()
-
-        }
-
-        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            val image = itemView.findViewById<ImageView>(R.id.st_Image)
-            fun setTemplateImage(imageUrl: String) {
-                Log.d(TAG, "setTemplateImage: loading image $imageUrl")
-                context?.let { Glide.with(it).load(imageUrl).into(image) }
-            }
-        }
-    }
 
     inner class DefaultRecyclerClass(val recyclerView: RecyclerView) {
         fun showRecycler(searchString: String) {
@@ -236,72 +203,103 @@ class Template : Fragment() {
     companion object {
         private const val TAG = "Template"
     }
-    fun showTrending()
-    {
-        binding.ftTrendingTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
-        binding.ftTrendingText.setTextColor(Color.BLACK)
-        binding.ftNewTab.setBackgroundResource(0)
-        binding.ftNewText.setTextColor(Color.DKGRAY)
-    }
-    fun showNew()
-    {
-        binding.ftTrendingTab.setBackgroundResource(0)
-        binding.ftTrendingText.setTextColor(Color.DKGRAY)
-        binding.ftNewTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
-        binding.ftNewText.setTextColor(Color.BLACK)
-    }
-    inner class FirebaseRec
-    {
-        val query = FirebaseDatabase.getInstance().reference.child("Templates").orderByChild("TIMESTAMP")
-        var options: FirebaseRecyclerOptions<TemplateModel> = FirebaseRecyclerOptions.Builder<TemplateModel>()
-            .setQuery(query, TemplateModel::class.java)
-            .build()
-        val firebaseAdapter = object:FirebaseRecyclerAdapter<TemplateModel,ViewHolder>(options)
-        {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                val view = LayoutInflater.from(context)
-                    .inflate(R.layout.single_template, parent, false)
-                return ViewHolder(view)
-            }
 
-            override fun onBindViewHolder(holder: ViewHolder, position: Int, model: TemplateModel) {
-                Log.d(TAG, "onBindViewHolder: ")
-                if (binding.ftTemplateLabel.text != "Available Templates") {
-                    binding.ftTemplateLabel.text = "Available Templates"
+    fun showTrending() {
+
+    }
+
+    fun showNew() {
+
+    }
+
+    inner class FirebaseRec {
+        val latestQuery =
+            FirebaseDatabase.getInstance().reference.child("Templates").orderByChild("TIMESTAMP")
+        val mostDownloadedQuery =
+            FirebaseDatabase.getInstance().reference.child("Templates").orderByChild("TIMES_USED")
+        var mostDownloadedOptions: FirebaseRecyclerOptions<TemplateModel> =
+            FirebaseRecyclerOptions.Builder<TemplateModel>()
+                .setQuery(mostDownloadedQuery, TemplateModel::class.java)
+                .build()
+        var latestOptions: FirebaseRecyclerOptions<TemplateModel> =
+            FirebaseRecyclerOptions.Builder<TemplateModel>()
+                .setQuery(latestQuery, TemplateModel::class.java)
+                .build()
+        val firebaseAdapter =
+            object : FirebaseRecyclerAdapter<TemplateModel, ViewHolder>(latestOptions) {
+                override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+                    val view = LayoutInflater.from(context)
+                        .inflate(R.layout.single_template, parent, false)
+                    return ViewHolder(view)
                 }
-                holder.setImage(model.link)
 
-                holder.itemView.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.apply {
-                        putString("MODE", "TEMPLATE")
-                        putString("LINK", model.link)
-                        showCreateFragment(bundle)
+                override fun onBindViewHolder(
+                    holder: ViewHolder,
+                    position: Int,
+                    model: TemplateModel
+                ) {
+                    Log.d(TAG, "onBindViewHolder: ")
+                    if (binding.ftTemplateLabel.text != "Available Templates") {
+                        binding.ftTemplateLabel.text = "Available Templates"
+                    }
+                    holder.setImage(model.link)
+                    val key = model.name
+                    val timesUsed:Long = model.TIMES_USED
+                    Log.d(TAG, "onBindViewHolder: key = $key, Times Used = $timesUsed")
+                    holder.itemView.setOnClickListener {
+                        val bundle = Bundle()
+                        bundle.apply {
+                            putString("MODE", "TEMPLATE")
+                            putString("LINK", model.link)
+                            showCreateFragment(bundle)
+                        }
+                        incrementCount(key,timesUsed)
                     }
                 }
+
+
             }
 
-
-        }
-        fun showRecycler(recyclerView: RecyclerView)
-        {
+        fun showRecycler(recyclerView: RecyclerView) {
             recyclerView.adapter = firebaseAdapter
             firebaseAdapter.startListening()
             firebaseAdapter.notifyDataSetChanged()
 
+
         }
-        inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
-        {
+
+        fun showTrending() {
+            binding.ftTrendingTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
+            binding.ftTrendingText.setTextColor(Color.BLACK)
+            binding.ftHotTab.setBackgroundResource(0)
+            binding.ftNewText.setTextColor(Color.DKGRAY)
+            firebaseAdapter.updateOptions(latestOptions)
+            firebaseAdapter.notifyDataSetChanged()
+
+        }
+
+        fun showMostDownloaded() {
+            binding.ftTrendingTab.setBackgroundResource(0)
+            binding.ftTrendingText.setTextColor(Color.DKGRAY)
+            binding.ftHotTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
+            binding.ftNewText.setTextColor(Color.BLACK)
+            firebaseAdapter.updateOptions(mostDownloadedOptions)
+            firebaseAdapter.notifyDataSetChanged()
+        }
+
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             private val image = itemView.findViewById<ImageView>(R.id.st_Image)
-            fun setImage(link:String)
-            {
-                context?.let { Glide.with(context!!).load(link ).into(image) }
+            fun setImage(link: String) {
+                context?.let { Glide.with(context!!).load(link).into(image) }
             }
 
         }
 
 
-
+    }
+    fun incrementCount(key:String,timesUsed:Long)
+    {
+        FirebaseDatabase.getInstance().reference.child("Templates").child(key).child("TIMES_USED").setValue(timesUsed-1)
     }
 
     override fun onDestroyView() {

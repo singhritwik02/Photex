@@ -3,6 +3,7 @@ package com.ritwik.photex;
 public class TemplateModel {
     String LINK;
     Long TIMES_USED;
+    String NAME;
 
     public TemplateModel(String LINK, Long TIMES_USED) {
         this.LINK = LINK;
@@ -10,6 +11,14 @@ public class TemplateModel {
     }
 
     public TemplateModel() {
+    }
+
+    public String getNAME() {
+        return NAME;
+    }
+
+    public void setNAME(String NAME) {
+        this.NAME = NAME;
     }
 
     public String getLINK() {
