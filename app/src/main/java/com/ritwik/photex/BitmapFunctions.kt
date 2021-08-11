@@ -185,6 +185,56 @@ class BitmapFunctions {
             canvas.drawBitmap(referenceBitmap,left,top,null)
             return bitmap
         }
+        fun increaseLeftBorder(referenceBitmap: Bitmap,borderPercent: Float,colorString: String?):Bitmap
+        {
+            Log.d(TAG, "increaseLeftBorder: border percent = $borderPercent")
+            val width = referenceBitmap.width + (referenceBitmap.width * borderPercent)
+            val height = referenceBitmap.height
+            Log.d(TAG, "setBorders: bitmap width with borders = $width")
+            Log.d(TAG, "setBorders: bitmap height with borders = $height")
+            // creating a new bitmap
+            val bitmap = Bitmap.createBitmap(
+                width.roundToInt(),
+                height,
+                Bitmap.Config.ARGB_8888
+            )
+            val canvas = Canvas(bitmap)
+            // drawing the main bitmap onto the plain canvas
+            val color =
+                if (colorString != null) {
+                    var color = Color.WHITE
+                    try {
+                        color = Color.parseColor(colorString)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        color = Color.WHITE
+
+                    }
+                    color
+                } else {
+                    Color.WHITE
+                }
+            val canvasPaint = Paint()
+            canvasPaint.color = color
+            canvas.drawPaint(canvasPaint)
+
+            // drawing the bitmap over the canvas,leaving the respective borders
+            val left = (bitmap.width - referenceBitmap.width.toFloat())
+            val top = 0f
+
+            canvas.drawBitmap(referenceBitmap,left,top,null)
+            return bitmap
+        }
+        private fun setMarginZero(referenceBitmap: Bitmap,side:String)
+        {
+            when(side)
+            {
+                "L"->
+                {
+
+                }
+            }
+        }
 
     }
 }

@@ -1,6 +1,6 @@
 package com.ritwik.photex;
 
-class TemplateModel {
+public class TemplateModel {
     String LINK;
     Long TIMES_USED;
 

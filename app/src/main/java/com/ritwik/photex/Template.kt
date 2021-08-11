@@ -1,5 +1,6 @@
 package com.ritwik.photex
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,6 +27,8 @@ class Template : Fragment() {
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
     private var containerId = 0
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +40,10 @@ class Template : Fragment() {
         recyclerView.layoutManager = manager
         binding.ftTemplateLabel.text = "Loading Templates"
         val recyclerClass = DefaultRecyclerClass(recyclerView)
-        recyclerClass.showRecycler("")
+        
+        val firebaseRecycler = FirebaseRec()
+        firebaseRecycler.showRecycler(recyclerView)
+
         binding.ftSearchField.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -50,10 +56,12 @@ class Template : Fragment() {
 
                 override fun afterTextChanged(p0: Editable?) {
                     if (p0?.toString() == "") {
-                        recyclerClass.showRecycler("")
+                        Log.d(TAG, "afterTextChanged: Showing no search recycler")
+                        firebaseRecycler.showRecycler(recyclerView)
                     } else {
                         val searchText = p0?.toString() ?: ""
                         recyclerClass.showRecycler(searchText)
+                        Log.d(TAG, "afterTextChanged: showing search recycler")
                     }
                 }
 
@@ -228,9 +236,77 @@ class Template : Fragment() {
     companion object {
         private const val TAG = "Template"
     }
+    fun showTrending()
+    {
+        binding.ftTrendingTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
+        binding.ftTrendingText.setTextColor(Color.BLACK)
+        binding.ftNewTab.setBackgroundResource(0)
+        binding.ftNewText.setTextColor(Color.DKGRAY)
+    }
+    fun showNew()
+    {
+        binding.ftTrendingTab.setBackgroundResource(0)
+        binding.ftTrendingText.setTextColor(Color.DKGRAY)
+        binding.ftNewTab.setBackgroundResource(R.drawable.bottom_line_yellow_bold)
+        binding.ftNewText.setTextColor(Color.BLACK)
+    }
+    inner class FirebaseRec
+    {
+        val query = FirebaseDatabase.getInstance().reference.child("Templates").orderByChild("TIMESTAMP")
+        var options: FirebaseRecyclerOptions<TemplateModel> = FirebaseRecyclerOptions.Builder<TemplateModel>()
+            .setQuery(query, TemplateModel::class.java)
+            .build()
+        val firebaseAdapter = object:FirebaseRecyclerAdapter<TemplateModel,ViewHolder>(options)
+        {
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+                val view = LayoutInflater.from(context)
+                    .inflate(R.layout.single_template, parent, false)
+                return ViewHolder(view)
+            }
+
+            override fun onBindViewHolder(holder: ViewHolder, position: Int, model: TemplateModel) {
+                Log.d(TAG, "onBindViewHolder: ")
+                if (binding.ftTemplateLabel.text != "Available Templates") {
+                    binding.ftTemplateLabel.text = "Available Templates"
+                }
+                holder.setImage(model.link)
+
+                holder.itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString("MODE", "TEMPLATE")
+                        putString("LINK", model.link)
+                        showCreateFragment(bundle)
+                    }
+                }
+            }
+
+
+        }
+        fun showRecycler(recyclerView: RecyclerView)
+        {
+            recyclerView.adapter = firebaseAdapter
+            firebaseAdapter.startListening()
+            firebaseAdapter.notifyDataSetChanged()
+
+        }
+        inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView)
+        {
+            private val image = itemView.findViewById<ImageView>(R.id.st_Image)
+            fun setImage(link:String)
+            {
+                context?.let { Glide.with(context!!).load(link ).into(image) }
+            }
+
+        }
+
+
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 }

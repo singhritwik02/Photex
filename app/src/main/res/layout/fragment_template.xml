@@ -15,6 +15,16 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/search_icon"
+        app:layout_constraintTop_toTopOf="@id/ft_TopLabel"
+        app:layout_constraintBottom_toBottomOf="@id/ft_TopLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="8dp"
+        android:id="@+id/ft_SearchButton"
+        />
 
 
     <EditText
@@ -35,7 +45,61 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ft_TopLabel" />
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       android:weightSum="2"
+       android:layout_margin="8dp"
+       android:id="@+id/ft_TabLayout"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintTop_toBottomOf="@id/ft_SearchField"
+       >
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:background="@drawable/bottom_line_yellow_bold"
+           android:orientation="horizontal"
+           android:id="@+id/ft_TrendingTab"
+           >
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Trending"
+               android:fontFamily="@font/avenir_next_bold"
+               android:layout_margin="8dp"
+               android:textColor="@color/black"
+               android:layout_gravity="center"
+               android:id="@+id/ft_TrendingText"
+               />
 
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_gravity="center"
+           android:id="@+id/ft_NewTab"
+           android:gravity="center"
+           android:orientation="horizontal"
+           >
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="New"
+               android:id="@+id/ft_NewText"
+               android:fontFamily="@font/avenir_next_bold"
+               android:layout_margin="8dp"
+               android:textColor="@android:color/darker_gray"
+               android:layout_gravity="center"
+               />
+
+       </LinearLayout>
+   </LinearLayout>
 
     <TextView
         android:id="@+id/ft_TemplateLabel"
@@ -47,7 +111,7 @@
         android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ft_SearchField" />
+        app:layout_constraintTop_toBottomOf="@id/ft_TabLayout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ft_Recycler"

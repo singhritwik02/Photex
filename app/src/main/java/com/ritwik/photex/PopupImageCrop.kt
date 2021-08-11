@@ -30,6 +30,7 @@ class PopupImageCrop(
     private lateinit var window: PopupWindow
     private lateinit var binding: PopupImageCropBinding
     private var color: String = "#FFFFFF"
+    private var margins = Margins()
     var status = "O"
     fun showWindow() {
         Log.d(TAG, "showWindow: showing window")
@@ -50,17 +51,17 @@ class PopupImageCrop(
         binding.picImageView.setImageBitmap(bitmap)
         binding.picCenterAlign.setOnClickListener {
             toReturnBitmap = bitmap
-            addCenter()
+            addCenter(0f)
             status = "C"
         }
         binding.picTopAlign.setOnClickListener {
             toReturnBitmap = bitmap
-            addBottom()
+            addBottom(0f)
             status = "B"
         }
         binding.picBottomAlign.setOnClickListener {
             toReturnBitmap = bitmap
-            addTop()
+            addTop(0f)
             status = "T"
         }
         binding.picReset.setOnClickListener {
@@ -73,6 +74,37 @@ class PopupImageCrop(
 
 
         }
+        binding.picPresetBar.setOnSeekBarChangeListener(
+            object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                    p0?.let { seekBar ->
+                        val extra = seekBar.progress.toFloat() / 100
+                        Log.d(TAG, "onProgressChanged: extra = ${extra}")
+                        when (status) {
+                            "T" -> {
+                                addTop(extra)
+                            }
+                            "B" -> {
+                                addBottom(extra)
+                            }
+                            "C" -> {
+                                addCenter(extra)
+                            }
+                        }
+
+                    }
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                    Log.d(TAG, "onStartTrackingTouch: ")
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    Log.d(TAG, "onStopTrackingTouch: ")
+                }
+
+            }
+        )
         binding.picChooseColorImage
             .setOnClickListener {
                 ColorPickerDialog.Builder(context)
@@ -107,6 +139,7 @@ class PopupImageCrop(
                 } else {
                     toReturnBitmap = BitmapFunctions.setBorders(bitmap, percent.toFloat(), color)
                 }
+                binding.picAllBorderPercent.setText("${p0.progress}%")
                 binding.picImageView.setImageBitmap(toReturnBitmap)
 
             }
@@ -122,31 +155,8 @@ class PopupImageCrop(
         })
         val slideUp = AnimationUtils.loadAnimation(context!!, R.anim.slide_up) as Animation
         val slideDown = AnimationUtils.loadAnimation(context, R.anim.slide_down) as Animation
-        binding.picShowIndependentMargins.setOnClickListener {
-            if (binding.picIndependentMarginsLayout.visibility != View.VISIBLE) {
-                // animate to visible
-                binding.picShowIndependentMarginsImage.animate().rotation(180f).setDuration(150)
-                    .withEndAction {
-
-                        binding.picIndependentMarginsLayout.visibility = View.VISIBLE
-                        binding.picIndependentMarginsLayout.animate().alpha(1f).setDuration(150)
-                        binding.picSquareBorderLayout.visibility = View.GONE
 
 
-                    }
-            } else {
-                // animate to invisible
-                binding.picShowIndependentMarginsImage.animate().rotation(0f).setDuration(150)
-                    .withEndAction {
-                        binding.picIndependentMarginsLayout.animate().alpha(0f).setDuration(150)
-                            .withEndAction {
-                                binding.picIndependentMarginsLayout.visibility = View.GONE
-                                binding.picSquareBorderLayout.visibility = View.VISIBLE
-                            }
-
-                    }
-            }
-        }
         binding.picPresetButton.setOnClickListener { view ->
             if (binding.picPresetLayout.visibility != View.VISIBLE) {
                 binding.picPresetButtonImage.animate().rotation(180f).setDuration(150)
@@ -171,6 +181,8 @@ class PopupImageCrop(
 
 
         }
+
+
     }
 
     private fun cropToSquare() {
@@ -199,11 +211,11 @@ class PopupImageCrop(
 
     }
 
-    fun addTop() {
-        if (!this::toReturnBitmap.isInitialized) {
-            toReturnBitmap = bitmap
-        }
-        val topHeight = 0.4 * toReturnBitmap.height
+    fun addTop(extraMargin: Float) {
+
+        toReturnBitmap = bitmap
+
+        val topHeight = (0.4 + extraMargin) * toReturnBitmap.height
         // creating a new Bitmap
         val tempBitmap = Bitmap.createBitmap(
             toReturnBitmap.width,
@@ -221,11 +233,11 @@ class PopupImageCrop(
         binding.picImageView.setImageBitmap(toReturnBitmap)
     }
 
-    fun addCenter() {
+    fun addCenter(extraMargin: Float) {
         toReturnBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
 
-        val leftMargin = 0.1 * bitmap.width
-        val topMargin = 0.1 * bitmap.height
+        val leftMargin = (0.1 + extraMargin) * bitmap.width
+        val topMargin = (0.1 + extraMargin) * bitmap.height
         val canvas = Canvas(toReturnBitmap)
         val right = toReturnBitmap.width - leftMargin
         val bottom = toReturnBitmap.height - topMargin
@@ -240,11 +252,77 @@ class PopupImageCrop(
 
     }
 
-    fun addBottom() {
+    fun addBottom(extraMargin: Float) {
+        toReturnBitmap = bitmap
+        val bottomHeight = (0.4 + extraMargin) * toReturnBitmap.height
+        // creating a new Bitmap
+        val tempBitmap = Bitmap.createBitmap(
+            toReturnBitmap.width,
+            (toReturnBitmap.height + bottomHeight).roundToInt(), Bitmap.Config.ARGB_8888
+        )
+        // adding the main bitmap
+        val canvas = Canvas(tempBitmap)
+        val cPaint = Paint()
+        if (color != null) {
+            cPaint.color = Color.parseColor(color)
+            canvas.drawPaint(cPaint)
+        } else {
+            cPaint.color = Color.WHITE
+            canvas.drawPaint(cPaint)
+        }
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        toReturnBitmap = tempBitmap
+        binding.picImageView.setImageBitmap(toReturnBitmap)
+
+
+    }
+
+    fun manipulateTop(extraMargin: Float) {
         if (!this::toReturnBitmap.isInitialized) {
             toReturnBitmap = bitmap
         }
-        val bottomHeight = 0.4 * toReturnBitmap.height
+        val topHeight = (0.4 + extraMargin) * toReturnBitmap.height
+        // creating a new Bitmap
+        val tempBitmap = Bitmap.createBitmap(
+            toReturnBitmap.width,
+            (toReturnBitmap.height + topHeight).roundToInt(), Bitmap.Config.ARGB_8888
+        )
+        // adding the main bitmap
+        val canvas = Canvas(tempBitmap)
+        val cPaint = Paint()
+
+        cPaint.color = Color.parseColor(color)
+        canvas.drawPaint(cPaint)
+
+        canvas.drawBitmap(bitmap, 0f, topHeight.toFloat(), null)
+        toReturnBitmap = tempBitmap
+        binding.picImageView.setImageBitmap(toReturnBitmap)
+    }
+
+    fun manipulateCenter(extraMargin: Float) {
+        toReturnBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        val leftMargin = (0.1 + extraMargin) * bitmap.width
+        val topMargin = (0.1 + extraMargin) * bitmap.height
+        val canvas = Canvas(toReturnBitmap)
+        val right = toReturnBitmap.width - leftMargin
+        val bottom = toReturnBitmap.height - topMargin
+        val paint = Paint()
+        paint.color = Color.parseColor(color)
+        canvas.drawRect(
+            leftMargin.toFloat(), topMargin.toFloat(), right.toFloat(),
+            bottom.toFloat(), paint
+        )
+        binding.picImageView.setImageBitmap(toReturnBitmap)
+
+
+    }
+
+    fun manipulateBottom(extraMargin: Float) {
+        if (!this::toReturnBitmap.isInitialized) {
+            toReturnBitmap = bitmap
+        }
+        val bottomHeight = (0.4 + extraMargin) * toReturnBitmap.height
         // creating a new Bitmap
         val tempBitmap = Bitmap.createBitmap(
             toReturnBitmap.width,
@@ -273,6 +351,14 @@ class PopupImageCrop(
         } else {
             bitmap
         }
+    }
+
+    inner class Margins {
+        var lMarginPercent = 0f
+        var rMarginPercent = 0f
+        var tMarginPercent = 0f
+        var bMarginPercent = 0f
+        var allMarginsPercent = 0f
     }
 
     companion object {
