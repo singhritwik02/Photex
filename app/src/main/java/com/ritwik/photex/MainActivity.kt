@@ -1,12 +1,14 @@
 package com.ritwik.photex
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.ritwik.photex.databinding.ActivityMainBinding
 import com.ritwik.photex.databinding.PopupExitConfirmationBinding
 import com.unity3d.ads.IUnityAdsListener;
@@ -31,6 +33,15 @@ class MainActivity : AppCompatActivity() {
 
         val view = binding.root
         setContentView(view)
+        val auth = FirebaseAuth.getInstance()
+        if(auth.currentUser == null)
+        {
+            startActivity(Intent(this,LoginActivity::class.java))
+        }
+        else
+        {
+
+        }
 
     }
 

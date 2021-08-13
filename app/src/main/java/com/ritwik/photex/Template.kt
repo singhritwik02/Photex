@@ -243,9 +243,8 @@ class Template : Fragment() {
                         binding.ftTemplateLabel.text = "Available Templates"
                     }
                     holder.setImage(model.link)
-                    val key = model.name
-                    val timesUsed:Long = model.TIMES_USED
-                    Log.d(TAG, "onBindViewHolder: key = $key, Times Used = $timesUsed")
+
+
                     holder.itemView.setOnClickListener {
                         val bundle = Bundle()
                         bundle.apply {
@@ -253,7 +252,12 @@ class Template : Fragment() {
                             putString("LINK", model.link)
                             showCreateFragment(bundle)
                         }
-                        incrementCount(key,timesUsed)
+                        if(CloudDatabase.isLoggedIn()) {
+                            val key = model.name
+                            val timesUsed: Long = model.TIMES_USED
+                            Log.d(TAG, "onBindViewHolder: key = $key, Times Used = $timesUsed")
+                            incrementCount(key, timesUsed)
+                        }
                     }
                 }
 

@@ -10,9 +10,6 @@ class CloudDatabase {
             val auth = FirebaseAuth.getInstance()
             return auth!=null
         }
-        fun incrementDownloads()
-        {
 
-        }
     }
 }

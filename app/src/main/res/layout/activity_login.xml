@@ -5,5 +5,100 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/login_background"
+        android:scaleType="centerCrop"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/al_loginText"
+        android:background="@drawable/white_round_corner"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/al_Logo"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:padding="16dp"
+            />
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/al_SignInButton"
+            android:layout_margin="16dp"
+            android:id="@+id/al_loginText"
+            android:orientation="vertical"
+            android:background="@drawable/login_text_background"
+            >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Help us improve the user
+expereince of the app
+by signing in with google"
+        android:fontFamily="@font/avenir_next_bold"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:padding="32dp"
+        android:layout_margin="16dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@id/al_SignInButton"
+        />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Photex"
+                android:fontFamily="@font/avenir_next_bold"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:textColor="@android:color/darker_gray"
+                />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="8dp"
+        android:id="@+id/al_SignInButton"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/sign_in_button_back"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/google_icon"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign in with Google"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
