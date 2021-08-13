@@ -247,17 +247,22 @@ class Template : Fragment() {
 
                     holder.itemView.setOnClickListener {
                         val bundle = Bundle()
-                        bundle.apply {
-                            putString("MODE", "TEMPLATE")
-                            putString("LINK", model.link)
-                            showCreateFragment(bundle)
-                        }
                         if(CloudDatabase.isLoggedIn()) {
                             val key = model.name
                             val timesUsed: Long = model.TIMES_USED
                             Log.d(TAG, "onBindViewHolder: key = $key, Times Used = $timesUsed")
                             incrementCount(key, timesUsed)
                         }
+                        else
+                        {
+                            Log.d(TAG, "onBindViewHolder: User not Logged In")
+                        }
+                        bundle.apply {
+                            putString("MODE", "TEMPLATE")
+                            putString("LINK", model.link)
+                            showCreateFragment(bundle)
+                        }
+
                     }
                 }
 
