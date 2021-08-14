@@ -17,12 +17,11 @@ class ChangeTextFragment(val fragment: CreateFragment) : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentChangeTextBinding.inflate(layoutInflater,container,false)
-        val selectedItem = fragment.selectedItem!!
-        binding.fctEditTextField.setText(selectedItem.text)
+        binding.fctEditTextField.setText(fragment.selectedItem!!.text)
         binding.fctDoneButton
             .setOnClickListener {
-                selectedItem.text = binding.fctEditTextField.text.toString()
-                binding.fctEditTextField.setText(selectedItem.text)
+                fragment.selectedItem!!.text = binding.fctEditTextField.text.toString()
+                binding.fctEditTextField.setText(fragment.selectedItem!!.text)
                 fragment.reDrawBitmap()
             }
 

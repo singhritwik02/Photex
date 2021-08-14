@@ -3,42 +3,47 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
 }
+android
+        {
+            compileSdkVersion 30
 
-android {
-    compileSdkVersion 30
+            buildFeatures
+                    {
+                        viewBinding true
+                    }
+            defaultConfig {
+                applicationId "com.ritwik.photex"
+                minSdkVersion 21
+                targetSdkVersion 30
+                versionCode 7
+                versionName "1.6"
 
-    buildFeatures
-            {
-                viewBinding true
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
             }
-    defaultConfig {
-        applicationId "com.ritwik.photex"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 5
-        versionName "1.4"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+            buildTypes {
+                release {
+                    minifyEnabled false
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+                }
+
+            }
+
+
+            compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+            kotlinOptions {
+                jvmTarget = '1.8'
+            }
+
         }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-}
 repositories {
     maven {
-        url  "https://android-sdk.is.com/"
+        url "https://android-sdk.is.com/"
     }
 }
 
@@ -55,6 +60,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation files('/Users/ritwiksingh/Downloads/unity_ads.aar')
     implementation files('/Users/ritwiksingh/Downloads/unity_ads.aar')
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

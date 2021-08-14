@@ -1139,13 +1139,12 @@ class CreateFragment : Fragment() {
         }
 
         fun showChangeText() {
-            if (!this::changeTextFragment.isInitialized) {
-                changeTextFragment = ChangeTextFragment(this@CreateFragment)
-            }
+
             activity!!.supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
-                .replace(container, changeTextFragment, FRAGMENT_CHANGE_TEXT).commit()
+                .replace(container, ChangeTextFragment(this@CreateFragment), FRAGMENT_CHANGE_TEXT).commit()
             selectedFragment = FRAGMENT_CHANGE_TEXT
+
         }
 
         fun setStartingFragment() {

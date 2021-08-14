@@ -1,7 +1,11 @@
 package com.ritwik.photex
 
 import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,11 +14,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.ritwik.photex.databinding.FragmentHomeBinding
 import com.unity3d.ads.UnityAds
 import com.unity3d.services.banners.BannerErrorInfo
 import com.unity3d.services.banners.BannerView
 import com.unity3d.services.banners.UnityBannerSize
+import java.lang.Exception
 
 
 class HomeFragment : Fragment() {
@@ -22,7 +31,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private var containerId: Int = 0
     private lateinit var fragment: Fragment
-
+    private var memeWallStatus = MemeWallStatus()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,7 +63,14 @@ class HomeFragment : Fragment() {
                 bundle.putString("MODE", "GALLERY")
                 showCreateFragment(bundle)
             }
+        try {
 
+        updateMemeWallStatus()
+        }
+        catch (e:Exception)
+        {
+            e.printStackTrace()
+        }
         UnityAds.initialize(context, "4218265", false);
         val banner = setUpTopBanner()
         binding.fhTemplateButton.setOnClickListener {
@@ -73,6 +89,23 @@ class HomeFragment : Fragment() {
             }
 
         }
+        val notifications = Notifications(context!!)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notifications.createNotificationChannel()
+        }
+        binding.fhMemeWallButton.setOnClickListener {
+            if(memeWallStatus.status == "AVAILABLE")
+            {
+                val packageName = "com.ritwik.photex"
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                }
+            }
+        }
+
+
 
         return binding.root
     }
@@ -143,7 +176,44 @@ class HomeFragment : Fragment() {
         }
         return true
     }
+    inner class MemeWallStatus
+    {
+     var message = "Coming Soon"
+        var status = "AWAITED"
 
+
+    }
+    private fun updateMemeWallStatus()
+    {
+        val database = FirebaseDatabase.getInstance().reference.child("MEME_WALL_STATUS")
+            .addValueEventListener(
+                object:ValueEventListener
+                {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(!snapshot.exists())
+                        {
+                            Log.d(TAG, "onDataChange: Data snapshot does not exist")
+                            return
+                        }
+                        val message = snapshot.child("MESSAGE").value.toString()
+                        val status = snapshot.child("STATUS").value.toString()
+                        memeWallStatus.message = message
+                        memeWallStatus.status = status
+                        binding.fhMemeWallStatus.setText(message)
+                        if(status == "AVAILABLE")
+                        {
+                            binding.fhMemeWallStatus.setText("Update App")
+                        }
+
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d(TAG, "onCancelled: ")
+                    }
+
+                }
+            )
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

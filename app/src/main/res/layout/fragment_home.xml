@@ -244,6 +244,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"
+        android:id="@+id/fh_MemeWallButton"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -263,7 +264,7 @@
             android:id="@+id/fh_MemeWallStatus"
             android:fontFamily="@font/avenir_next_regular"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
 

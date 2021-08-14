@@ -43,31 +43,35 @@
                 android:scaleType="centerInside" />
         </FrameLayout>
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="20"
             android:layout_gravity="center"
             android:orientation="horizontal"
             >
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:weightSum="5"
+                android:layout_margin="8dp"
                 android:layout_gravity="center"
                 >
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginEnd="8dp"
                     android:paddingBottom="4dp"
+                    android:id="@+id/psip_ShapeRectangle"
                     android:background="@drawable/bottom_line_yellow_bold"
                     >
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/select_recangle"
-                        android:id="@+id/psip_ShapeRectangle"
+
                         android:layout_gravity="center"
                         />
                     <TextView
@@ -81,17 +85,19 @@
                         />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginEnd="8dp"
                     android:paddingBottom="4dp"
+                    android:id="@+id/psip_ShapeOval"
                     >
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/select_oval"
-                        android:id="@+id/psip_ShapeOval"
+
                         android:layout_gravity="center"
                         />
                     <TextView
@@ -105,17 +111,19 @@
                         />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginEnd="8dp"
                     android:paddingBottom="4dp"
+                    android:id="@+id/psip_Move"
                     >
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/select_move"
-                        android:id="@+id/psip_Move"
+
                         android:layout_gravity="center"
                         />
                     <TextView
@@ -129,7 +137,8 @@
                         />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginEnd="8dp"
@@ -152,7 +161,8 @@
                         />
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
