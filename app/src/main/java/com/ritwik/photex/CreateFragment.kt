@@ -62,7 +62,8 @@ class CreateFragment : Fragment() {
     private var fragmentContainer: Int = 0
     private lateinit var watermarkBitmap: Bitmap
     private val selectedWatermarks = arrayListOf<UsernameData>()
-
+   // private lateinit var finalExport:PopupShowFinalExport
+    private lateinit var currentBitmap:Bitmap
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -184,7 +185,8 @@ class CreateFragment : Fragment() {
                             val item = selectedItem!!
                             val paint = item.paint
                             val bounds = Rect()
-                            paint.getTextBounds(item.text, 0, item.text.length, bounds)
+                            // FIXME: 15/08/21 item.text.length
+                            paint.getTextBounds(item.text, 0, item.itemWidth, bounds)
 
                             itemArray[index].locationX = dstX - bounds.width() / 2
                             itemArray[index].locationY = dstY - bounds.height() / 2
@@ -194,7 +196,7 @@ class CreateFragment : Fragment() {
                             itemArray[index].locationY = dstY - bitmap.height / 2
                         }
 
-                        reDrawBitmap()
+                        reDrawBitmapRefined()
                     } else {
                         Toast.makeText(context, "Select an item to edit", Toast.LENGTH_SHORT).show()
                     }
@@ -211,11 +213,18 @@ class CreateFragment : Fragment() {
         UnityAds.initialize(context, "4218265", true)
         binding.fcSaveButton
             .setOnClickListener {
+//              if(!this::finalExport.isInitialized)
+//              {
+//                  finalExport = PopupShowFinalExport()
+//              }
+//                 finalExport.showPopup()
+                finalReDrawBitmap(true)
                 if (UnityAds.isReady("Interstitial_Android")) {
                     UnityAds.show(activity, "Interstitial_Android");
                 }
-
                 saveImage()
+
+
             }
 
 
@@ -326,7 +335,7 @@ class CreateFragment : Fragment() {
                         Log.d(TAG, "onProgressChanged: $degreeRotation")
                         item.rotation = degreeRotation
                         rotateBinding.psrCustomDegree.setText(item.rotation.toString())
-                        reDrawBitmap()
+                        reDrawBitmapRefined()
                     }
 
                 }
@@ -341,7 +350,7 @@ class CreateFragment : Fragment() {
 
             }
         )
-        reDrawBitmap()
+        reDrawBitmapRefined()
 
     }
 
@@ -357,6 +366,19 @@ class CreateFragment : Fragment() {
         val paint = Paint()
         itemRef.type = "TEXT"
         itemRef.text = text
+        // getting the lines and the width of longest line
+        val lines: List<String> = text.split("\n")
+        if (lines.size == 1) {
+            itemRef.itemWidth = text.length
+
+        } else {
+            for (line in lines) {
+                if (line.length > itemRef.itemWidth) {
+                    itemRef.itemWidth = line.length
+                }
+            }
+        }
+
         val presets = Presets(context!!)
         paint.textSize = presets.preSize.toFloat()
         if (presets.preFont != presets.DEFAULT_FONT) {
@@ -378,7 +400,7 @@ class CreateFragment : Fragment() {
         paint.color = try {
             Color.parseColor(presets.preTextColor)
         } catch (e: Exception) {
-            Color.WHITE
+            Color.BLACK
         }
         paint.typeface = if (presets.preFont != presets.DEFAULT_FONT) {
             val file =
@@ -396,8 +418,9 @@ class CreateFragment : Fragment() {
         itemArray.add(itemRef)
         layerRecycler.updateAdapter()
         selectedItem = itemRef
-        reDrawBitmap()
-        itemArray.indexOf(itemRef)
+        val currentIndex = itemArray.indexOf(itemRef)
+        setCurrentBitmap(currentIndex)
+
 
         FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -475,9 +498,9 @@ class CreateFragment : Fragment() {
         }
     }
 
-    fun reDrawBitmap() {
+    fun  reDrawBitmap() {
         // setting presets
-
+        Log.d(TAG, "reDrawBitmap: ")
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(proxy!!)
         // setting the thumbnail
@@ -495,10 +518,7 @@ class CreateFragment : Fragment() {
                 )
 
                 val text = item.text
-
-
                 val lines: List<String> = text.split("\n")
-
                 var yoff = 0
                 var yMarginOff = 0
                 var backgroundHeight = 0
@@ -583,7 +603,7 @@ class CreateFragment : Fragment() {
             val temp = BitmapFunctions.getBitmapFromAssets(context!!, "created_with_photex.png")
             if (temp != null) {
 
-                watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.05f, "H")
+                watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.08f, "H")
             }
 
         }
@@ -595,6 +615,132 @@ class CreateFragment : Fragment() {
                 (mainBitmap.height - (20 + watermarkBitmap.height)).toFloat(),
                 null
             )
+        }
+        binding.fcMainImage.setImageBitmap(proxy)
+        modifiedBitmap = proxy
+
+
+    }
+
+    fun finalReDrawBitmap(waterMarked: Boolean) {
+        // setting presets
+
+        val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(proxy!!)
+        // setting the thumbnail
+
+
+        for (item in itemArray) {
+            if (item.type == "TEXT") {
+                canvas.save()
+                val paint = item.paint
+                val bounds = Rect()
+                paint.getTextBounds(item.text, 0, item.text.length, bounds)
+                canvas.rotate(
+                    item.rotation, item.locationX + bounds.width() / 2,
+                    item.locationY + bounds.height() / 2
+                )
+
+                val text = item.text
+                val lines: List<String> = text.split("\n")
+                var yoff = 0
+                var yMarginOff = 0
+                var backgroundHeight = 0
+                for (i in lines.indices) {
+                    yMarginOff = 0
+                    if (item.backgroundMargins != null) {
+                        val xMargin = item.backgroundMargins!!.marginX
+                        val fontMetrics = paint.fontMetrics
+                        //val yMargin = item.backgroundMargins!!.marginY
+                        val yMargin = 0.1 * (fontMetrics.descent - fontMetrics.ascent)
+                        paint.getFontMetrics(fontMetrics)
+                        val rect = Rect(
+                            (item.locationX - xMargin).toInt(),
+                            (item.locationY + fontMetrics.top - yMargin + yoff).toInt(),
+                            (paint.measureText(lines[i]) + item.locationX + xMargin).toInt(),
+                            (fontMetrics.bottom + item.locationY + yMargin + yoff).toInt()
+                        )
+                        yMarginOff = (rect.height())
+
+                        val bPaint = item.backgroundMargins!!.backPaint
+                        Log.d(TAG, "reDrawBitmap: textX = ${item.locationX},y = ${item.locationY}")
+                        Log.d(
+                            TAG,
+                            "reDrawBitmap: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
+                        )
+                        bPaint.alpha = item.backgroundAlpha
+                        if (item.backgroundMargins!!.rounded) {
+                            val radius =
+                                getCornerRadius(rect.width().toFloat(), rect.height().toFloat())
+                            Log.d(TAG, "reDrawBitmap: xRadius = ${radius}")
+                            canvas.drawRoundRect(rect.toRectF(), radius, radius, bPaint)
+                        } else {
+                            canvas.drawRect(rect, bPaint)
+                        }
+                        Log.d(TAG, "reDrawBitmap: Drawn Rect")
+
+
+                    } else {
+                        Log.d(TAG, "reDrawBitmap: Null Back")
+                    }
+                    canvas.drawText(lines[i], item.locationX, item.locationY + yoff, paint)
+                    paint.getTextBounds(lines[i], 0, lines[i].length, bounds)
+
+                    item.strokePaint?.let {
+                        it.textSize = paint.textSize
+                        it.typeface = paint.typeface
+                        canvas.drawText(lines[i], item.locationX, item.locationY + yoff, it)
+                    }
+                    yoff += (item.lineSpacing.getSpacing() * mainBitmap.height).roundToInt()
+                    if (yMarginOff == 0) {
+                        yoff += bounds.height()
+                    } else {
+                        yoff += yMarginOff
+                    }
+                }
+
+
+                if (item.rotation != 0f) {
+                    canvas.restore()
+                }
+            } else if (item.type == "STICKER" || item.type == "NAME_PRINT") {
+
+                item.getStickerBitmap().let {
+                    canvas.save()
+                    canvas.rotate(
+                        item.rotation, item.locationX + it.width / 2,
+                        item.locationY + it.height / 2
+                    )
+                    canvas.drawBitmap(
+                        it,
+                        (item.locationX),
+                        (item.locationY),
+                        item.paint
+                    )
+                    if (item.rotation != 0f) {
+                        canvas.restore()
+                    }
+                }
+            }
+        }
+        if (waterMarked) {
+            if (!this::watermarkBitmap.isInitialized) {
+                val temp = BitmapFunctions.getBitmapFromAssets(context!!, "created_with_photex.png")
+                if (temp != null) {
+
+                    watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.08f, "H")
+                }
+
+            }
+            // drawing the bitmap at the bottom left
+            if (this::watermarkBitmap.isInitialized) {
+                canvas.drawBitmap(
+                    watermarkBitmap,
+                    20f,
+                    (mainBitmap.height - (20 + watermarkBitmap.height)).toFloat(),
+                    null
+                )
+            }
         }
         binding.fcMainImage.setImageBitmap(proxy)
         modifiedBitmap = proxy
@@ -645,6 +791,7 @@ class CreateFragment : Fragment() {
                     }
                     holder.itemView.setOnClickListener {
                         selectedItem = itemArray[position]
+                        setCurrentBitmap(position)
                         updateAdapter()
                         if (selectedItem!!.type == "TEXT") {
                             if (this@CreateFragment::menuFragmentManager.isInitialized) {
@@ -724,7 +871,7 @@ class CreateFragment : Fragment() {
                 if (binding.pctEditTextField.text.toString() != "") {
                     if (action == "EDIT") {
                         this.selectedItem!!.text = binding.pctEditTextField.text.toString()
-                        reDrawBitmap()
+                        reDrawBitmapRefined()
                         layerRecycler.updateAdapter()
                     } else {
                         addText(binding.pctEditTextField.text.toString())
@@ -963,7 +1110,9 @@ class CreateFragment : Fragment() {
         itemArray.add(itemRef)
         selectedItem = itemRef
         layerRecycler.updateAdapter()
-        reDrawBitmap()
+        val currentIndex = itemArray.indexOf(itemRef)
+        setCurrentBitmap(currentIndex)
+        reDrawBitmapRefined()
 
     }
 
@@ -1038,10 +1187,6 @@ class CreateFragment : Fragment() {
 
             with(textOptionsBinding)
             {
-                ltoBackArrow
-                    .setOnClickListener {
-                        showMainMenuFragment()
-                    }
                 ltoSelectSize
                     .setOnClickListener {
                         showChangeSize()
@@ -1096,12 +1241,11 @@ class CreateFragment : Fragment() {
 
 
         private fun showChangeBackground() {
-            if (!this::changeBackground.isInitialized) {
                 changeBackground = ChangeBackground(this@CreateFragment)
-            }
-            activity!!.supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
-                .replace(container, changeBackground, FRAGMENT_CHANGE_BACKGROUND).commit()
+                activity!!.supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
+                    .add(container, changeBackground, FRAGMENT_CHANGE_BACKGROUND).commit()
+
             selectedFragment = FRAGMENT_CHANGE_BACKGROUND
         }
 
@@ -1142,7 +1286,8 @@ class CreateFragment : Fragment() {
 
             activity!!.supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
-                .replace(container, ChangeTextFragment(this@CreateFragment), FRAGMENT_CHANGE_TEXT).commit()
+                .replace(container, ChangeTextFragment(this@CreateFragment), FRAGMENT_CHANGE_TEXT)
+                .commit()
             selectedFragment = FRAGMENT_CHANGE_TEXT
 
         }
@@ -1200,6 +1345,7 @@ class CreateFragment : Fragment() {
         window.showAtLocation(fontBinding.root, Gravity.CENTER, 0, 0)
         val fontDatabase = FontDatabase(context!!)
         var offlineFonts = fontDatabase.getOfflineFonts()
+
         class OfflineFonts {
             var recyclerView: RecyclerView = fontBinding.psfOfflineFontsRecycler
             val presets = Presets(context!!)
@@ -1235,7 +1381,7 @@ class CreateFragment : Fragment() {
                                         .show()
                                 }
                             }
-                            reDrawBitmap()
+                            reDrawBitmapRefined()
                             window.dismiss()
                         }
                     }
@@ -1309,15 +1455,13 @@ class CreateFragment : Fragment() {
             fontBinding.psfUpdatingLayout.visibility = View.VISIBLE
             fontBinding.psfUpdatingLayout.startAnimation(enterAnimation)
             fontDatabase.update()
-            {status->
-                if(status == 0) {
+            { status ->
+                if (status == 0) {
                     Log.d(TAG, "showFontSelectionPopup: Update Complete")
                     fontBinding.psfUpdatingLayout.startAnimation(exitAnimation)
                     fontBinding.psfUpdatingLayout.visibility = View.GONE
                     offlineFontsRecycler.updateRecycler()
-                }
-                else
-                {
+                } else {
                     offlineFontsRecycler.updateRecycler()
                 }
             }
@@ -1326,7 +1470,6 @@ class CreateFragment : Fragment() {
             fontBinding.psfUpdateLayout.startAnimation(exitAnimation)
             fontBinding.psfUpdateLayout.visibility = View.GONE
         }
-
 
 
         // on click listener for offline device fonts
@@ -1472,7 +1615,7 @@ class CreateFragment : Fragment() {
                 if (temp != null) {
                     selectedItem!!.setStickerBitmap(temp)
                 }
-                reDrawBitmap()
+                reDrawBitmapRefined()
                 return@setOnClickListener
             }
             val temp = resizeBitmap(0.5f)
@@ -1483,7 +1626,7 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
-            reDrawBitmap()
+            reDrawBitmapRefined()
             selectedItem!!.stickerDimension = "SMALL"
 
         }
@@ -1506,7 +1649,7 @@ class CreateFragment : Fragment() {
                 if (temp != null) {
                     selectedItem!!.setStickerBitmap(temp)
                 }
-                reDrawBitmap()
+                reDrawBitmapRefined()
                 return@setOnClickListener
             }
             val temp = resizeBitmap(1f)
@@ -1517,7 +1660,7 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
-            reDrawBitmap()
+            reDrawBitmapRefined()
             selectedItem!!.stickerDimension = "ORIGINAL"
         }
         srpBinding.pcsMedium.setOnClickListener {
@@ -1539,7 +1682,7 @@ class CreateFragment : Fragment() {
                 if (temp != null) {
                     selectedItem!!.setStickerBitmap(temp)
                 }
-                reDrawBitmap()
+                reDrawBitmapRefined()
                 return@setOnClickListener
             }
             val temp = resizeBitmap(1.5f)
@@ -1550,7 +1693,7 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
-            reDrawBitmap()
+          reDrawBitmapRefined()
             selectedItem!!.stickerDimension = "MEDIUM"
         }
         srpBinding.pcsLarge.setOnClickListener {
@@ -1572,7 +1715,7 @@ class CreateFragment : Fragment() {
                 if (temp != null) {
                     selectedItem!!.setStickerBitmap(temp)
                 }
-                reDrawBitmap()
+                reDrawBitmapRefined()
                 return@setOnClickListener
             }
             val temp = resizeBitmap(2f)
@@ -1583,7 +1726,7 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
-            reDrawBitmap()
+            reDrawBitmapRefined()
             selectedItem!!.stickerDimension = "LARGE"
         }
         srpBinding.pcsExtraAdd.setOnClickListener {
@@ -1605,7 +1748,7 @@ class CreateFragment : Fragment() {
 
             }
 
-            reDrawBitmap()
+          reDrawBitmapRefined()
         }
         srpBinding.pcsExtraMinus.setOnClickListener {
             val difference =
@@ -1625,7 +1768,7 @@ class CreateFragment : Fragment() {
 
             }
 
-            reDrawBitmap()
+            reDrawBitmapRefined()
         }
 
     }
@@ -1662,7 +1805,7 @@ class CreateFragment : Fragment() {
                         val alpha = (255 / 100.toFloat()) * it.progress
                         Log.d(TAG, "onProgressChanged: alpha = ${alpha.toInt()}")
                         item.paint.alpha = alpha.roundToInt()
-                        reDrawBitmap()
+                        reDrawBitmapRefined()
                     }
                 }
 
@@ -2109,7 +2252,9 @@ class CreateFragment : Fragment() {
         itemArray.add(itemRef)
         selectedItem = itemRef
         layerRecycler.updateAdapter()
-        reDrawBitmap()
+        val currentIndex = itemArray.indexOf(itemRef)
+        setCurrentBitmap(currentIndex)
+        reDrawBitmapRefined()
 
     }
 
@@ -2357,12 +2502,280 @@ class CreateFragment : Fragment() {
         }
 
     }
+    fun setCurrentBitmap(selectedItemIndex:Int)
+    {
+        val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
+        val canvas = Canvas(proxy!!)
+        // setting the thumbnail
 
+        var item: Items
+        for (n in itemArray.indices) {
+            if(n == selectedItemIndex)
+            {
+                continue
+            }
+            item = itemArray[n]
+            if (item.type == "TEXT") {
+                canvas.save()
+                val paint = item.paint
+                val bounds = Rect()
+                paint.getTextBounds(item.text, 0, item.text.length, bounds)
+                canvas.rotate(
+                    item.rotation, item.locationX + bounds.width() / 2,
+                    item.locationY + bounds.height() / 2
+                )
+
+                val text = item.text
+                val lines: List<String> = text.split("\n")
+                var yoff = 0
+                var yMarginOff = 0
+                var backgroundHeight = 0
+                for (i in lines.indices) {
+                    yMarginOff = 0
+                    if (item.backgroundMargins != null) {
+                        val xMargin = item.backgroundMargins!!.marginX
+                        val fontMetrics = paint.fontMetrics
+                        //val yMargin = item.backgroundMargins!!.marginY
+                        val yMargin = 0.1 * (fontMetrics.descent - fontMetrics.ascent)
+                        paint.getFontMetrics(fontMetrics)
+                        val rect = Rect(
+                            (item.locationX - xMargin).toInt(),
+                            (item.locationY + fontMetrics.top - yMargin + yoff).toInt(),
+                            (paint.measureText(lines[i]) + item.locationX + xMargin).toInt(),
+                            (fontMetrics.bottom + item.locationY + yMargin + yoff).toInt()
+                        )
+                        yMarginOff = (rect.height())
+
+                        val bPaint = item.backgroundMargins!!.backPaint
+                        Log.d(TAG, "reDrawBitmap: textX = ${item.locationX},y = ${item.locationY}")
+                        Log.d(
+                            TAG,
+                            "reDrawBitmap: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
+                        )
+                        bPaint.alpha = item.backgroundAlpha
+                        if (item.backgroundMargins!!.rounded) {
+                            val radius =
+                                getCornerRadius(rect.width().toFloat(), rect.height().toFloat())
+                            Log.d(TAG, "reDrawBitmap: xRadius = ${radius}")
+                            canvas.drawRoundRect(rect.toRectF(), radius, radius, bPaint)
+                        } else {
+                            canvas.drawRect(rect, bPaint)
+                        }
+                        Log.d(TAG, "reDrawBitmap: Drawn Rect")
+
+
+                    } else {
+                        Log.d(TAG, "reDrawBitmap: Null Back")
+                    }
+                    canvas.drawText(lines[i], item.locationX, item.locationY + yoff, paint)
+                    paint.getTextBounds(lines[i], 0, lines[i].length, bounds)
+
+                    item.strokePaint?.let {
+                        it.textSize = paint.textSize
+                        it.typeface = paint.typeface
+                        canvas.drawText(lines[i], item.locationX, item.locationY + yoff, it)
+                    }
+                    yoff += (item.lineSpacing.getSpacing() * mainBitmap.height).roundToInt()
+                    if (yMarginOff == 0) {
+                        yoff += bounds.height()
+                    } else {
+                        yoff += yMarginOff
+                    }
+                }
+
+
+                if (item.rotation != 0f) {
+                    canvas.restore()
+                }
+            } else if (item.type == "STICKER" || item.type == "NAME_PRINT") {
+
+                item.getStickerBitmap().let {
+                    canvas.save()
+                    canvas.rotate(
+                        item.rotation, item.locationX + it.width / 2,
+                        item.locationY + it.height / 2
+                    )
+                    canvas.drawBitmap(
+                        it,
+                        (item.locationX),
+                        (item.locationY),
+                        item.paint
+                    )
+                    if (item.rotation != 0f) {
+                        canvas.restore()
+                    }
+                }
+            }
+        }
+        if (!this::watermarkBitmap.isInitialized) {
+            val temp = BitmapFunctions.getBitmapFromAssets(context!!, "created_with_photex.png")
+            if (temp != null) {
+
+                watermarkBitmap = BitmapFunctions.getResizedBitmap(temp, mainBitmap, 0.08f, "H")
+            }
+
+        }
+        // drawing the bitmap at the bottom left
+        if (this::watermarkBitmap.isInitialized) {
+            canvas.drawBitmap(
+                watermarkBitmap,
+                20f,
+                (mainBitmap.height - (20 + watermarkBitmap.height)).toFloat(),
+                null
+            )
+        }
+        binding.fcMainImage.setImageBitmap(proxy)
+        currentBitmap = proxy
+        reDrawBitmapRefined()
+    }
+    fun reDrawBitmapRefined()
+    {
+        if(selectedItem == null)
+        {
+            Toast.makeText(context, "No item selected!", Toast.LENGTH_SHORT).show()
+        }
+        Log.d(TAG, "reDrawBitmapRefined:")
+        val proxy = currentBitmap.copy(Bitmap.Config.ARGB_8888,true)
+        val item = selectedItem!!
+        val canvas = Canvas(proxy)
+        if (item.type == "TEXT") {
+            canvas.save()
+            val paint = item.paint
+            val bounds = Rect()
+            paint.getTextBounds(item.text, 0, item.text.length, bounds)
+            canvas.rotate(
+                item.rotation, item.locationX + bounds.width() / 2,
+                item.locationY + bounds.height() / 2
+            )
+
+            val text = item.text
+            val lines: List<String> = text.split("\n")
+            var yoff = 0
+            var yMarginOff = 0
+            var backgroundHeight = 0
+            for (i in lines.indices) {
+                yMarginOff = 0
+                if (item.backgroundMargins != null) {
+                    val xMargin = item.backgroundMargins!!.marginX
+                    val fontMetrics = paint.fontMetrics
+                    //val yMargin = item.backgroundMargins!!.marginY
+                    val yMargin = 0.1 * (fontMetrics.descent - fontMetrics.ascent)
+                    paint.getFontMetrics(fontMetrics)
+                    val rect = Rect(
+                        (item.locationX - xMargin).toInt(),
+                        (item.locationY + fontMetrics.top - yMargin + yoff).toInt(),
+                        (paint.measureText(lines[i]) + item.locationX + xMargin).toInt(),
+                        (fontMetrics.bottom + item.locationY + yMargin + yoff).toInt()
+                    )
+                    yMarginOff = (rect.height())
+
+                    val bPaint = item.backgroundMargins!!.backPaint
+                    Log.d(TAG, "reDrawBitmapRefined: textX = ${item.locationX},y = ${item.locationY}")
+                    Log.d(
+                        TAG,
+                        "reDrawBitmapRefined: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
+                    )
+                    bPaint.alpha = item.backgroundAlpha
+                    if (item.backgroundMargins!!.rounded) {
+                        val radius =
+                            getCornerRadius(rect.width().toFloat(), rect.height().toFloat())
+                        Log.d(TAG, "reDrawBitmapRefined: xRadius = ${radius}")
+                        canvas.drawRoundRect(rect.toRectF(), radius, radius, bPaint)
+                    } else {
+                        canvas.drawRect(rect, bPaint)
+                    }
+                    Log.d(TAG, "reDrawBitmapRefined: Drawn Rect")
+
+
+                } else {
+                    Log.d(TAG, "reDrawBitmapRefined: Null Back")
+                }
+                canvas.drawText(lines[i], item.locationX, item.locationY + yoff, paint)
+                paint.getTextBounds(lines[i], 0, lines[i].length, bounds)
+
+                item.strokePaint?.let {
+                    it.textSize = paint.textSize
+                    it.typeface = paint.typeface
+                    canvas.drawText(lines[i], item.locationX, item.locationY + yoff, it)
+                }
+                yoff += (item.lineSpacing.getSpacing() * mainBitmap.height).roundToInt()
+                if (yMarginOff == 0) {
+                    yoff += bounds.height()
+                } else {
+                    yoff += yMarginOff
+                }
+            }
+
+
+            if (item.rotation != 0f) {
+                canvas.restore()
+            }
+        } else if (item.type == "STICKER" || item.type == "NAME_PRINT") {
+
+            item.getStickerBitmap().let {
+                canvas.save()
+                canvas.rotate(
+                    item.rotation, item.locationX + it.width / 2,
+                    item.locationY + it.height / 2
+                )
+                canvas.drawBitmap(
+                    it,
+                    (item.locationX),
+                    (item.locationY),
+                    item.paint
+                )
+                if (item.rotation != 0f) {
+                    canvas.restore()
+                }
+            }
+        }
+        binding.fcMainImage.setImageBitmap(proxy)
+        modifiedBitmap = proxy
+
+    }
     private fun getCornerRadius(width: Float, height: Float): Float {
         var radius = 0f
         radius = (height * 0.2).toFloat()
         return radius
     }
+
+//    inner class PopupShowFinalExport {
+//        var watermarked: Boolean = false
+//        private lateinit var popupBinding: PopupFinalExportBinding
+//        private lateinit var window: PopupWindow
+//        fun showPopup() {
+//            if (!this::popupBinding.isInitialized) {
+//                popupBinding = PopupFinalExportBinding.inflate(layoutInflater)
+//                window = PopupWindow(
+//                    popupBinding.root,
+//                    WindowManager.LayoutParams.MATCH_PARENT,
+//                    WindowManager.LayoutParams.MATCH_PARENT,
+//                    true
+//                )
+//
+//            }
+//            window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
+//            popupBinding.pfeMainImage.setImageBitmap(modifiedBitmap)
+//            popupBinding.pfeSaveButton.setOnClickListener {
+//                finalReDrawBitmap(true)
+//                if (UnityAds.isReady("Interstitial_Android")) {
+//                    UnityAds.show(activity, "Interstitial_Android");
+//                }
+//                saveImage()
+//            }
+//            popupBinding.pfeWatermarkButton
+//                .setOnClickListener {
+//                    val referral = Referral()
+//                    val referalLink = referral.getCustomLink()
+//                    Log.d(TAG, "showPopup: $referalLink")
+//                    val intent = Intent()
+//                    intent.action = Intent.ACTION_SEND
+//                    intent.putExtra(Intent.EXTRA_TEXT,referalLink)
+//                    intent.type = "text/plain"
+//                    startActivity(intent)
+//                }
+//        }
+//    }
 
 
 }

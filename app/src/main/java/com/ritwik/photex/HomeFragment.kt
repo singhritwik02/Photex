@@ -103,9 +103,32 @@ class HomeFragment : Fragment() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
                 }
             }
+            else
+            {
+                startActivity(Intent(activity,TweetWthText::class.java))
+            }
+        }
+        val versionName = getVersionCode()
+        getLatestVersionName {latestVersion->
+        if(!versionName.equals(latestVersion))
+        {
+            binding.fhUpdateButton.visibility = View.VISIBLE
+        }
+            else
+        {
+            binding.fhUpdateButton.visibility = View.GONE
         }
 
-
+        }
+        binding.fhUpdateButton.setOnClickListener {
+            val packageName = "com.ritwik.photex"
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+            }
+        }
+        Log.d(TAG, "onCreateView: version Name = $versionName")
 
         return binding.root
     }
@@ -216,6 +239,32 @@ class HomeFragment : Fragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+    }
+    fun getVersionCode(): String {
+        return try {
+            val packageInfo = context!!.packageManager.getPackageInfo(context!!.packageName, 0)
+            packageInfo.versionName
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "1"
+        }
+    }
+    fun getLatestVersionName(function:(String)->Unit)
+    {
+        val database = FirebaseDatabase.getInstance().reference
+        database.child("LATEST_VERSION_NAME").addValueEventListener(
+            object:ValueEventListener
+            {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val versionName = snapshot.value.toString()
+                    function(versionName)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, "onCancelled: ")
+                }
+
+            }
+        )
     }
 }

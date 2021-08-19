@@ -17,6 +17,8 @@ open class Items {
     var locationY = 0f
     var rotation = 0f
     var paint = Paint()
+    var itemHeight = 0f
+    var itemWidth:Int = 0
     var size = 0f
     var strokePaint:Paint? = null
     var backgroundMargins:Margins? = null

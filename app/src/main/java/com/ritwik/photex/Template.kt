@@ -156,7 +156,10 @@ class Template : Fragment() {
                                         imageList.add(link)
                                     } else {
                                         Log.d(TAG, "onDataChange: search string not empty")
-                                        if (child.key.toString().contains(searchString, true)) {
+                                        // replacing _ with spaces in the key
+                                        var key = child.key.toString()
+                                        key.replace("_"," ")
+                                        if (key.contains(searchString, true)) {
                                             Log.d(TAG, "onDataChange: key matches")
                                             imageList.add(link)
                                         } else {

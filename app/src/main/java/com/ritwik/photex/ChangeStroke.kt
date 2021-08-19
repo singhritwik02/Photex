@@ -30,13 +30,13 @@ class ChangeStroke(val fragment: CreateFragment) : Fragment() {
         { color ->
             selectedColor = color
             fragment.addStroke(2, color)
-            fragment.reDrawBitmap()
+            fragment.reDrawBitmapRefined()
         }
         colorRecycler.showRecycler()
         binding.fcsClearButton
             .setOnClickListener {
                 fragment.addStroke(0, null)
-                fragment.reDrawBitmap()
+                fragment.reDrawBitmapRefined()
             }
         binding.fcsStrokeWidthUp
             .setOnClickListener {
@@ -49,7 +49,7 @@ class ChangeStroke(val fragment: CreateFragment) : Fragment() {
                 binding.fcsStrokeWidthField.setText(width.toString())
                 fragment.addStroke(width, selectedColor)
 
-                fragment.reDrawBitmap()
+                fragment.reDrawBitmapRefined()
 
             }
         binding.fcsStrokeWidthDown
@@ -68,7 +68,7 @@ class ChangeStroke(val fragment: CreateFragment) : Fragment() {
                 binding.fcsStrokeWidthField.setText(width.toString())
                 fragment.addStroke(width, selectedColor)
 
-                fragment.reDrawBitmap()
+                fragment.reDrawBitmapRefined()
 
             }
         return binding.root

@@ -20,10 +20,18 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         // Inflate the layout for this fragment
         
         _binding = FragmentChangeBackgroundBinding.inflate(layoutInflater, container, false)
-        val item = fragment.selectedItem!!
         val mainBitmap = fragment.mainBitmap
-        val progressF = (225 / 100.toFloat()) * item.backgroundAlpha
+        val progressF = (225 / 100.toFloat()) * fragment.selectedItem!!.backgroundAlpha
+        Log.d(TAG, "onCreateView: background alpha = ${fragment.selectedItem!!.backgroundAlpha}")
         val progress = progressF.toInt()
+        binding.ptbRoundedCornersButtton.isChecked  = if(fragment.selectedItem!!.backgroundMargins!=null)
+        {
+            fragment.selectedItem!!.backgroundMargins!!.rounded
+        }
+        else
+        {
+            false
+        }
         binding.pcbAlphaSeekBar.progress = if (progress > 100) {
             Log.d(TAG, "setBackground: setting progress to $progress")
             progress
@@ -34,28 +42,24 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
             Log.d(TAG, "setBackground: setting progress to $progress")
             progress
         }
-        if (item.backgroundMargins == null) {
+        if (fragment.selectedItem!!.backgroundMargins == null) {
 
-            binding.ptbHorizontalSeekBar.progress = 0
+          binding.ptbHorizontalSeekBar.progress = 0
         } else {
 
-            val xMargin = item.backgroundMargins!!.marginX
-            val yMargin = item.backgroundMargins!!.marginY
+            val xMargin = fragment.selectedItem!!.backgroundMargins!!.marginX
+            val yMargin = fragment.selectedItem!!.backgroundMargins!!.marginY
             val progressH = (xMargin / mainBitmap.width.toFloat()) * 100
             val progressV = (yMargin / mainBitmap.height.toFloat()) * 100
             Log.d(TAG, "setBackground: Horizontal Progress = $progressH")
             Log.d(TAG, "setBackground: Vertical Progress = $progressV")
             binding.ptbHorizontalSeekBar.progress = progressH.toInt()
-
-
         }
-
-
         binding.pcbClearButton.setOnClickListener {
-            item.removeBackground()
-            item.backgroundAlpha = 225
-            fragment.reDrawBitmap()
-            val progressF = (225 / 100.toFloat()) * item.backgroundAlpha
+            fragment.selectedItem!!.removeBackground()
+            fragment.selectedItem!!.backgroundAlpha = 225
+            fragment.reDrawBitmapRefined()
+            val progressF = (225 / 100.toFloat()) * fragment.selectedItem!!.backgroundAlpha
             val progress = progressF.toInt()
             binding.pcbAlphaSeekBar.progress = if (progress > 100) {
                 Log.d(TAG, "setBackground: setting progress to $progress")
@@ -67,12 +71,12 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
                 Log.d(TAG, "setBackground: setting progress to $progress")
                 progress
             }
-            if (item.backgroundMargins == null) {
+            if (fragment.selectedItem!!.backgroundMargins == null) {
                 binding.ptbHorizontalSeekBar.progress = 0
             } else {
 
-                val xMargin = item.backgroundMargins!!.marginX
-                val yMargin = item.backgroundMargins!!.marginY
+                val xMargin = fragment.selectedItem!!.backgroundMargins!!.marginX
+                val yMargin = fragment.selectedItem!!.backgroundMargins!!.marginY
                 val progressH = (xMargin / mainBitmap.width.toFloat()) * 100
                 val progressV = (yMargin / mainBitmap.height.toFloat()) * 100
                 Log.d(TAG, "setBackground: Horizontal Progress = $progressH")
@@ -84,13 +88,12 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         }
         binding.fcbLineSpacingBar.setOnSeekBarChangeListener(
             object :SeekBar.OnSeekBarChangeListener
-
             {
                 override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                     p0?.let {
                         val spacing = it.progress * 0.001
-                        item.lineSpacing.setSpacing(spacing.toFloat())
-                        fragment.reDrawBitmap()
+                        fragment.selectedItem!!.lineSpacing.setSpacing(spacing.toFloat())
+                        fragment.reDrawBitmapRefined()
                     }
                 }
 
@@ -110,13 +113,13 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
                     p0?.let {
                         val max = mainBitmap.width
                         val width = (max / 100.toFloat()) * it.progress
-                        if (item.backgroundMargins == null) {
-                            item.setBackground(width, 2f, null)
-                            fragment.reDrawBitmap()
+                        if (fragment.selectedItem!!.backgroundMargins == null) {
+                            fragment.selectedItem!!.setBackground(width, 2f, null)
+                            fragment.reDrawBitmapRefined()
                         } else {
-                            val y = item.backgroundMargins!!.marginY
-                            item.setBackground(width, y, null)
-                            fragment.reDrawBitmap()
+                            val y = fragment.selectedItem!!.backgroundMargins!!.marginY
+                            fragment.selectedItem!!.setBackground(width, y, null)
+                            fragment.reDrawBitmapRefined()
                         }
                     }
                 }
@@ -132,16 +135,16 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
             }
         )
         binding.ptbRoundedCornersButtton.setOnCheckedChangeListener { compoundButton, b ->
-            if(item.backgroundMargins!=null)
+            if(fragment.selectedItem!!.backgroundMargins!=null)
             {
-                item.backgroundMargins!!.rounded = b
+                fragment.selectedItem!!.backgroundMargins!!.rounded = b
             }
             else
             {
-                item.setBackground(2f,2f,null)
-                item.backgroundMargins!!.rounded = b
+                fragment.selectedItem!!.setBackground(2f,2f,null)
+                fragment.selectedItem!!.backgroundMargins!!.rounded = b
             }
-            fragment.reDrawBitmap()
+            fragment.reDrawBitmapRefined()
 
         }
         binding.pcbAlphaSeekBar.setOnSeekBarChangeListener(
@@ -151,8 +154,8 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
                         val alpha = (255 / 100.toFloat()) * it.progress
 
                         Log.d(TAG, "onProgressChanged: alpha = ${alpha.toInt()}")
-                        item.backgroundAlpha = alpha.toInt()
-                        fragment.reDrawBitmap()
+                        fragment.selectedItem!!.backgroundAlpha = alpha.toInt()
+                        fragment.reDrawBitmapRefined()
                     }
                 }
 
@@ -168,25 +171,24 @@ class ChangeBackground (val fragment: CreateFragment): Fragment() {
         )
         val colorRecycler = ColorRecycler(binding.ptbColorRecycler, context!!,false)
         { colorString ->
-            if (item.backgroundMargins != null) {
-                var x = item.backgroundMargins!!.marginX
-                var y = item.backgroundMargins!!.marginY
+            if (fragment.selectedItem!!.backgroundMargins != null) {
+                var x = fragment.selectedItem!!.backgroundMargins!!.marginX
+                var y = fragment.selectedItem!!.backgroundMargins!!.marginY
 
-                item.setBackground(x, y, colorString)
-                fragment.reDrawBitmap()
+                fragment.selectedItem!!.setBackground(x, y, colorString)
+                fragment.reDrawBitmapRefined()
             } else {
-                item.setBackground(2f, 2f, colorString)
-                fragment.reDrawBitmap()
+                fragment.selectedItem!!.setBackground(2f, 2f, colorString)
+                fragment.reDrawBitmapRefined()
             }
         }
         colorRecycler.showRecycler()
-        fragment.reDrawBitmap()
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
     }
 
     companion object {

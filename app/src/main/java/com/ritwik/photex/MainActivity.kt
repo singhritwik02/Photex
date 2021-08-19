@@ -2,17 +2,32 @@ package com.ritwik.photex
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.ritwik.photex.databinding.ActivityMainBinding
 import com.ritwik.photex.databinding.PopupExitConfirmationBinding
 import com.unity3d.ads.IUnityAdsListener;
 import com.unity3d.ads.UnityAds;
+import androidx.annotation.NonNull
+import androidx.fragment.app.FragmentActivity
+
+import com.google.android.gms.tasks.OnFailureListener
+
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData
+
+import com.google.android.gms.tasks.OnSuccessListener
+
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +57,36 @@ class MainActivity : AppCompatActivity() {
         {
 
         }
+//        FirebaseDynamicLinks.getInstance()
+//            .getDynamicLink(intent)
+//            .addOnSuccessListener(
+//                this
+//            ) { pendingDynamicLinkData ->
+//                // Get deep link from result (may be null if no link is found)
+//                var deepLink: Uri? = null
+//                if (pendingDynamicLinkData != null) {
+//                    deepLink = pendingDynamicLinkData.link
+//                }
+//
+//                Log.e(TAG, "onCreate: Link received")
+//                Log.e(TAG, "onCreate: ${deepLink?.toString()}")
+//                Toast.makeText(this, "${deepLink?.toString()}", Toast.LENGTH_SHORT).show()
+//                // Handle the deep link. For example, open the linked
+//                // content, or apply promotional credit to the user's
+//                // account.
+//                // ...
+//
+//                // ...
+//            }
+//            .addOnFailureListener(
+//                this
+//            ) { e ->
+//                Log.w(
+//                    TAG,
+//                    "getDynamicLink:onFailure",
+//                    e
+//                )
+//            }
 
     }
 

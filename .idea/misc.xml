@@ -4,14 +4,23 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/login_text_background.xml" value="0.2564814814814815" />
+        <entry key="app/src/main/res/drawable/rounded_shape.xml" value="0.24814814814814815" />
         <entry key="app/src/main/res/drawable/sign_in_button_back.xml" value="0.2537037037037037" />
         <entry key="app/src/main/res/drawable/white_round_corner.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.268018018018018" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.18" />
+        <entry key="app/src/main/res/layout/activity_tweet_with_text.xml" value="0.268018018018018" />
+        <entry key="app/src/main/res/layout/activity_tweet_wth_text.xml" value="0.268018018018018" />
+        <entry key="app/src/main/res/layout/fragment_change_background.xml" value="0.1698198198198198" />
+        <entry key="app/src/main/res/layout/fragment_create.xml" value="0.2101851851851852" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_main_menu.xml" value="0.2101851851851852" />
         <entry key="app/src/main/res/layout/fragment_template.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/layout_text_options.xml" value="0.22037037037037038" />
+        <entry key="app/src/main/res/layout/popup_final_export.xml" value="0.22" />
         <entry key="app/src/main/res/layout/popup_image_crop.xml" value="0.2644444444444444" />
         <entry key="app/src/main/res/layout/popup_select_image_part.xml" value="0.25" />
         <entry key="app/src/main/res/layout/single_template.xml" value="0.15" />
+        <entry key="app/src/main/res/layout/tweet_with_image.xml" value="0.25" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1837837837837838" />
       </map>
     </option>

@@ -31,7 +31,7 @@ class ChangeColorFragment (val fragment:CreateFragment): Fragment() {
             selectedColor = color
             selectedItem.paint.color = Color.parseColor(selectedColor)
             presets.preTextColor = selectedColor
-            fragment.reDrawBitmap()
+            fragment.reDrawBitmapRefined()
         }
         colorRecycler.showRecycler()
         binding.fccChooseColor
@@ -45,7 +45,7 @@ class ChangeColorFragment (val fragment:CreateFragment): Fragment() {
                             selectedColor = "#${envelope.hexCode}"
                             selectedItem.paint.color = Color.parseColor(selectedColor)
                             presets.preTextColor = selectedColor
-                            fragment.reDrawBitmap()
+                            fragment.reDrawBitmapRefined()
 
                         })
                     .setNegativeButton("Cancel",

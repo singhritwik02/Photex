@@ -22,7 +22,7 @@ class ChangeTextFragment(val fragment: CreateFragment) : Fragment() {
             .setOnClickListener {
                 fragment.selectedItem!!.text = binding.fctEditTextField.text.toString()
                 binding.fctEditTextField.setText(fragment.selectedItem!!.text)
-                fragment.reDrawBitmap()
+                fragment.reDrawBitmapRefined()
             }
 
         return binding.root

@@ -64,14 +64,12 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
             fragment.chooseImage(1024)
 
         }
-
         return binding.root
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
     fun changeToSticker() {
@@ -85,11 +83,15 @@ class MainMenuFragment(fragment: CreateFragment) : Fragment() {
     }
 
     fun changeToText() {
-        if (binding.fmmEditTextLabel.text != "Edit") {
-            binding.fmmEditText.animate().alpha(0f).setDuration(250).withEndAction {
-                binding.fmmEditTextImage.setImageResource(R.drawable.edit_text)
-                binding.fmmEditTextLabel.text = "Edit"
-                binding.fmmEditText.animate().alpha(1f).duration = 250
+        binding.root.post {
+
+
+            if (binding.fmmEditTextLabel.text != "Edit") {
+                binding.fmmEditText.animate().alpha(0f).setDuration(250).withEndAction {
+                    binding.fmmEditTextImage.setImageResource(R.drawable.edit_text)
+                    binding.fmmEditTextLabel.text = "Edit"
+                    binding.fmmEditText.animate().alpha(1f).duration = 250
+                }
             }
         }
     }

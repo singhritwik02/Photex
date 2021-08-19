@@ -29,7 +29,7 @@ class ChangeSizeFragment (val fragment: CreateFragment): Fragment() {
 
             paint.textSize = sizeInFloat
             presets.preSize = selectedItem!!.paint.textSize
-            fragment.reDrawBitmap()
+            fragment.reDrawBitmapRefined()
 
         }
         binding.fcsDecrease.setOnClickListener {
@@ -37,7 +37,7 @@ class ChangeSizeFragment (val fragment: CreateFragment): Fragment() {
             binding.fcsField.setText(sizeInFloat.toString())
             paint.textSize = sizeInFloat
             presets.preSize = selectedItem!!.paint.textSize
-            fragment.reDrawBitmap()
+            fragment.reDrawBitmapRefined()
 
         }
         return binding.root

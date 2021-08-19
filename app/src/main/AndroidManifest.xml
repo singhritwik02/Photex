@@ -16,15 +16,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Photex" >
+        <activity
+            android:name=".TweetWthText"
+            android:exported="true" />
+
         <service
             android:name=".Notifications"
             android:enabled="true"
             android:exported="true"
-            tools:ignore="Instantiatable">
-
+            tools:ignore="Instantiatable" >
         </service>
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/notification_icon" />
+
         <activity
             android:name=".LoginActivity"
             android:exported="true" />
@@ -35,6 +41,16 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="example.com"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
     </application>

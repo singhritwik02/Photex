@@ -16,6 +16,51 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="40"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                >
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fmm_TextSettings"
+                    android:src="@drawable/text_settings"
+                    />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fmm_StickerSettings"
+                    android:src="@drawable/sticker_settings"
+                    />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fmm_AddImage"
+                    android:src="@drawable/image_settings"
+                    />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="10"
+                    android:layout_gravity="center"
+                    android:id="@+id/fmm_AddWatermarkButton"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/watermark_button"
+                    />
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,50 +169,6 @@
                         />
 
                 </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="40"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal"
-                >
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/fmm_TextSettings"
-                    android:src="@drawable/text_settings"
-                    />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/fmm_StickerSettings"
-                    android:src="@drawable/sticker_settings"
-                    />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/fmm_AddImage"
-                    android:src="@drawable/image_settings"
-                    />
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_weight="10"
-                    android:layout_gravity="center"
-                    android:id="@+id/fmm_AddWatermarkButton"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/watermark_button"
-                    />
-
             </LinearLayout>
 
         </LinearLayout>
