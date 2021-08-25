@@ -27,6 +27,7 @@ class Template : Fragment() {
     private var _binding: FragmentTemplateBinding? = null
     private val binding get() = _binding!!
     private var containerId = 0
+    private var startSearchString:String? = null
 
 
     override fun onCreateView(
@@ -35,14 +36,28 @@ class Template : Fragment() {
     ): View? {
         containerId = container?.id!!
         _binding = FragmentTemplateBinding.inflate(inflater, container, false)
+        arguments?.let {
+            startSearchString = it.get("SEARCH_STRING").toString()
+
+        }
         val recyclerView = binding.ftRecycler
         val manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = manager
         binding.ftTemplateLabel.text = "Loading Templates"
         val recyclerClass = DefaultRecyclerClass(recyclerView)
-
         val firebaseRecycler = FirebaseRec()
-        firebaseRecycler.showRecycler(recyclerView)
+
+        if(startSearchString!=null)
+        {
+            binding.ftSearchField.setText(startSearchString)
+            Log.d(TAG, "onCreateView: start search string is not null")
+            recyclerClass.showRecycler(startSearchString!!)
+        }
+        else
+        {
+            Log.d(TAG, "onCreateView: start search string is null")
+            firebaseRecycler.showRecycler(recyclerView)
+        }
 
         binding.ftSearchField.addTextChangedListener(
             object : TextWatcher {

@@ -25,9 +25,7 @@ import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.android.gms.tasks.OnSuccessListener
 
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
-
-
-
+import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,11 +36,35 @@ class MainActivity : AppCompatActivity() {
     val FRAGMENT_CHANGE_COLOR = "CHANGE_COLOR"
     val FRAGMENT_CHANGE_STROKE = "CHANGE_STROKE"
     val FRAGMENT_CHANGE_BACKGROUND = "CHANGE_BACKGROUND"
+    private var templateString:String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-
+        intent.extras?.let {
+            if(it.get("TEMPLATE_STRING")!=null)
+            {
+                templateString = it.get("TEMPLATE_STRING").toString()
+            }
+            else if(it.containsKey("SEARCH_STRING"))
+            {
+                templateString = it.get("SEARCH_STRING").toString()
+            }
+        }
         val homeFragment = HomeFragment()
+        if(templateString!=null)
+        {
+            with(Bundle())
+            {
+                putString("TEMPLATE",templateString)
+                homeFragment.arguments = this
+                
+            }
+            Log.d(TAG, "onCreate: template string is not null")
+        }
+        else
+        {
+            Log.d(TAG, "onCreate: template string is null")
+        }
         supportFragmentManager.beginTransaction()
             .replace(binding.amFragmentLayout.id, homeFragment, "HOME_FRAGMENT").commit()
 
@@ -55,38 +77,30 @@ class MainActivity : AppCompatActivity() {
         }
         else
         {
+            if(Referral.isFirstRun(this@MainActivity))
+            {
+
+            }
+            else
+            {
+                Log.d(TAG, "onCreate: Not first run")
+            }
+            processReferral()
+        }
+
+        startService(Intent(this,Notifications::class.java))
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {task->
+            if(!task.isSuccessful)
+            {
+                Log.d(TAG, "onCreate: Failed to get token")
+                return@addOnCompleteListener
+            }
+            val token = task.getResult()
+            Log.d(TAG, "onCreate: $token")
+
 
         }
-//        FirebaseDynamicLinks.getInstance()
-//            .getDynamicLink(intent)
-//            .addOnSuccessListener(
-//                this
-//            ) { pendingDynamicLinkData ->
-//                // Get deep link from result (may be null if no link is found)
-//                var deepLink: Uri? = null
-//                if (pendingDynamicLinkData != null) {
-//                    deepLink = pendingDynamicLinkData.link
-//                }
-//
-//                Log.e(TAG, "onCreate: Link received")
-//                Log.e(TAG, "onCreate: ${deepLink?.toString()}")
-//                Toast.makeText(this, "${deepLink?.toString()}", Toast.LENGTH_SHORT).show()
-//                // Handle the deep link. For example, open the linked
-//                // content, or apply promotional credit to the user's
-//                // account.
-//                // ...
-//
-//                // ...
-//            }
-//            .addOnFailureListener(
-//                this
-//            ) { e ->
-//                Log.w(
-//                    TAG,
-//                    "getDynamicLink:onFailure",
-//                    e
-//                )
-//            }
+
 
     }
 
@@ -167,6 +181,64 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+    }
+    fun processReferral()
+    {
+        val referral = Referral(this@MainActivity)
+        referral.checkReferralDuplicacy {isDuplicate ->
+        if(!isDuplicate)
+        {
+            processLink(referral)
+        }
+            else
+                
+        {
+            Log.d(TAG, "processReferral: Already Referred")
+        }
+            
+        }
+    }
+    fun processLink(referral: Referral)
+    {
+        FirebaseDynamicLinks.getInstance()
+            .getDynamicLink(intent)
+            .addOnSuccessListener(
+                this
+            ) { pendingDynamicLinkData ->
+                // Get deep link from result (may be null if no link is found)
+                var deepLink: Uri? = null
+                if (pendingDynamicLinkData != null) {
+                    deepLink = pendingDynamicLinkData.link
+                }
+
+                Log.e(TAG, "onCreate: Link received")
+                Log.e(TAG, "onCreate: ${deepLink?.toString()}")
+                val fullLink = deepLink?.toString()
+                // Handle the deep link. For example, open the linked
+                // content, or apply promotional credit to the user's
+                // account.
+                // ...
+                if(fullLink!=null) {
+                    val startIndex = fullLink.indexOf("uid=")+4
+                    val decodedUid = fullLink.substring(startIndex)
+                    Log.d(TAG, "getCustomLink: decodedUID = $decodedUid")
+                    referral.setReferrer(decodedUid)
+                    referral.rewardToReferrer(decodedUid)
+                    referral.setFirstRun()
+                }
+
+                // ...
+            }
+            .addOnFailureListener(
+                this
+            ) { e ->
+                Log.w(
+                    TAG,
+                    "getDynamicLink:onFailure",
+                    e
+                )
+            }
 
     }
 

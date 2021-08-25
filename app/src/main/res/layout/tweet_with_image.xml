@@ -120,7 +120,7 @@
 
 
                 <com.github.siyamed.shapeimageview.RoundedImageView
-                    android:id="@+id/image_tweet"
+                    android:id="@+id/atwi_TweetImage"
                     android:layout_width="match_parent"
                     android:layout_height="512px"
                     android:layout_margin="10dp"

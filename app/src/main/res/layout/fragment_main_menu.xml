@@ -16,6 +16,15 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:fontFamily="@font/avenir_next_bold"
+                android:textColor="@color/black"
+                android:layout_marginStart="32dp"
+                android:textSize="16sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

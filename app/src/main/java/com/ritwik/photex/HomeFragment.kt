@@ -8,9 +8,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -19,6 +18,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.ritwik.photex.databinding.FragmentHomeBinding
+import com.ritwik.photex.databinding.PopupTweetOptionsBinding
 import com.unity3d.ads.UnityAds
 import com.unity3d.services.banners.BannerErrorInfo
 import com.unity3d.services.banners.BannerView
@@ -39,7 +39,19 @@ class HomeFragment : Fragment() {
         containerId = container?.id!!
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
+        arguments?.let {
+            if (it.get("TEMPLATE")!=null)
+            {
+                val templateString = it.getString("TEMPLATE").toString()
+                if (container != null) {
+                    val template = Template()
+                    val bundle = Bundle()
+                    bundle.putString("SEARCH_STRING",templateString)
+                    template.arguments = bundle
+                    activity?.supportFragmentManager?.beginTransaction()?.replace(container.id, template, "TEMPLATE_FRAGMENT")?.addToBackStack("")?.commit()
+                }
+            }
+        }
         binding.fhBlankButton
             .setOnClickListener {
 
@@ -63,16 +75,14 @@ class HomeFragment : Fragment() {
                 bundle.putString("MODE", "GALLERY")
                 showCreateFragment(bundle)
             }
-        try {
+       binding.fhTwitterMainLayout.setOnClickListener {
+           if(!checkPermission())
+           {
+               return@setOnClickListener
+           }
+           showTweetOptions()
+       }
 
-        updateMemeWallStatus()
-        }
-        catch (e:Exception)
-        {
-            e.printStackTrace()
-        }
-        UnityAds.initialize(context, "4218265", false);
-        val banner = setUpTopBanner()
         binding.fhTemplateButton.setOnClickListener {
             if(!checkPermission())
             {
@@ -80,34 +90,20 @@ class HomeFragment : Fragment() {
             }
             activity?.let {
                 if (container != null) {
+                    val template = Template()
+                    val bundle = Bundle()
+                   // bundle.putString("SEARCH_STRING","shershah")
+                   // template.arguments = bundle
                     it.supportFragmentManager.beginTransaction()
-                        .replace(container.id, Template(), "TEMPLATE_FRAGMENT").addToBackStack("")
+                        .replace(container.id, template, "TEMPLATE_FRAGMENT").addToBackStack("")
                         .commit()
-                    banner.destroy()
+
 
                 }
             }
 
         }
-        val notifications = Notifications(context!!)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notifications.createNotificationChannel()
-        }
-        binding.fhMemeWallButton.setOnClickListener {
-            if(memeWallStatus.status == "AVAILABLE")
-            {
-                val packageName = "com.ritwik.photex"
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-                } catch (e: ActivityNotFoundException) {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-                }
-            }
-            else
-            {
-                startActivity(Intent(activity,TweetWthText::class.java))
-            }
-        }
+
         val versionName = getVersionCode()
         getLatestVersionName {latestVersion->
         if(!versionName.equals(latestVersion))
@@ -206,37 +202,37 @@ class HomeFragment : Fragment() {
 
 
     }
-    private fun updateMemeWallStatus()
-    {
-        val database = FirebaseDatabase.getInstance().reference.child("MEME_WALL_STATUS")
-            .addValueEventListener(
-                object:ValueEventListener
-                {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if(!snapshot.exists())
-                        {
-                            Log.d(TAG, "onDataChange: Data snapshot does not exist")
-                            return
-                        }
-                        val message = snapshot.child("MESSAGE").value.toString()
-                        val status = snapshot.child("STATUS").value.toString()
-                        memeWallStatus.message = message
-                        memeWallStatus.status = status
-                        binding.fhMemeWallStatus.setText(message)
-                        if(status == "AVAILABLE")
-                        {
-                            binding.fhMemeWallStatus.setText("Update App")
-                        }
-
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.d(TAG, "onCancelled: ")
-                    }
-
-                }
-            )
-    }
+//    private fun updateMemeWallStatus()
+//    {
+//        val database = FirebaseDatabase.getInstance().reference.child("MEME_WALL_STATUS")
+//            .addValueEventListener(
+//                object:ValueEventListener
+//                {
+//                    override fun onDataChange(snapshot: DataSnapshot) {
+//                        if(!snapshot.exists())
+//                        {
+//                            Log.d(TAG, "onDataChange: Data snapshot does not exist")
+//                            return
+//                        }
+//                        val message = snapshot.child("MESSAGE").value.toString()
+//                        val status = snapshot.child("STATUS").value.toString()
+//                        memeWallStatus.message = message
+//                        memeWallStatus.status = status
+//                        binding.fhMemeWallStatus.setText(message)
+//                        if(status == "AVAILABLE")
+//                        {
+//                            binding.fhMemeWallStatus.setText("Update App")
+//                        }
+//
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                        Log.d(TAG, "onCancelled: ")
+//                    }
+//
+//                }
+//            )
+//    }
     override fun onDestroyView() {
         super.onDestroyView()
     }
@@ -266,5 +262,26 @@ class HomeFragment : Fragment() {
 
             }
         )
+    }
+    private fun showTweetOptions()
+    {
+        val optionBinding = PopupTweetOptionsBinding.inflate(layoutInflater)
+        val dm = resources.displayMetrics
+        val window = PopupWindow(optionBinding.root,(dm.widthPixels*0.9).toInt(),WindowManager.LayoutParams.WRAP_CONTENT,true)
+        window.elevation = 100f
+        window.showAtLocation(optionBinding.root,Gravity.CENTER,0,0)
+        optionBinding.ptoTweetWithText
+            .setOnClickListener {
+                window.dismiss()
+                startActivity(Intent(context,TweetWthText::class.java))
+            }
+        optionBinding.ptoTweetWithImage.setOnClickListener {
+            window.dismiss()
+            startActivity(Intent(context,TweetWithImage::class.java))
+        }
+        optionBinding.ptoBasicTweet.setOnClickListener {
+            window.dismiss()
+            startActivity(Intent(context,BasicTweet::class.java))
+        }
     }
 }

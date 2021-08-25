@@ -66,13 +66,13 @@ class Presets(val context: Context) {
             field = value
 
         }
-    var preTextColor = "#FFFFFF"
+    var preTextColor = "#000000"
         get() {
 
             val color = if (sfManager.contains("TEXT_COLOR")) {
-                sfManager.getString("TEXT_COLOR", "#FFFFFF") ?: "#FFFFFF"
+                sfManager.getString("TEXT_COLOR", "#FFFFFF") ?: "#000000"
             } else {
-                "#FFFFFF"
+                "#000000"
             }
             Log.d(TAG, "getting text color:$color ")
             return color

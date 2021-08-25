@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -14,6 +15,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.ritwik.photex.databinding.ActivityTweetWthTextBinding
+import com.skydoves.colorpickerview.kotlin.colorPickerDialog
+import com.unity3d.ads.UnityAds
+import java.lang.reflect.Executable
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,17 +26,43 @@ class TweetWthText : AppCompatActivity() {
     val profileImageCode = 1024
     var verified = false
     private lateinit var binding: ActivityTweetWthTextBinding
+    private lateinit var referalPopup:ReferralPopup
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTweetWthTextBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        UnityAds.initialize(this, "4218265", false)
+        try {
+            val details = TwitterAccountDatabase.getDetails(this)
+            binding.atwtName.setText(details[0])
+            binding.atwtUsername.setText(details[1])
+            TwitterAccountDatabase.getProfileThumbnail(this)?.let {
+                binding.atwtProfilePic.setImageBitmap(it)
+            }
+
+
+        }
+        catch (e:java.lang.Exception)
+        {
+            e.printStackTrace()
+        }
         binding.atwtSave.setOnClickListener {
 
-            binding.atwtLooseFocus.requestFocus()
+           binding.atwtLooseFocus.requestFocus()
             val bmp = loadBitmapFromView(binding.atwtMainTweet)
-            binding.atwtImage.setImageBitmap(bmp)
             if (bmp != null) {
-                saveImage(bmp)
+                val name = binding.atwtLooseFocus.text.toString()
+                name.let {
+                    showAd()
+                    if(it == "") {
+                        saveImage(bmp,null
+                        )
+                    } else {
+
+                        saveImage(bmp,it)
+                    }
+                }
+
             } else {
                 Toast.makeText(this, "Failed to save Image", Toast.LENGTH_SHORT).show()
             }
@@ -51,6 +81,17 @@ class TweetWthText : AppCompatActivity() {
             setCurrentDate()
             setCurrentTime()
         }
+        binding.atwtWatermarkButton.setOnClickListener {
+            if(!this::referalPopup.isInitialized)
+            {
+                referalPopup = ReferralPopup(this,this)
+            }
+            referalPopup.showPopup()
+            {
+                saveWithoutWatermark()
+            }
+
+        }
     }
 
     fun loadBitmapFromView(v: View): Bitmap? {
@@ -65,6 +106,7 @@ class TweetWthText : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false)
         startActivityForResult(intent, profileImageCode)
 
     }
@@ -115,9 +157,11 @@ class TweetWthText : AppCompatActivity() {
         binding.atwtDate.setText(currentDateandTime)
     }
 
-    fun saveImage(bitmap: Bitmap) {
+    fun saveImage(bitmap: Bitmap,name:String?) {
+
+        CloudDatabase.incrementNoOfSaves()
         var contentValues = ContentValues()
-        val name = getRandomName()
+        val name = name?:getRandomName()
         Log.d(TAG, "saveImage: Saving image as $name")
         contentValues.apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -148,6 +192,7 @@ class TweetWthText : AppCompatActivity() {
             Toast.makeText(this, "Failed to Save Image", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
         }
+        saveDetails()
 
     }
 
@@ -164,21 +209,64 @@ class TweetWthText : AppCompatActivity() {
         if (verified) {
             binding.atwtVerification.animate().alpha(0.2f).setDuration(150).withEndAction {
                 verified = false
-                binding.atwtVerification.setImageResource(R.drawable.twitter_not_verified)
+                binding.atwtVerificationImage.setImageResource(R.drawable.twitter_not_verified)
                 binding.atwtVerification.animate().alpha(1f).setDuration(150)
                 binding.atwtVerifiedIcon.visibility = View.GONE
             }
         } else {
             binding.atwtVerification.animate().alpha(0.2f).setDuration(150).withEndAction {
                 verified = true
-                binding.atwtVerification.setImageResource(R.drawable.twitter_verified)
+                binding.atwtVerificationImage.setImageResource(R.drawable.twitter_verified)
                 binding.atwtVerification.animate().alpha(1f).setDuration(150)
                 binding.atwtVerifiedIcon.visibility = View.VISIBLE
             }
 
         }
     }
+    private fun saveWithoutWatermark()
+    {
+        saveDetails()
+        binding.atwtLooseFocus.requestFocus()
+        binding.atwtWatermark.visibility = View.INVISIBLE
+        val bmp = loadBitmapFromView(binding.atwtMainTweet)
+        binding.atwtWatermark.visibility = View.VISIBLE
 
+        if (bmp != null) {
+            val name = binding.atwtLooseFocus.text.toString()
+            name.let {
+                if(it == "") {
+                    saveImage(bmp,null
+                    )
+                } else {
+                    saveImage(bmp,it)
+                }
+            }
+
+        } else {
+            Toast.makeText(this, "Failed to save Image", Toast.LENGTH_SHORT).show()
+        }
+    }
+    private fun showAd() {
+        val unityInterstital = UnityInterstital(this,this)
+        unityInterstital.initialiseAd()
+        unityInterstital.displayAd()
+    }
+    private fun saveDetails()
+    {
+        try {
+
+
+            val name = binding.atwtName.text.toString()
+            val username = binding.atwtUsername.text.toString()
+            val bitmap = ((binding.atwtProfilePic.drawable) as BitmapDrawable).bitmap
+
+            TwitterAccountDatabase.addToSharedPref(name, username, bitmap, this)
+        }
+        catch (e:java.lang.Exception)
+        {
+            e.printStackTrace()
+        }
+    }
     companion object {
         private const val TAG = "TweetWthText"
     }

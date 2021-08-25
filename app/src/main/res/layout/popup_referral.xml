@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/white"
+    android:elevation="20dp"
+    android:background="@color/white"
+    app:cardCornerRadius="20dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refer to a Friend"
+            android:fontFamily="@font/avenir_next_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:id="@+id/pr_TopLabel"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/referral_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_TopLabel"
+            android:layout_marginTop="32dp"
+            android:id="@+id/pr_mainImage"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Refer Photex to a friend and earn points which can be used to remove watermark on your images"
+            android:fontFamily="@font/avenir_next_regular"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_mainImage"
+            android:layout_margin="18dp"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:id="@+id/pr_DescriptionText"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_DescriptionText"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/pr_CurrentPointsLayout"
+            android:layout_margin="24dp"
+
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Points"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textColor="@color/black"
+
+
+            android:textSize="14sp"
+            android:id="@+id/pr_CurrentPointsLabel"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_gravity="center"
+            app:layout_constraintStart_toEndOf="@id/pr_CurrentPointsLabel"
+            app:layout_constraintTop_toTopOf="@id/pr_CurrentPointsLabel"
+            app:layout_constraintBottom_toBottomOf="@id/pr_CurrentPointsLabel"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textSize="14sp"
+            android:textColor="@color/yellow"
+            android:id="@+id/pr_CurrentPointsCount"
+            />
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove Watermark and Save"
+            android:textColor="@android:color/darker_gray"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_CurrentPointsLayout"
+            android:layout_marginTop="24dp"
+            android:id="@+id/pr_RemoveWatermarkButton"
+            />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_RemoveWatermarkButton"
+            android:background="@drawable/sign_in_button_back"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:id="@+id/pr_ShareButton"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/share_icon"
+                android:layout_gravity="center"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Share"
+                android:layout_gravity="center"
+                android:fontFamily="@font/avenir_next_regular"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:layout_margin="8dp"
+                />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Points will be credited when the person will install
+the app and sign in"
+            android:fontFamily="@font/avenir_next_regular"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pr_RewardButton"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            />
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/pr_ShareButton"
+           android:id="@+id/pr_RewardButton"
+           android:layout_margin="8dp"
+           android:padding="8dp"
+           android:background="@drawable/sign_in_button_back"
+           >
+          <ImageView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:src="@drawable/advertisment"
+              android:layout_gravity="center"
+              />
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="remove for once"
+               android:fontFamily="@font/avenir_next_regular"
+               android:textColor="@color/black"
+               android:layout_gravity="center"
+               android:textSize="12sp"
+               android:layout_marginStart="8dp"
+               />
+       </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.cardview.widget.CardView>

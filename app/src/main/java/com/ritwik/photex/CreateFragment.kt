@@ -62,8 +62,9 @@ class CreateFragment : Fragment() {
     private var fragmentContainer: Int = 0
     private lateinit var watermarkBitmap: Bitmap
     private val selectedWatermarks = arrayListOf<UsernameData>()
-   // private lateinit var finalExport:PopupShowFinalExport
-    private lateinit var currentBitmap:Bitmap
+    private lateinit var finalExport: PopupShowFinalExport
+    private lateinit var currentBitmap: Bitmap
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +73,7 @@ class CreateFragment : Fragment() {
         _binding = FragmentCreateBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
         val bundle = arguments
-        setUpBannerAd()
+        //setUpBannerAd()
 
         if (container != null) {
             fragmentContainer = container.id
@@ -126,6 +127,7 @@ class CreateFragment : Fragment() {
             {
                 if (it != null) {
                     mainBitmap = it
+                    modifiedBitmap = it
                 }
                 if (it != null) {
                     Log.d(TAG, "onCreateView: Bitmap is not null")
@@ -204,29 +206,19 @@ class CreateFragment : Fragment() {
                 }
                 true
             }
-        val myAdsListener = UnityAdsListener()
-        // Add the listener to the SDK:
-        // Add the listener to the SDK:
-        UnityAds.addListener(myAdsListener)
-        // Initialize the SDK:
-        // Initialize the SDK:
-        UnityAds.initialize(context, "4218265", true)
-        binding.fcSaveButton
-            .setOnClickListener {
-//              if(!this::finalExport.isInitialized)
-//              {
-//                  finalExport = PopupShowFinalExport()
-//              }
-//                 finalExport.showPopup()
-                finalReDrawBitmap(true)
-                if (UnityAds.isReady("Interstitial_Android")) {
-                    UnityAds.show(activity, "Interstitial_Android");
+            // Add the listener to the SDK:
+
+            binding.fcSaveButton.setOnClickListener {
+                if (!this::finalExport.isInitialized) {
+                    finalExport = PopupShowFinalExport()
                 }
-                saveImage()
+                finalExport.showPopup()
 
 
             }
-
+        if(!UnityAds.isInitialized()) {
+            UnityAds.initialize(context, "4218265", false)
+        }
 
         return binding.root
     }
@@ -498,7 +490,7 @@ class CreateFragment : Fragment() {
         }
     }
 
-    fun  reDrawBitmap() {
+    fun reDrawBitmap() {
         // setting presets
         Log.d(TAG, "reDrawBitmap: ")
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
@@ -742,8 +734,8 @@ class CreateFragment : Fragment() {
                 )
             }
         }
-        binding.fcMainImage.setImageBitmap(proxy)
-        modifiedBitmap = proxy
+
+        saveImage(proxy, waterMarked)
 
 
     }
@@ -1241,10 +1233,10 @@ class CreateFragment : Fragment() {
 
 
         private fun showChangeBackground() {
-                changeBackground = ChangeBackground(this@CreateFragment)
-                activity!!.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
-                    .add(container, changeBackground, FRAGMENT_CHANGE_BACKGROUND).commit()
+            changeBackground = ChangeBackground(this@CreateFragment)
+            activity!!.supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
+                .add(container, changeBackground, FRAGMENT_CHANGE_BACKGROUND).commit()
 
             selectedFragment = FRAGMENT_CHANGE_BACKGROUND
         }
@@ -1486,7 +1478,8 @@ class CreateFragment : Fragment() {
         return name
     }
 
-    fun saveImage() {
+    fun saveImage(bmp: Bitmap, waterMarked: Boolean) {
+        CloudDatabase.incrementNoOfSaves()
         var contentValues = ContentValues()
         val name = getRandomName()
         Log.d(TAG, "saveImage: Saving image as $name")
@@ -1508,8 +1501,16 @@ class CreateFragment : Fragment() {
             }
             val outputStream = resolver.openOutputStream(uri)
             if (outputStream != null) {
-                modifiedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                Toast.makeText(context, "Image saved as $name", Toast.LENGTH_SHORT).show()
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                if (!waterMarked) {
+                    Toast.makeText(
+                        context,
+                        "Image saved as $name without watermark",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(context, "Image saved as $name", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 Log.d(TAG, "saveImage: Output stream is null")
             }
@@ -1693,7 +1694,7 @@ class CreateFragment : Fragment() {
                 srpBinding.pcsStickerImage.animate().alpha(1f).duration = 150
 
             }
-          reDrawBitmapRefined()
+            reDrawBitmapRefined()
             selectedItem!!.stickerDimension = "MEDIUM"
         }
         srpBinding.pcsLarge.setOnClickListener {
@@ -1748,7 +1749,7 @@ class CreateFragment : Fragment() {
 
             }
 
-          reDrawBitmapRefined()
+            reDrawBitmapRefined()
         }
         srpBinding.pcsExtraMinus.setOnClickListener {
             val difference =
@@ -2502,16 +2503,15 @@ class CreateFragment : Fragment() {
         }
 
     }
-    fun setCurrentBitmap(selectedItemIndex:Int)
-    {
+
+    fun setCurrentBitmap(selectedItemIndex: Int) {
         val proxy = mainBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(proxy!!)
         // setting the thumbnail
 
         var item: Items
         for (n in itemArray.indices) {
-            if(n == selectedItemIndex)
-            {
+            if (n == selectedItemIndex) {
                 continue
             }
             item = itemArray[n]
@@ -2628,14 +2628,13 @@ class CreateFragment : Fragment() {
         currentBitmap = proxy
         reDrawBitmapRefined()
     }
-    fun reDrawBitmapRefined()
-    {
-        if(selectedItem == null)
-        {
+
+    fun reDrawBitmapRefined() {
+        if (selectedItem == null) {
             Toast.makeText(context, "No item selected!", Toast.LENGTH_SHORT).show()
         }
         Log.d(TAG, "reDrawBitmapRefined:")
-        val proxy = currentBitmap.copy(Bitmap.Config.ARGB_8888,true)
+        val proxy = currentBitmap.copy(Bitmap.Config.ARGB_8888, true)
         val item = selectedItem!!
         val canvas = Canvas(proxy)
         if (item.type == "TEXT") {
@@ -2670,7 +2669,10 @@ class CreateFragment : Fragment() {
                     yMarginOff = (rect.height())
 
                     val bPaint = item.backgroundMargins!!.backPaint
-                    Log.d(TAG, "reDrawBitmapRefined: textX = ${item.locationX},y = ${item.locationY}")
+                    Log.d(
+                        TAG,
+                        "reDrawBitmapRefined: textX = ${item.locationX},y = ${item.locationY}"
+                    )
                     Log.d(
                         TAG,
                         "reDrawBitmapRefined: left = ${rect.left}, top = ${rect.top}, right = ${rect.right}, bottom = ${rect.bottom}"
@@ -2733,49 +2735,53 @@ class CreateFragment : Fragment() {
         modifiedBitmap = proxy
 
     }
+
     private fun getCornerRadius(width: Float, height: Float): Float {
         var radius = 0f
         radius = (height * 0.2).toFloat()
         return radius
     }
 
-//    inner class PopupShowFinalExport {
-//        var watermarked: Boolean = false
-//        private lateinit var popupBinding: PopupFinalExportBinding
-//        private lateinit var window: PopupWindow
-//        fun showPopup() {
-//            if (!this::popupBinding.isInitialized) {
-//                popupBinding = PopupFinalExportBinding.inflate(layoutInflater)
-//                window = PopupWindow(
-//                    popupBinding.root,
-//                    WindowManager.LayoutParams.MATCH_PARENT,
-//                    WindowManager.LayoutParams.MATCH_PARENT,
-//                    true
-//                )
-//
-//            }
-//            window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
-//            popupBinding.pfeMainImage.setImageBitmap(modifiedBitmap)
-//            popupBinding.pfeSaveButton.setOnClickListener {
-//                finalReDrawBitmap(true)
-//                if (UnityAds.isReady("Interstitial_Android")) {
-//                    UnityAds.show(activity, "Interstitial_Android");
-//                }
-//                saveImage()
-//            }
-//            popupBinding.pfeWatermarkButton
-//                .setOnClickListener {
-//                    val referral = Referral()
-//                    val referalLink = referral.getCustomLink()
-//                    Log.d(TAG, "showPopup: $referalLink")
-//                    val intent = Intent()
-//                    intent.action = Intent.ACTION_SEND
-//                    intent.putExtra(Intent.EXTRA_TEXT,referalLink)
-//                    intent.type = "text/plain"
-//                    startActivity(intent)
-//                }
-//        }
-//    }
+    inner class PopupShowFinalExport {
+        var watermarked: Boolean = false
+        private lateinit var popupBinding: PopupFinalExportBinding
+        private lateinit var window: PopupWindow
+        private lateinit var referralPopup: ReferralPopup
+        fun showPopup() {
+            if (!this::popupBinding.isInitialized) {
+                popupBinding = PopupFinalExportBinding.inflate(layoutInflater)
+                window = PopupWindow(
+                    popupBinding.root,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    true
+                )
+
+            }
+            window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
+            popupBinding.pfeMainImage.setImageBitmap(modifiedBitmap)
+            popupBinding.pfeSaveButton.setOnClickListener {
+                finalReDrawBitmap(true)
+               showAd()
+                saveImage(modifiedBitmap, true)
+            }
+            popupBinding.pfeWatermarkButton
+                .setOnClickListener {
+                    if (!this::referralPopup.isInitialized) {
+                        referralPopup = ReferralPopup(context!!, activity!!)
+                    }
+                    referralPopup.showPopup {
+                        finalReDrawBitmap(false)
+                    }
+                }
+        }
+    }
+
+    private fun showAd() {
+        val unityInterstital = UnityInterstital(context!!, activity!!)
+        unityInterstital.initialiseAd()
+        unityInterstital.displayAd()
+    }
 
 
 }
