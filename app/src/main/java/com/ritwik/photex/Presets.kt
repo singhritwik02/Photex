@@ -86,22 +86,29 @@ class Presets(val context: Context) {
             field = value
         }
 
-    var preStrokeColor = "#000000"
+
+    var preBackColor = "#FFFFFF"
     get(){
-        val strokeColor = if(sfManager.contains("STROKE_COLOR"))
+        val backColor = if(sfManager.contains("BACK_COLOR"))
         {
-            sfManager.getString("STROKE_COLOR","#000000")?:"#000000"
+            sfManager.getString("BACK_COLOR","#FFFFFF")?:"#FFFFFF"
         }
         else
         {
-            "#000000"
+            "#FFFFFF"
         }
-        Log.d(TAG, "getting stroke color from presets = :$strokeColor ")
-        return strokeColor
+        Log.d(TAG, "getting stroke color from presets = :$backColor ")
+        return backColor
 
     }
     set(value)
     {
+        with(sfManager.edit())
+        {
+            putString("BACK_COLOR", value)
+            commit()
+        }
+        field = value
         field = value
 
     }

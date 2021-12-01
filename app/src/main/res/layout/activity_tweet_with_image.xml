@@ -14,19 +14,15 @@
 
         >
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:weightSum="100"
             >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/twitter_yellow_icon"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                />
+
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="80"
                 android:layout_height="wrap_content"
                 android:text="Personalised Tweet"
                 android:fontFamily="@font/avenir_next_bold"
@@ -34,7 +30,30 @@
                 android:textSize="16sp"
                 android:layout_margin="16dp"
                 />
-
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="20"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/atwi_ModeSwitch"
+                android:layout_gravity="center"
+                >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/twitter_yellow_icon"
+                android:layout_gravity="center"
+                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mode"
+                    android:fontFamily="@font/avenir_next_bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
     <ScrollView
@@ -179,26 +198,35 @@
                         android:textSize="18sp" />
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="512px"
-                        android:layout_margin="10dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="150dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
                         app:cardCornerRadius="10dp"
                        app:cardElevation="0dp"
+                        android:id="@+id/atwi_ImageCard"
                         >
                     <ImageView
                         android:id="@+id/atwi_TweetImage"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-
+                        android:layout_height="520px"
+                        android:layout_gravity="center"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_add_icon"/>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:id="@+id/editFooterPart"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/editPart"
+                    android:id="@+id/atwi_ExtrasLayout"
+                    >
+                <RelativeLayout
+                    android:id="@+id/editFooterPart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
                     android:layout_alignParentStart="true"
                     android:orientation="horizontal">
 
@@ -397,7 +425,7 @@
                     android:layout_below="@id/bottomLinearLayout"
                     android:background="@color/colorExtraLightGray" />
 
-
+                </RelativeLayout>
             </RelativeLayout>
 
             <TextView
@@ -405,7 +433,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:alpha="0.3"
+                android:alpha="0.1"
                 android:fontFamily="@font/avenir_next_regular"
                 android:text="Photex"
                 android:textSize="64sp" />

@@ -239,7 +239,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_bold"
-                        android:text="Gallery"
+                        android:text="Image"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
@@ -248,7 +248,7 @@
                         android:textSize="12sp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_regular"
-                        android:text="Choose from your gallery."
+                        android:text="Create raw image from a Photo or template"
                         android:textColor="@color/black" />
                 </LinearLayout>
 

@@ -29,7 +29,9 @@ class LoginActivity : AppCompatActivity() {
         }
         val memeArray = intArrayOf(R.raw.meme_2,R.raw.meme_3,R.raw.meme_4,R.raw.meme_5,R.raw.meme_6)
         val memeCode = (0..4).random()
-
+        binding.alBackArrow.setOnClickListener {
+            onBackPressed()
+        }
         binding.alLogo.setAnimation(memeArray[memeCode])
     }
     fun loginWithGoogle()

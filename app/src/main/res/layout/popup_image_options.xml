@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose From Gallery"
+        android:fontFamily="@font/avenir_next_regular"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textAlignment="center"
+        android:id="@+id/pio_Gallery"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:layout_margin="8dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose From Templates"
+        android:fontFamily="@font/avenir_next_regular"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:id="@+id/pio_Templates"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:layout_margin="8dp"
+        />
+
+</LinearLayout>

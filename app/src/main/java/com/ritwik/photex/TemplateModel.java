@@ -4,6 +4,15 @@ public class TemplateModel {
     String LINK;
     Long TIMES_USED;
     String NAME;
+    String STYLE_CODE = null;
+
+    public String getSTYLE_CODE() {
+        return STYLE_CODE;
+    }
+
+    public void setSTYLE_CODE(String STYLE_CODE) {
+        this.STYLE_CODE = STYLE_CODE;
+    }
 
     public TemplateModel(String LINK, Long TIMES_USED) {
         this.LINK = LINK;

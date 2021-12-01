@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorExtraExtraLightGray">
+
+    <com.ritwik.photex.CustomScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/fts_Scroll"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:id="@+id/fts_PreviewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorExtraExtraLightGray"
+                android:orientation="horizontal"
+                android:weightSum="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/fts_TextPreview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="70"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/avenir_next_regular"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:text="Preview"
+                    android:textColor="@color/matte_black"
+                    android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/fts_RotateRightButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:layout_weight="10"
+                    android:src="@drawable/rotate_right_icon"
+                    app:tint="@color/matte_black" />
+
+
+                <ImageView
+                    android:id="@+id/fts_EditButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:layout_weight="10"
+                    app:tint="@color/matte_black"
+                    android:src="@drawable/icon_edot_text" />
+
+                <ImageView
+                    android:id="@+id/fts_DeleteButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:layout_weight="10"
+                    app:tint="@color/matte_black"
+                    android:src="@drawable/delete_icon_white" />
+
+            </LinearLayout>
+
+            <SeekBar
+                android:id="@+id/fts_SizeBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/matte_black"
+                android:progressBackgroundTint="@color/matte_black"
+                android:progressTint="@color/matte_black"
+                android:thumb="@drawable/size_thumb"
+                android:thumbTint="@color/matte_black_light"
+                app:layout_constraintTop_toBottomOf="@id/fts_PreviewLayout" />
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fts_FontNameButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:backgroundTint="@color/matte_black_light"
+                android:minHeight="80dp"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintTop_toBottomOf="@id/fts_SizeBar"
+                app:layout_constraintEnd_toStartOf="@id/fts_TextColorButton">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="16dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/avenir_next_regular"
+                            android:text="Font Family"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/option_icon_text"
+                            app:tint="@color/white" />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp"
+                        android:weightSum="2"
+                        >
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="18dp"
+                            android:id="@+id/fts_StyleBold"
+                            android:src="@drawable/ic_format_bold_white_24dp"
+                            />
+                        <ImageView
+                            android:layout_marginStart="4dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:id="@+id/fts_StyleItalic"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_format_italic_white_24dp"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/fts_TextColorButton"
+                app:layout_constraintTop_toBottomOf="@id/fts_SizeBar"
+                app:layout_constraintBottom_toBottomOf="@id/fts_TextColorButton"
+                app:cardBackgroundColor="@color/matte_black_light"
+                app:layout_constrainedHeight="true"
+                android:id="@+id/fts_AlignmentButton"
+                app:layout_constrainedWidth="true"
+                app:cardCornerRadius="15dp"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="16dp"
+                    android:id="@+id/fts_AlignmentAnimation"
+                    android:src="@drawable/left_to_center"
+                    app:tint="@color/white" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fts_TextColorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                app:cardBackgroundColor="@color/colorBlueType1"
+                app:cardCornerRadius="25dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="8dp"
+                app:layout_constraintTop_toBottomOf="@id/fts_SizeBar">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/fts_TextColorLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:fontFamily="@font/avenir_next_regular"
+                            android:text="Text Color"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:id="@+id/fts_TextColorIcon"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:src="@drawable/color_palette" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/fts_TextColorCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:text="Color Code"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <com.skydoves.transformationlayout.TransformationLayout
+                android:id="@+id/fts_TransformationLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:transformation_duration="550"
+                app:layout_constraintEnd_toStartOf="@id/fts_ShadowTransformation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fts_FontNameButton"
+                app:transformation_targetView="@+id/fts_Target">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fts_BackgroundButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:minHeight="80dp"
+                app:cardBackgroundColor="@color/matte_black_light"
+                app:cardCornerRadius="20dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/fts_BackgroundButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                       android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:maxLines="1"
+                        android:text="Background"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            </com.skydoves.transformationlayout.TransformationLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toEndOf="@id/fts_ShadowTransformation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardBackgroundColor="@color/matte_black_light"
+                app:cardElevation="0dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintTop_toBottomOf="@id/fts_AlignmentButton"
+                android:id="@+id/fts_RotationBarLayout"
+                app:cardCornerRadius="15dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="100"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    >
+
+
+            <com.ritwik.photex.CustomCircleSeek
+                android:id="@+id/fts_RotationBar"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="90"
+                app:wheel_max_process="360"
+                app:wheel_unreached_color="@color/matte_black"
+                android:layout_gravity="center"
+                android:padding="4dp"
+                app:wheel_unreached_width="10dp"
+
+                />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="10"
+                        android:text="Reset"
+                        android:textSize="8sp"
+                        android:layout_gravity="center"
+                        android:id="@+id/fts_RotationResetButton"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:textColor="@color/matte_black"
+                        />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <com.skydoves.transformationlayout.TransformationLayout
+                android:id="@+id/fts_ShadowTransformation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:transformation_duration="550"
+                android:layout_margin="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fts_TextColorButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/fts_ShadowButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:minHeight="80dp"
+                    app:cardBackgroundColor="@color/matte_black_light"
+                    app:cardCornerRadius="20dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:orientation="vertical"
+                      android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+
+                        >
+
+                        <TextView
+                            android:id="@+id/fts_ShadowButtonText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:ellipsize="end"
+                            android:fontFamily="@font/avenir_next_bold"
+                            android:maxLines="1"
+                            android:text="Shadow"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </com.skydoves.transformationlayout.TransformationLayout>
+
+            <androidx.cardview.widget.CardView
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_margin="8dp"
+                android:id="@+id/fts_Target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="15dp"
+                android:visibility="gone"
+                android:padding="8dp"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:padding="8dp"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <CheckBox
+                        android:id="@+id/fts_Stretched"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:text="Stretch"
+                        android:layout_margin="8dp"
+                        android:textColor="@color/matte_black"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/fts_BackgroundColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:padding="16dp"
+                        android:text="Color"
+                        android:textColor="@color/matte_black"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/fts_Stretched" />
+
+                    <TextView
+                        android:id="@+id/ex3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:padding="16dp"
+                        android:text="Close"
+                        android:textColor="@color/matte_red"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/fts_BackgroundColor" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.ritwik.photex.CustomScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

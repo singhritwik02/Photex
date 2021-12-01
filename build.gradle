@@ -11,7 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.1'
         classpath 'com.google.gms:google-services:4.3.10'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30'
 
 
 
@@ -27,7 +27,7 @@ allprojects {
         maven {
             url 'https://android-sdk.is.com/'
         }
-
+        maven { url "https://jitpack.io" }
         maven { url 'https://maven.google.com' }
     }
 }
