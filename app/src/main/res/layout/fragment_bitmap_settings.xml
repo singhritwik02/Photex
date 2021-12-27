@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@color/colorExtraExtraLightGray"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".BitmapSettings">
     <ScrollView
@@ -25,16 +25,16 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/delete_icon_white"
-        app:tint="@color/black" />
+        app:tint="@color/matte_blue" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/avenir_next_bold"
+        android:fontFamily="@font/avenir_next_regular"
         android:text="Size"
-        android:textColor="@color/matte_black_light"
+        android:textColor="@color/matte_blue"
         android:textSize="16sp" />
 
     <SeekBar
@@ -44,19 +44,19 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="@color/matte_black"
+        android:backgroundTint="@color/matte_blue"
         android:min="1"
-        android:progressBackgroundTint="@color/matte_black"
+        android:progressBackgroundTint="@color/matte_blue"
         android:progressTint="@color/matte_black"
         android:thumb="@drawable/size_thumb"
-        android:thumbTint="@color/matte_black_light" />
+        android:thumbTint="@color/matte_blue_light" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/avenir_next_bold"
+        android:fontFamily="@font/avenir_next_regular"
         android:text="Rotation"
         android:textColor="@color/matte_black_light"
         android:textSize="16sp" />
@@ -69,21 +69,21 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/matte_black"
+        android:backgroundTint="@color/matte_blue"
         android:max="360"
         android:min="0"
-        android:progressBackgroundTint="@color/matte_black"
+        android:progressBackgroundTint="@color/matte_blue"
         android:progressTint="@color/matte_black"
         android:thumb="@drawable/size_thumb"
-        android:thumbTint="@color/matte_black_light" />
+        android:thumbTint="@color/matte_blue_light" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/avenir_next_bold"
+                android:fontFamily="@font/avenir_next_regular"
                 android:text="Alpha"
-                android:textColor="@color/matte_black_light"
+                android:textColor="@color/matte_blue"
                 android:textSize="16sp" />
 
             <SeekBar
@@ -94,13 +94,13 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                android:backgroundTint="@color/matte_black"
+                android:backgroundTint="@color/matte_blue"
                 android:max="255"
                 android:min="1"
-                android:progressBackgroundTint="@color/matte_black"
+                android:progressBackgroundTint="@color/matte_blue"
                 android:progressTint="@color/matte_black"
                 android:thumb="@drawable/size_thumb"
-                android:thumbTint="@color/matte_black_light" />
+                android:thumbTint="@color/matte_blue_light" />
         </LinearLayout>
     </ScrollView>
 

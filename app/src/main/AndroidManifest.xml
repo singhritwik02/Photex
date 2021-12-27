@@ -17,17 +17,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Photex">
         <activity
-            android:name=".MemeStyle"
-            android:screenOrientation="portrait"
+            android:name=".SplashScreen"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".UploadService"
+            android:enabled="true"
             android:exported="true" />
+
+        <activity
+            android:name=".MemeStyle"
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".CreateMeme"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".TweetWithImage"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".Notifications"
@@ -48,16 +65,12 @@
 
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -72,7 +85,7 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

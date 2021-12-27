@@ -7,22 +7,30 @@
         <entry key="app/src/main/res/drawable-ldpi/left_to_center.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable-ldpi/right_to_left.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable-v24/center_to_right.xml" value="0.2782222222222222" />
+        <entry key="app/src/main/res/drawable/background_popup_image_options.xml" value="0.2782222222222222" />
+        <entry key="app/src/main/res/drawable/background_template_top_back.xml" value="0.2782222222222222" />
+        <entry key="app/src/main/res/drawable/backround_change_layout.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/bottom_line_yellow_bold.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/center_to_right.xml" value="0.17567567567567569" />
+        <entry key="app/src/main/res/drawable/home_fragment_background.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/image_back.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/login_text_background.xml" value="0.2564814814814815" />
+        <entry key="app/src/main/res/drawable/popup_backgrounf.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/rect_text_back.xml" value="0.281981981981982" />
         <entry key="app/src/main/res/drawable/roundec_text_back.xml" value="0.281981981981982" />
         <entry key="app/src/main/res/drawable/rounded_shape.xml" value="0.24814814814814815" />
+        <entry key="app/src/main/res/drawable/search_back.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/selected_back.xml" value="0.24074074074074073" />
         <entry key="app/src/main/res/drawable/sign_in_button_back.xml" value="0.2537037037037037" />
+        <entry key="app/src/main/res/drawable/splash_drawable.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/text_style_background.xml" value="0.2782222222222222" />
         <entry key="app/src/main/res/drawable/white_round_corner.xml" value="0.2564814814814815" />
         <entry key="app/src/main/res/layout/activity_basic_tweet.xml" value="0.268018018018018" />
-        <entry key="app/src/main/res/layout/activity_create_meme.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/activity_create_meme.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="app/src/main/res/layout/activity_meme_style.xml" value="0.268018018018018" />
+        <entry key="app/src/main/res/layout/activity_splash_screen.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/activity_tweet_with_image.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/activity_tweet_with_text.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/activity_tweet_wth_text.xml" value="0.22" />
@@ -30,27 +38,33 @@
         <entry key="app/src/main/res/layout/fragment_change_background.xml" value="0.1698198198198198" />
         <entry key="app/src/main/res/layout/fragment_create.xml" value="0.2101851851851852" />
         <entry key="app/src/main/res/layout/fragment_empty_options.xml" value="0.2617117117117117" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.31224304752546983" />
         <entry key="app/src/main/res/layout/fragment_main_menu.xml" value="0.2101851851851852" />
         <entry key="app/src/main/res/layout/fragment_meme_style.xml" value="0.25585585585585585" />
         <entry key="app/src/main/res/layout/fragment_template.xml" value="0.15" />
         <entry key="app/src/main/res/layout/fragment_text_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_text_options.xml" value="0.22037037037037038" />
+        <entry key="app/src/main/res/layout/login_confirmation_popup.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_ad_loading.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_add_text.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_background_options.xml" value="0.1" />
         <entry key="app/src/main/res/layout/popup_change_theme.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_choose_image_options.xml" value="0.268018018018018" />
+        <entry key="app/src/main/res/layout/popup_choose_layout.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_choose_template.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_final_export.xml" value="0.22" />
         <entry key="app/src/main/res/layout/popup_image_crop.xml" value="0.2644444444444444" />
         <entry key="app/src/main/res/layout/popup_image_options.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_loading.xml" value="0.20855855855855857" />
+        <entry key="app/src/main/res/layout/popup_loading_sticker.xml" value="0.2644444444444444" />
         <entry key="app/src/main/res/layout/popup_referral.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/popup_select_image_part.xml" value="0.25" />
         <entry key="app/src/main/res/layout/popup_show_filter.xml" value="0.268018018018018" />
+        <entry key="app/src/main/res/layout/popup_show_fonts.xml" value="0.2644444444444444" />
         <entry key="app/src/main/res/layout/popup_show_stickers.xml" value="0.2644444444444444" />
         <entry key="app/src/main/res/layout/popup_tweet_options.xml" value="0.14124293785310735" />
+        <entry key="app/src/main/res/layout/popup_upload_confirmation.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/popup_uploading_template.xml" value="0.268018018018018" />
         <entry key="app/src/main/res/layout/single_offline_font.xml" value="0.16216216216216217" />
         <entry key="app/src/main/res/layout/single_template.xml" value="0.15" />
         <entry key="app/src/main/res/layout/tweet_with_image.xml" value="0.25" />

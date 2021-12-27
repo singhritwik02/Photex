@@ -70,7 +70,7 @@ class Presets(val context: Context) {
         get() {
 
             val color = if (sfManager.contains("TEXT_COLOR")) {
-                sfManager.getString("TEXT_COLOR", "#FFFFFF") ?: "#000000"
+                sfManager.getString("TEXT_COLOR", "#000000") ?: "#000000"
             } else {
                 "#000000"
             }
@@ -111,6 +111,67 @@ class Presets(val context: Context) {
         field = value
         field = value
 
+    }
+    var preStyle = "T"
+    get() {
+        val preThemeCode = if(sfManager.contains("STYLE_CODE"))
+        {
+            sfManager.getString("STYLE_CODE","T")?:"T"
+        }
+        else
+        {
+            "T"
+        }
+        return preThemeCode
+    }
+    set(value) {
+        with(sfManager.edit())
+        {
+            putString("STYLE_CODE", value)
+            commit()
+        }
+        field = value
+    }
+
+    var preTheme = "L"
+    get() {
+        val preTheme = if(sfManager.contains("THEME_COLOR"))
+        {
+            sfManager.getString("THEME_COLOR","L")?:"L"
+        }
+        else
+        {
+            "L"
+        }
+        return  preTheme
+    }
+    set(value) {
+        with(sfManager.edit())
+        {
+            putString("THEME_COLOR", value)
+            commit()
+        }
+        field = value
+    }
+    var preBlankColor = "#FFFFFF"
+    get() {
+        val color = if (sfManager.contains("PRE_BLANK_COLOR"))
+        {
+            sfManager.getString("PRE_BLANK_COLOR","#ffffff")?:"#ffffff"
+        }
+        else
+        {
+            "#FFFFFF"
+        }
+        return color
+    }
+    set(value) {
+        with(sfManager.edit())
+        {
+            putString("PRE_BLANK_COLOR",value)
+            commit()
+        }
+        field = value
     }
     companion object {
         private const val TAG = "Presets"

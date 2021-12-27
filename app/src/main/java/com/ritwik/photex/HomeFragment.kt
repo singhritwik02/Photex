@@ -34,6 +34,18 @@ class HomeFragment : Fragment() {
         containerId = container?.id!!
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        // getting the notification string if exists
+        arguments?.let {
+            val notificationString = it["NOTIFICATION"].toString()
+            if(notificationString.equals("TEMPLATE"))
+            {
+                val intent = Intent(context!!, CreateMeme::class.java)
+                intent.putExtra("STYLE", "UPPER_TEXT")
+                intent.putExtra("NOTIFICATION","TEMPLATE")
+                startActivity(intent)
+            }
+
+        }
         binding.fhBlankButton
             .setOnClickListener {
 
@@ -49,15 +61,6 @@ class HomeFragment : Fragment() {
 
 
             }
-        binding.fhGalleryButton
-            .setOnClickListener {
-                if (!checkPermission()) {
-                    return@setOnClickListener
-                }
-                val intent = Intent(activity!!, CreateMeme::class.java)
-                intent.putExtra("STYLE", "NO_TEXT")
-                startActivity(intent)
-            }
         binding.fhTwitterMainLayout.setOnClickListener {
             if (!checkPermission()) {
                 return@setOnClickListener
@@ -69,7 +72,7 @@ class HomeFragment : Fragment() {
             if (!checkPermission()) {
                 return@setOnClickListener
             }
-            startActivity(Intent(context, MemeStyle::class.java))
+            startActivity(Intent(context, CreateMeme::class.java))
 
 
         }

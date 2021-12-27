@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -46,7 +47,7 @@ class PopupChooseTemplate(
         window.animationStyle = R.style.slideAnimation
         window.showAtLocation(binding.root, Gravity.NO_GRAVITY, 0, 0)
         val recyclerView = binding.pctpRecycler
-        val manager = GridLayoutManager(context, 2, GridLayoutManager.VERTICAL, false)
+        val manager = GridLayoutManager(context,2,GridLayoutManager.VERTICAL,false)
         recyclerView.layoutManager = manager
         binding.pctpTemplateLabel.text = "Loading Templates"
         recyclerClass = DefaultRecyclerClass(recyclerView)
@@ -361,7 +362,8 @@ class PopupChooseTemplate(
             val image = itemView.findViewById<ImageView>(R.id.st_Image)
             fun setTemplateImage(imageUrl: String) {
                 Log.d(TAG, "setTemplateImage: loading image $imageUrl")
-                context?.let { Glide.with(context!!).load(imageUrl).into(image) }
+                context?.let { Glide.with(context!!).load(imageUrl).into(image)
+                }
             }
         }
     }

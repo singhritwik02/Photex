@@ -1,135 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white">
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/pct_LoadingView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@color/white"
-        app:cardElevation="100dp"
-        android:id="@+id/pct_LoadingView"
         app:cardCornerRadius="20dp"
-        >
+        app:cardElevation="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <com.airbnb.lottie.LottieAnimationView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:lottie_rawRes="@raw/ad_loading"
             android:layout_margin="8dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            />
+            app:lottie_rawRes="@raw/ad_loading" />
     </androidx.cardview.widget.CardView>
-    <TextView
-        android:id="@+id/pctp_TopLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:fontFamily="@font/avenir_next_bold"
-        android:text="Templates"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_filter_list_24"
-        app:layout_constraintEnd_toStartOf="@id/pctp_SearchButton"
-        app:layout_constraintTop_toTopOf="@id/pctp_SearchButton"
-        android:layout_marginEnd="8dp"
-        android:id="@+id/pctp_FilterButton"
-        />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/search_icon"
-        app:layout_constraintTop_toTopOf="@id/pctp_TopLabel"
-        app:layout_constraintBottom_toBottomOf="@id/pctp_TopLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="8dp"
-        android:id="@+id/pctp_SearchButton"
-        />
 
-
-    <EditText
-        android:id="@+id/pctp_SearchField"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:visibility="visible"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/search_back"
-        android:drawableStart="@drawable/search_icon"
-        android:fontFamily="@font/avenir_next_regular"
-        android:hint="search"
-        android:padding="16dp"
-        android:textSize="14sp"
-        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pctp_TopLabel" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_margin="8dp"
-        android:id="@+id/pctp_TabLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pctp_SearchField"
-        >
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:background="@drawable/bottom_line_yellow_bold"
-            android:orientation="horizontal"
-            android:id="@+id/pctp_TrendingTab"
-            >
+        android:id="@+id/pct_MenuFrame"
+        android:paddingBottom="8dp"
+        android:background="@drawable/background_template_top_back"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <TextView
+                android:id="@+id/pctp_TopLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trending"
-                android:fontFamily="@font/avenir_next_bold"
-                android:layout_margin="8dp"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:id="@+id/pctp_TrendingText"
+                android:layout_margin="16dp"
+                android:fontFamily="@font/avenir_next_regular"
+                android:text="Templates"
+                android:textColor="@color/white"
+                android:textSize="28sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/pctp_FilterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/filter_button_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/pctp_TopLabel"
+                app:layout_constraintBottom_toBottomOf="@id/pctp_TopLabel"
                 />
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/pctp_HotTab"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/pctp_NewText"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/pctp_SearchField"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="8dp"
-                android:fontFamily="@font/avenir_next_bold"
-                android:text="Hot"
-                android:textColor="@android:color/darker_gray" />
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/search_back"
+                android:drawableStart="@drawable/search_icon"
+                android:drawableTint="@color/white"
+                android:fontFamily="@font/avenir_next_regular"
+                android:hint="search"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pctp_TopLabel" />
 
-        </LinearLayout>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/pctp_TabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pctp_SearchField">
+
+                <LinearLayout
+                    android:id="@+id/pctp_TrendingTab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bottom_line_yellow_bold"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/pctp_TrendingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:text="Trending"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/pctp_HotTab"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/pctp_NewText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:fontFamily="@font/avenir_next_bold"
+                        android:text="Hot"
+                        android:textColor="@android:color/darker_gray" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/pctp_TemplateLabel"
@@ -141,7 +157,7 @@
         android:textColor="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pctp_TabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/pct_MenuFrame" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pctp_Recycler"

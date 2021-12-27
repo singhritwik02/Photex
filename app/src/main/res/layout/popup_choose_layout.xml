@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/backround_change_layout"
+    app:cardCornerRadius="32dp"
+    app:cardElevation="16dp">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Meme Layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/pcl_TopText"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/color_palette"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="16dp"
+            android:id="@+id/pcl_ColorButton"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pcl_TopText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:id="@+id/pcl_ButtonGroup"
+                >
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top Caption"
+                    android:fontFamily="@font/avenir_next_regular"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:textSize="16sp"
+                    android:id="@+id/pcl_TopCaption"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bottom Caption"
+                    android:fontFamily="@font/avenir_next_regular"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:textSize="16sp"
+                    android:id="@+id/pcl_BottomCaption"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Top and Bottom Caption"
+                    android:fontFamily="@font/avenir_next_regular"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:textSize="16sp"
+                    android:id="@+id/pcl_TopAndBottomCaption"
+                    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Caption"
+                    android:fontFamily="@font/avenir_next_regular"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/white"
+                    android:textSize="16sp"
+                    android:id="@+id/pcl_NoCaption"
+                    />
+
+
+            </RadioGroup>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

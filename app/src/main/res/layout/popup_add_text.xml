@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/matte_black">
+    android:background="@color/matte_blue">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +11,7 @@
         android:textColor="@color/white"
         android:textColorHint="@android:color/darker_gray"
         android:padding="8dp"
-        android:background="@color/matte_black"
+        android:background="@color/matte_blue"
         android:minHeight="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

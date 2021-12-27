@@ -4,17 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/matte_blue"
     tools:context=".LoginActivity">
 
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/back_arrow"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_margin="16dp"
-    android:id="@+id/al_BackArrow"
-    />
+    <ImageView
+        android:id="@+id/al_BackArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/back_arrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/al_Logo"
         android:layout_width="wrap_content"
@@ -27,63 +29,48 @@
         app:layout_constraintBottom_toTopOf="@id/al_loginText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toBottomOf="@id/al_BackArrow"
+        app:layout_constraintTop_toBottomOf="@id/al_BackArrow"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/meme_4" />
 
-    <LinearLayout
+
+    <TextView
         android:id="@+id/al_loginText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/white_round_corner"
+        android:fontFamily="@font/avenir_next_regular"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/al_SignInButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/avenir_next_regular"
-            android:padding="32dp"
-            android:text="Help us improve the user
+        android:padding="32dp"
+        android:text="Help us improve the user
 experience of the app
 by signing in with google"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@id/al_SignInButton" />
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/al_SignInButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:fontFamily="@font/avenir_next_bold"
-            android:textColor="@android:color/darker_gray" />
-    </LinearLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/al_SignInButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-       android:backgroundTint="@color/yellow"
+        android:backgroundTint="@color/matte_blue_light"
         android:orientation="horizontal"
         app:cardCornerRadius="999dp"
-
-       app:layout_constraintBottom_toTopOf="@id/al_AppLogo"
+        app:layout_constraintBottom_toTopOf="@id/al_AppLogo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="8dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -102,16 +89,15 @@ by signing in with google"
                 android:textSize="14sp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
     <ImageView
+        android:id="@+id/al_AppLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/app_logo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/al_AppLogo"
-        />
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,124 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    android:background="@drawable/home_fragment_background">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/home_back_yellow"
-       app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/home_top_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintTop_toTopOf="parent" />
-    <androidx.cardview.widget.CardView
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:text="Welcome!"
+        android:fontFamily="@font/avenir_next_regular"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fh_MainOptionsLayout"
+        android:textSize="32sp"
+        android:layout_margin="32dp"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fh_UpdateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/matte_blue"
+        android:visibility="gone"
         app:cardCornerRadius="99dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="16dp"
-        android:id="@+id/fh_UpdateButton"
-        android:visibility="gone"
-        >
+        app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="4dp"
-            >
+            android:padding="4dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Update"
-                android:fontFamily="@font/avenir_next_bold"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:layout_margin="8dp"
                 android:layout_gravity="center"
-                />
+                android:layout_margin="8dp"
+                android:fontFamily="@font/avenir_next_bold"
+                android:text="Update"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/update_icon"
                 android:layout_gravity="center"
                 android:layout_marginEnd="8dp"
-                />
+                android:src="@drawable/update_icon" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
+        android:id="@+id/fh_Banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="vertical"
         android:gravity="center"
-        android:id="@+id/fh_Banner"
-        />
-
-
-
-
-
-
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:id="@+id/fh_MainOptionsLayout"
+        android:layout_marginEnd="16dp"
         app:cardCornerRadius="32dp"
-        android:id="@+id/fh_MainLayout"
-        android:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         >
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fh_OptionsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-       android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        app:layout_constraintStart_toStartOf="parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Get Creative!!"
-            android:fontFamily="@font/avenir_next_bold"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            android:id="@+id/fh_CreativeLabel"
-            android:textSize="14sp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            />
+
 
         <FrameLayout
             android:id="@+id/fh_BlankButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:elevation="0dp"
+            android:layout_margin="8dp"
             android:backgroundTint="@android:color/transparent"
+            android:elevation="0dp"
+            app:layout_constraintTop_toBottomOf="@id/fh_PhotexLabel"
 
 
-            >
+            tools:layout_editor_absoluteX="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -138,16 +129,16 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_bold"
                         android:text="Blank"
-                        android:textColor="@color/black"
+                        android:textColor="@color/matte_blue"
                         android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
                         android:fontFamily="@font/avenir_next_regular"
                         android:text="Create from a blank colored image."
-                        android:textColor="@color/black" />
+                        android:textColor="@color/matte_blue"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -155,7 +146,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_weight="20"
-                    android:src="@drawable/next_arrow" />
+                    android:src="@drawable/next_arrow"
+                    app:tint="@color/matte_blue" />
             </LinearLayout>
         </FrameLayout>
 
@@ -163,14 +155,12 @@
             android:id="@+id/fh_TemplateButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_margin="8dp"
             android:elevation="10dp"
+            app:layout_constraintTop_toBottomOf="@id/fh_BlankButton"
 
 
-            >
+            tools:layout_editor_absoluteX="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -190,16 +180,16 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_bold"
                         android:text="Template"
-                        android:textColor="@color/black"
+                        android:textColor="@color/matte_blue"
                         android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="12sp"
                         android:fontFamily="@font/avenir_next_regular"
                         android:text="Edit an already created template."
-                        android:textColor="@color/black" />
+                        android:textColor="@color/matte_blue"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <ImageView
@@ -207,12 +197,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
                     android:layout_weight="20"
+                    app:tint="@color/matte_blue"
                     android:src="@drawable/next_arrow" />
             </LinearLayout>
         </FrameLayout>
 
+
         <FrameLayout
-            android:id="@+id/fh_GalleryButton"
+            android:id="@+id/fh_TwitterButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -220,14 +212,18 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:elevation="10dp"
-            >
+            app:layout_constraintTop_toBottomOf="@id/fh_TemplateButton">
 
             <LinearLayout
+                android:id="@+id/fh_TwitterMainLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="horizontal"
-                android:weightSum="100">
+                android:weightSum="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -239,93 +235,83 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_bold"
-                        android:text="Image"
-                        android:textColor="@color/black"
+                        android:text="Twitter Templates"
+                        android:textColor="@color/matte_blue"
                         android:textSize="18sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:textSize="12sp"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/avenir_next_regular"
-                        android:text="Create raw image from a Photo or template"
-                        android:textColor="@color/black" />
+                        android:text="Create your own tweets."
+                        android:textColor="@color/matte_blue"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
+                    app:tint="@color/matte_blue"
                     android:layout_weight="20"
                     android:src="@drawable/next_arrow" />
             </LinearLayout>
-        </FrameLayout>
-        <FrameLayout
-            android:id="@+id/fh_TwitterButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:elevation="10dp"
-            >
-
-                <LinearLayout
-                    android:id="@+id/fh_TwitterMainLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:orientation="horizontal"
-                    android:weightSum="100"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="80"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/avenir_next_bold"
-                            android:text="Twitter Templates"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/avenir_next_regular"
-                            android:text="Create your own tweets."
-                            android:textColor="@color/black"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|center_vertical"
-                        android:layout_weight="20"
-                        android:src="@drawable/next_arrow" />
-                </LinearLayout>
 
 
         </FrameLayout>
-        <ImageView
+
+        <TextView
+            android:id="@+id/fh_PhotexLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/main_screen_app_logo"
             android:layout_gravity="center"
             android:layout_margin="4dp"
-            />
+            android:text="Photex"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textColor="#39375B"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fh_BottomEmoji"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get"
+            android:fontFamily="@font/avenir_next_bold"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/chopin"
+            android:text="Creative"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bottom_emojis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/fh_BottomEmoji"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

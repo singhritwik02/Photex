@@ -16,4 +16,9 @@
     <color name="matte_black">#191919</color>
     <color name="matte_red">#B33F40</color>
     <color name="matte_black_light">#2F2D2D</color>
+    <color name="matte_yellow">#FFBA00</color>
+    <color name="matte_blue">#302E49</color>
+    <color name="matte_green">#00D498</color>
+    <color name="light_blue">#6221FF</color>
+    <color name="matte_blue_light">#39375B</color>
 </resources>

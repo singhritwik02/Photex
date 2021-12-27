@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="Preview"
         android:fontFamily="@font/avenir_next_bold"
-        android:textColor="@color/black"
+        android:textColor="@color/matte_blue"
         android:textSize="18sp"
 
         android:layout_margin="16dp"
@@ -92,13 +92,13 @@
                 android:layout_height="18dp"
                 android:src="@drawable/ic_baseline_crop_square_24"
                 android:layout_gravity="center"
-                app:tint="@color/matte_black" />
+                app:tint="@color/matte_blue" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Square"
                 android:fontFamily="@font/avenir_next_bold"
-                android:textColor="@color/black"
+                android:textColor="@color/matte_blue"
                 android:id="@+id/pfe_SquareCropText"
                 android:layout_gravity="center"
                 android:textSize="14sp"
@@ -118,13 +118,13 @@
                 android:layout_height="18dp"
                 android:src="@drawable/save_image"
                 android:layout_gravity="center"
-                />
+                app:tint="@color/matte_blue" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Save"
                 android:fontFamily="@font/avenir_next_bold"
-                android:textColor="@color/black"
+                android:textColor="@color/matte_blue"
                 android:layout_gravity="center"
                 android:textSize="14sp"
                 />
@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:text="Watermark"
                     android:fontFamily="@font/avenir_next_bold"
-                    android:textColor="@color/black"
+                    android:textColor="@color/matte_blue"
                     android:layout_gravity="center"
                     android:textSize="14sp"
                     />

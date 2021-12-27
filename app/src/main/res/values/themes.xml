@@ -2,15 +2,16 @@
     <!-- Base application theme. -->
     <style name="Theme.Photex" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/yellow</item>
-        <item name="colorPrimaryVariant">@color/darkYellow</item>
+        <item name="colorPrimary">@color/matte_blue</item>
+        <item name="colorPrimaryVariant">@color/matte_blue_light</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/yellow</item>
-        <item name="colorSecondaryVariant">@color/darkYellow</item>
+        <item name="colorSecondary">@color/matte_blue</item>
+        <item name="colorSecondaryVariant">@color/matte_blue_light</item>
         <item name="colorOnSecondary">@color/black</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/matte_blue</item>
         <!-- Customize your theme here. -->
 
     </style>
@@ -22,5 +23,18 @@
         >
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+    <style name="Theme.Transparent" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/matte_blue</item>
+        <item name="colorPrimaryVariant">@color/matte_blue_light</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/matte_blue</item>
+        <item name="colorSecondaryVariant">@color/matte_blue_light</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/matte_blue</item>
+        <item name="android:windowBackground">@drawable/splash_drawable</item>
     </style>
 </resources>

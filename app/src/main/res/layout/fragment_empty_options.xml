@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorExtraExtraLightGray"
+    android:background="@color/matte_blue"
     tools:context=".emptyOptions">
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,12 +18,12 @@
             android:src="@drawable/options_graphic"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            app:tint="@color/matte_black_light" />
+            app:tint="@color/white" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add or tap on an item to edit."
-            android:textColor="@color/matte_black_light"
+            android:textColor="@color/white"
             android:layout_gravity="center"
             android:fontFamily="@font/avenir_next_regular"
             android:textSize="14sp"

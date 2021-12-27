@@ -26,10 +26,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.setPadding
-import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -67,53 +67,65 @@ class CreateMeme : AppCompatActivity() {
     private lateinit var stickerPopup: StickerPopup
     private lateinit var adLoadingWindow: PopupWindow
     private val chooseStickerImageCode = 1025
+    private var customImage = false
+    private var customImageUri: Uri? = null
+    private lateinit var memeLayoutPopup: LayoutPopup
+    private var customImageBitmap: Bitmap? = null
     val nonRemovableLayer = arrayListOf<Layer>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateMemeBinding.inflate(layoutInflater)
+        deleteTempFileInstant()
         setContentView(binding.root)
         window.enterTransition = Fade()
-
-//        if(!UnityAds.isInitialized())
-//        {
-//            UnityAds.initialize(binding.root.context,"4218265",false)
-//        }
         UnityAds.initialize(this, "4218265", UnityAdsListener(), false)
         presets = Presets(this)
         if (intent.extras != null) {
             val extras = intent.extras!!
             style = extras["STYLE"] as String
             mode = (extras["MODE"] ?: "") as String
-            binding.root.post {
-                setViews()
-                if (style == "UPPER_TEXT") {
-                    changeLayout("T")
-                    //theme.setTopText()
-                } else if (style == "BOTTOM_TEXT") {
-                    //theme.setBottomText()
-                    changeLayout("B")
-                } else if (style == "BOTH_TEXT") {
-                    //theme.setBothText()
-                    changeLayout("BT")
-                } else if (style == "NO_TEXT") {
-                    //theme.setImageOnly()
-                } else if (style == "TEXT_ONLY") {
-                    theme.setTextOnly()
-                } else {
-                    theme.setBottomText()
+            if (extras.containsKey("NOTIFICATION")) {
+                showTemplatePopup()
+            }
 
+        }
+        binding.root.post {
+            setViews()
+            showNoOptionSelected()
+            // getting the style code from the presets
+            if (style == "TEXT_ONLY") {
+                binding.acmEmptyImageLayout.visibility = View.INVISIBLE
+                val colorCode = presets.preBlankColor
+                Log.d(TAG, "onCreate: presets color code = $colorCode")
+                val color = Color.parseColor(colorCode)
+                theme.setBlankTextMode(color)
+            }
+            if (style != "TEXT_ONLY") {
+                val styleCode = presets.preStyle
+                if (styleCode != "N") {
+                    changeLayout(styleCode)
+                } else {
+                    changeLayout("")
                 }
-                if (mode == "LIGHT") {
-                    theme.setLightTheme()
-                } else if (mode == "DARK") {
-                    theme.setDarkTheme()
-                } else if (mode == "CUSTOM") {
-
-                } else {
-
+                // getting the theme color
+                val themeColor = presets.preTheme
+                Log.d(TAG, "onCreate: theme Color = $themeColor")
+                when (themeColor) {
+                    "L" -> {
+                        theme.setLightTheme()
+                    }
+                    "D" -> {
+                        theme.setDarkTheme()
+                    }
+                    else -> {
+                        theme.setCustomTheme(themeColor)
+                    }
                 }
             }
+
+
         }
+
 
         binding.acmMemeImage.setOnClickListener {
             if (style == "TEXT_ONLY") {
@@ -131,6 +143,8 @@ class CreateMeme : AppCompatActivity() {
                         ColorEnvelopeListener { envelope, fromUser ->
                             Log.d(TAG, "showChooseColorPopup: ")
                             val colorCode = "#${envelope.hexCode}"
+                            presets.preBlankColor = colorCode
+                            Log.d(TAG, "onCreate: colorcode = ${presets.preBlankColor}")
                             val color = Color.parseColor(colorCode)
                             // creating a bitmap of the chosen color
                             val bitmap = createColoredBitmap(color)
@@ -149,12 +163,32 @@ class CreateMeme : AppCompatActivity() {
 
         }
         binding.acmOptionTheme.setOnClickListener {
-            theme.showChangeThemePopup()
-
+            if(style == "TEXT_ONLY")
+            {
+                Toast.makeText(this, "Option not available in Text only Mode", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (!this::memeLayoutPopup.isInitialized) {
+                memeLayoutPopup = LayoutPopup()
+            }
+            memeLayoutPopup.showWindow()
 
         }
         binding.acmOptionImageSticker.setOnClickListener {
-            chooseStickerImage()
+            if(style=="TEXT_ONLY") {
+                chooseStickerImage()
+            }
+            else
+            {
+                if(!imageSelected)
+                {
+                    Toast.makeText(this, "Choose Meme Image First!!", Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    chooseStickerImage()
+                }
+            }
         }
         binding.acmMemeFrameBottomHorizontalLayout.weightSum = 1f
         binding.acmOptionPadding.setOnClickListener {
@@ -271,16 +305,14 @@ class CreateMeme : AppCompatActivity() {
             val image = binding.acmMemeImage.drawable
             val bitmapDrawable = image as BitmapDrawable
             val bitmap = bitmapDrawable.bitmap
-            changeColors(bitmap)
+            customImageBitmap = bitmap
             removeEmptyLayout()
             // deleting the temp file
-            val file = File(
-                getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
-                "photextempfiledownloaded"
-            )
-            if (file.exists()) {
-                file.delete()
+
+            if (resultUri != null) {
+                customImageUri = resultUri
             }
+            customImage = true
         } else if (resultCode == UCrop.RESULT_ERROR) {
             Log.d(TAG, "onActivityResult: ${UCrop.getError(data!!)}")
         }
@@ -363,12 +395,14 @@ class CreateMeme : AppCompatActivity() {
                     }
                 }
             } else {
-                temp.oHeight = (data as Bitmap).height
+                val bitmapTemp = data as Bitmap
+                val bitmap = adjustStickerImage(bitmapTemp)
+                temp.oHeight = bitmap.height
                 temp.height = temp.oHeight
-                temp.oWidth = (data as Bitmap).width
+                temp.oWidth = bitmap.width
                 temp.width = temp.oWidth
                 temp.view = ImageView(this@CreateMeme)
-                (temp.view as ImageView).setImageBitmap(data as Bitmap)
+                (temp.view as ImageView).setImageBitmap(bitmap)
             }
             (temp.view)
             layerArray.add(temp)
@@ -542,69 +576,6 @@ class CreateMeme : AppCompatActivity() {
         //showTextSettings(binding.acmMemeText)
     }
 
-    private fun changeColors(bitmap: Bitmap) {
-
-
-        Palette.from(bitmap).generate { palette ->
-            if (palette == null) {
-                Log.d(TAG, "changeColors: palette is null")
-            }
-            palette?.let {
-                val swatch =
-                    palette.vibrantSwatch ?: palette.darkVibrantSwatch ?: palette.dominantSwatch
-                    ?: palette.darkMutedSwatch
-                if (swatch == null) {
-                    Log.d(TAG, "changeColors: swatch is null")
-                    return@generate
-                }
-                val mainColor = swatch.rgb
-                val titleTextColor = swatch.titleTextColor
-                binding.acmMenuCard.setBackgroundColor(mainColor)
-                window.statusBarColor = mainColor
-                binding.acmOptionPadding.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionPaddingText.setTextColor(titleTextColor)
-                // text
-                binding.acmOptionText.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionTextText.setTextColor(titleTextColor)
-                //
-                binding.acmOptionSticker.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionStickerText.setTextColor(titleTextColor)
-                //
-                binding.acmOptionBackground.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionBackgroundText.setTextColor(titleTextColor)
-                //
-                binding.acmOptionSave.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionSaveText.setTextColor(titleTextColor)
-                //
-                binding.acmOptionThemeText.setTextColor(titleTextColor)
-                binding.acmOptionThemeImage.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-                binding.acmOptionImageStickerText.setTextColor(titleTextColor)
-                binding.acmOptionImageStickerImage.setColorFilter(
-                    titleTextColor,
-                    android.graphics.PorterDuff.Mode.SRC_IN
-                );
-            }
-        }
-
-    }
 
     inner class MemeTheme {
 
@@ -618,7 +589,7 @@ class CreateMeme : AppCompatActivity() {
             val displayMetrics = resources.displayMetrics
             val window = PopupWindow(
                 themeBinding.root,
-                (displayMetrics.widthPixels * 0.5).toInt(),
+                (displayMetrics.widthPixels * 0.9).toInt(),
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 true
             )
@@ -633,7 +604,7 @@ class CreateMeme : AppCompatActivity() {
                 window.dismiss()
             }
             themeBinding.ptchCustomMode.setOnClickListener {
-                setCustomTheme()
+                setCustomTheme(null)
                 window.dismiss()
             }
 
@@ -647,54 +618,73 @@ class CreateMeme : AppCompatActivity() {
                 )
             )
             currentTheme = THEME_DARK
+            presets.preTheme = "D"
         }
 
         fun setLightTheme() {
             binding.acmMemeFrame.setBackgroundColor(Color.WHITE)
             currentTheme = THEME_LIGHT
+            presets.preTheme = "L"
         }
 
-        fun setCustomTheme() {
-            ColorPickerDialog.Builder(this@CreateMeme)
-                .setTitle("Choose Color")
-                .setPreferenceName("ChooseColor")
-                .setPositiveButton("Save",
-                    ColorEnvelopeListener { envelope, fromUser ->
-                        Log.d(TAG, "showChooseColorPopup: ")
-                        val colorCode = "#${envelope.hexCode}"
-                        val color = Color.parseColor(colorCode)
-                        binding.acmMemeFrame.setBackgroundColor(color)
-                        currentTheme = THEME_CUSTOM
+        fun setCustomTheme(color: String?) {
+            if (color == null) {
+                ColorPickerDialog.Builder(this@CreateMeme)
+                    .setTitle("Choose Color")
+                    .setPreferenceName("ChooseColor")
+                    .setPositiveButton("Save",
+                        ColorEnvelopeListener { envelope, fromUser ->
+                            Log.d(TAG, "showChooseColorPopup: ")
+                            val colorCode = "#${envelope.hexCode}"
+                            // putting the color code in presets
+                            presets.preTheme = colorCode
+                            val color = Color.parseColor(colorCode)
+                            binding.acmMemeFrame.setBackgroundColor(color)
+                            currentTheme = THEME_CUSTOM
 
-                    })
-                .setNegativeButton("Cancel",
-                    DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
-                .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
-                .show()
+                        })
+                    .setNegativeButton("Cancel",
+                        DialogInterface.OnClickListener { dialogInterface, i -> dialogInterface.dismiss() })
+                    .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+                    .show()
+            } else {
+                try {
+                    val themeColor = Color.parseColor(color)
+                    binding.acmMemeFrame.setBackgroundColor(themeColor)
+                    presets.preTheme = color
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    theme.setLightTheme()
+                    presets.preTheme = "L"
+                }
+                currentTheme = THEME_CUSTOM
+            }
+
+
         }
 
-        fun setBottomText() {
-            // removing upper text
-        }
-
-        fun setTopText() {
-            // removing bottom text
-        }
-
-        fun setBothText() {
-
-        }
 
 
-        fun setTextOnly() {
-            // removing both text views
-            //
-            val colorBitmap = createColoredBitmap(Color.WHITE)
+        fun setBlankTextMode(color:Int)
+        {
+            val colorBitmap =  if(color!=-1) {
+                createColoredBitmap(color)
+            }
+            else
+            {
+                createColoredBitmap(Color.WHITE)
+            }
             binding.acmMemeImage.setImageBitmap(colorBitmap)
             binding.acmEmptyImageLayout.visibility = View.GONE
             binding.acmWaterMark.alpha = 0.1f
+            // removing theme option
 
         }
+    }
+
+
+    fun setTextOnlyMode() {
+        binding.acmMemeImage.visibility = View.GONE
     }
 
     fun loadBitmapFromView(v: View): Bitmap? {
@@ -705,10 +695,10 @@ class CreateMeme : AppCompatActivity() {
         return b
     }
 
-    fun saveImage(bitmap: Bitmap, nameP: String?) {
+    fun saveImage(bitmap: Bitmap) {
         CloudDatabase.incrementNoOfSaves()
         val contentValues = ContentValues()
-        val name = nameP ?: getRandomName()
+        val name = getRandomName()
         Log.d(TAG, "saveImage: Saving image as $name")
         contentValues.apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -783,44 +773,49 @@ class CreateMeme : AppCompatActivity() {
 
     private fun showImageChooseOptions() {
         val optionBinding = PopupImageOptionsBinding.inflate(layoutInflater)
+        val displayMetrics = resources.displayMetrics
         val window = PopupWindow(
             optionBinding.root,
-            WindowManager.LayoutParams.WRAP_CONTENT,
+            (displayMetrics.widthPixels * 0.99).toInt(),
             WindowManager.LayoutParams.WRAP_CONTENT,
             true
         )
-        window.animationStyle = R.style.pAnimation
         window.elevation = 20f
-        window.showAsDropDown(binding.acmOptionBackground)
+        window.animationStyle = R.style.slideAnimation
+        window.showAtLocation(optionBinding.root, Gravity.BOTTOM, 0, 0)
         optionBinding.pioGallery.setOnClickListener {
             chooseImage()
             window.dismiss()
         }
         optionBinding.pioTemplates
             .setOnClickListener {
-                if (!this::templatePopup.isInitialized) {
-                    templatePopup = PopupChooseTemplate(this)
-                    { bitmap, styleCode ->
-                        if (binding.acmEmptyImageLayout.visibility != View.GONE) {
-                            binding.acmEmptyImageLayout.visibility = View.GONE
-                        }
-                        binding.acmMemeImage.setImageBitmap(bitmap)
-                        changeColors(bitmap)
-                        if (styleCode != null) {
-                            showStyleChangePopup(styleCode)
-                        } else {
-                            Log.d(TAG, "showImageChooseOptions: style code is null")
-                        }
-                        imageSelected = true
-
-                    }
-                }
-                templatePopup.showPopup()
+                showTemplatePopup()
                 window.dismiss()
 
             }
 
 
+    }
+
+    private fun showTemplatePopup() {
+        if (!this::templatePopup.isInitialized) {
+            templatePopup = PopupChooseTemplate(this)
+            { bitmap, styleCode ->
+                if (binding.acmEmptyImageLayout.visibility != View.GONE) {
+                    binding.acmEmptyImageLayout.visibility = View.GONE
+                }
+                binding.acmMemeImage.setImageBitmap(bitmap)
+                customImage = false
+                if (styleCode != null) {
+                    showStyleChangePopup(styleCode)
+                } else {
+                    Log.d(TAG, "showImageChooseOptions: style code is null")
+                }
+                imageSelected = true
+
+            }
+        }
+        templatePopup.showPopup()
     }
 
     inner class StickerPopup {
@@ -1057,8 +1052,33 @@ class CreateMeme : AppCompatActivity() {
             window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
             popupBinding.pfeMainImage.setImageBitmap(bitmap)
             popupBinding.pfeSaveButton.setOnClickListener {
-                showAd()
-                saveImage(bitmap, null)
+                if (!customImage) {
+                    showAd()
+                    saveImage(bitmap)
+
+                } else {
+                    if (customImageUri != null) {
+                        // checking if the user is currently logged in or not
+                        showUploadConfirmation() { statusInt ->
+                            //0 - cancel
+                            //1 - upload
+                            if (statusInt == 0) {
+                                showAd()
+                                saveImage(bitmap)
+                            } else {
+                                if (FirebaseAuth.getInstance().currentUser == null) {
+                                    showLoginConfirmationPopup {
+                                        showAd()
+                                        saveImage(bitmap)
+                                    }
+                                } else {
+                                    showAd()
+                                    saveImage(bitmap)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             popupBinding.pfeWatermarkButton.setOnClickListener {
                 showRewardedAd()
@@ -1176,7 +1196,7 @@ class CreateMeme : AppCompatActivity() {
                     binding.acmWaterMark.visibility = View.INVISIBLE
                     val noWatermarkBitmap = loadBitmapFromView(binding.acmMemeFrame)
                     if (noWatermarkBitmap != null) {
-                        saveImage(noWatermarkBitmap, null)
+                        saveImage(noWatermarkBitmap)
                         binding.acmWaterMark.visibility = View.VISIBLE
                     } else {
                         Toast.makeText(
@@ -1327,6 +1347,8 @@ class CreateMeme : AppCompatActivity() {
 
         // dividing top text into two parts
         // setting the weight sum
+        // setting the preset style code
+        presets.preStyle = layoutString
         nonRemovableLayer.clear()
         binding.acmMemeFrameBottomHorizontalLayout.weightSum = 0f
         binding.acmMemeFrameBottomHorizontalLayout.removeAllViews()
@@ -1339,6 +1361,11 @@ class CreateMeme : AppCompatActivity() {
         binding.acmMemeImage.layoutParams = imageParams
         binding.acmMemeVerticalLayout.weightSum = 0f
         binding.acmMemeVerticalLayout.removeAllViews()
+        if(layoutString.isEmpty())
+        {
+            presets.preStyle = "N"
+            return
+        }
         for (char in layoutString) {
             Log.d(TAG, "changeLayout: ${binding.acmMemeFrameBottomHorizontalLayout.weightSum}")
             // adding the second text view
@@ -1468,5 +1495,231 @@ class CreateMeme : AppCompatActivity() {
 
     companion object {
         private const val TAG = "CreateMeme"
+    }
+
+    private fun showUploadConfirmation(dismissFunction: (selectedStatus: Int) -> Unit) {
+        val popupBinding = PopupUploadConfirmationBinding.inflate(layoutInflater)
+        val displayMetrics = resources.displayMetrics
+        val window = PopupWindow(
+            popupBinding.root,
+            (displayMetrics.widthPixels * 0.90).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
+        window.elevation = 100f
+        window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
+        customImageUri?.let {
+            Log.d(TAG, "showUploadConfirmation: setting image")
+            popupBinding.upcDemoImage.setImageURI(customImageUri)
+        }
+        popupBinding.upcCancelButton.setOnClickListener {
+            window.dismiss()
+            dismissFunction(0)
+        }
+        popupBinding.upcUploadConfirmButton.setOnClickListener {
+            window.dismiss()
+            if (FirebaseAuth.getInstance().currentUser != null) {
+                customImageUri?.let {
+                    val templateUpload = TemplateUpload(it)
+                    templateUpload.uploadImage()
+                    dismissFunction(1)
+                }
+            } else {
+                dismissFunction(1)
+            }
+
+
+        }
+
+    }
+
+    private fun deleteTempFile() {
+        val file = File(
+            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+            "photextempfiledownloaded"
+        )
+        if (file.exists()) {
+            file.deleteOnExit()
+        }
+    }
+
+    private fun showLoginConfirmationPopup(afterLogFunction: () -> Unit) {
+        val loginBinding = LoginConfirmationPopupBinding.inflate(layoutInflater)
+        val displayMetrics = resources.displayMetrics
+        val loginWindow = PopupWindow(
+            loginBinding.root,
+            (displayMetrics.widthPixels * 0.95).toInt(),
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
+        loginWindow.elevation = 100f
+        loginWindow.showAtLocation(loginBinding.root, Gravity.CENTER, 0, 0)
+        loginBinding.lcpCancelButton.setOnClickListener {
+            loginWindow.dismiss()
+            afterLogFunction()
+        }
+        loginBinding.lcpLoginButton.setOnClickListener {
+            loginWindow.dismiss()
+            startActivity(Intent(this@CreateMeme, LoginActivity::class.java))
+        }
+
+    }
+
+    inner class TemplateUploadLoading {
+        private lateinit var popupBinding: PopupUploadingTemplateBinding
+        private lateinit var window: PopupWindow
+
+        fun showWindow() {
+            popupBinding = PopupUploadingTemplateBinding.inflate(layoutInflater)
+            val displayMetrics = resources.displayMetrics
+            window = PopupWindow(
+                popupBinding.root,
+                (displayMetrics.widthPixels * 0.95).toInt(),
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                false
+            )
+            window.elevation = 100f
+            window.showAtLocation(popupBinding.root, Gravity.CENTER, 0, 0)
+        }
+
+        fun hideWindow() {
+            if (this::window.isInitialized) {
+                if (window.isShowing) {
+                    window.dismiss()
+                }
+            }
+        }
+
+    }
+
+
+    inner class TemplateUpload(val imageUri: Uri) {
+        val templateUploadLoading = TemplateUploadLoading()
+        fun uploadImage() {
+            templateUploadLoading.showWindow()
+            Thread(Runnable {
+                val fileName = imageUri.lastPathSegment.toString()
+                // creating the storage reference
+                val storageRef =
+                    FirebaseStorage.getInstance().reference.child("UPLOADED_TEMPLATES")
+                        .child(fileName)
+                //uploading the image uri to the firebase storage
+                storageRef.putFile(imageUri).addOnSuccessListener {
+                    storageRef.downloadUrl.addOnCompleteListener { downloadLinkTask ->
+                        val downloadLink = downloadLinkTask.result
+                        addUploadedTemplateToDatabase(fileName, downloadLink.toString())
+                        Log.d(TAG, "uploadImage: download Link = $downloadLink")
+                    }
+                }.addOnFailureListener {
+                    Log.d(TAG, "uploadImage: Failed to Upload Image with Error  = ${it.toString()}")
+                }
+            }).start()
+
+        }
+
+        private fun addUploadedTemplateToDatabase(fileName: String, downloadLink: String) {
+            val uid = FirebaseAuth.getInstance().uid!!
+            // creating the database reference
+            val databaseRef =
+                FirebaseDatabase.getInstance().reference.child("Temp_Templates").child(fileName)
+            // setting the values of the child nodes
+            databaseRef.child("UPLOADER").setValue(uid)
+            // setting the link of the image
+            databaseRef.child("IMAGE_LINK").setValue(downloadLink)
+            runOnUiThread {
+                templateUploadLoading.hideWindow()
+            }
+        }
+
+    }
+
+    inner class LayoutPopup : RadioGroup.OnCheckedChangeListener {
+        private lateinit var popupBinding: PopupChooseLayoutBinding
+        private lateinit var window: PopupWindow
+
+        fun showWindow() {
+            if (!this::popupBinding.isInitialized) {
+                popupBinding = PopupChooseLayoutBinding.inflate(layoutInflater)
+                window = PopupWindow(
+                    popupBinding.root,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    true
+                )
+            }
+            window.elevation = 100f
+            window.animationStyle = R.style.slideAnimation
+            window.showAtLocation(popupBinding.root, Gravity.BOTTOM, 0, 0)
+            popupBinding.pclButtonGroup.setOnCheckedChangeListener(this)
+            popupBinding.pclColorButton.setOnClickListener {
+                window.dismiss()
+                theme.showChangeThemePopup()
+            }
+        }
+
+
+        // implementation of on check changed listener
+        override fun onCheckedChanged(p0: RadioGroup?, p1: Int) {
+            Log.d(TAG, "onCheckedChanged: check changed")
+            when (p1) {
+                R.id.pcl_TopCaption -> {
+                    Log.d(TAG, "onCheckedChanged: Top Caption Selected")
+                    changeLayout("T")
+                }
+                R.id.pcl_BottomCaption -> {
+                    Log.d(TAG, "onCheckedChanged: Bottom Caption Selected")
+                    changeLayout("B")
+                }
+                R.id.pcl_TopAndBottomCaption -> {
+                    Log.d(TAG, "onCheckedChanged: Top and Bottom Caption Selected")
+                    changeLayout("BT")
+                }
+                R.id.pcl_NoCaption -> {
+                    Log.d(TAG, "onCheckedChanged: setting no text")
+                    changeLayout("")
+                }
+            }
+        }
+    }
+    private fun adjustStickerImage(stickerBitmap:Bitmap):Bitmap
+    {
+        val mainHeight = binding.acmMemeImage.height
+        val mainWidth = binding.acmMemeImage.width
+        var newHeight = stickerBitmap.height
+        var newWidth = stickerBitmap.width
+        val imageScale:Float = newHeight.toFloat()/newWidth.toFloat()
+        if(newHeight > mainHeight)
+        {
+
+            newHeight = mainHeight-50
+            newWidth = (newHeight/imageScale).toInt()
+            Log.d(TAG, "adjustStickerImage: new height is greater than mainHeight")
+            Log.d(TAG, "adjustStickerImage: changing new height = $newHeight")
+            Log.d(TAG, "adjustStickerImage: changing the new width to $newWidth")
+        }
+        if(newWidth > mainWidth)
+        {
+            newWidth = mainWidth-50
+            newHeight = (newWidth*imageScale).toInt()
+            Log.d(TAG, "adjustStickerImage: new width is greater than mainWidth")
+            Log.d(TAG, "adjustStickerImage: changing new height = $newHeight")
+            Log.d(TAG, "adjustStickerImage: changing the new width to $newWidth")
+        }
+        // creating a scaled Bitmap
+        val newBitmap = Bitmap.createScaledBitmap(stickerBitmap,newWidth,newHeight,false)
+        return newBitmap
+
+    }
+    private fun deleteTempFileInstant() {
+        val file = File(
+            getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
+            "photextempfiledownloaded"
+        )
+        if (file.exists()) {
+            Log.d(TAG, "deleteTempFileInstant: deleting File")
+            file.delete()
+        } else {
+            Log.d(TAG, "deleteTempFileInstant: file does not exist")
+        }
     }
 }

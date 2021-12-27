@@ -12,22 +12,20 @@ import com.ritwik.photex.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var templateString: String? = null
+    private var cloudNotification: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         intent.extras?.let {
-            if (it.get("TEMPLATE_STRING") != null) {
-                templateString = it.get("TEMPLATE_STRING").toString()
-            } else if (it.containsKey("SEARCH_STRING")) {
-                templateString = it.get("SEARCH_STRING").toString()
+            if (it.get("NOTIFICATION") != null) {
+                cloudNotification = it.get("NOTIFICATION").toString()
             }
         }
         val homeFragment = HomeFragment()
-        if (templateString != null) {
+        if (cloudNotification != null) {
             with(Bundle())
             {
-                putString("TEMPLATE", templateString)
+                putString("NOTIFICATION", cloudNotification)
                 homeFragment.arguments = this
 
             }
